@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'pages/template/page_template.dart';
+import 'pages/template/template.dart';
 import 'pages/variable/page_variable.dart';
 import 'pages/task/page_task.dart';
 
