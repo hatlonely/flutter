@@ -18,39 +18,15 @@ class TemplateViewState extends State<TemplateView> {
   var languageController = TextEditingController();
   var scriptController = TextEditingController();
 
-  TextField nameTextField;
-  TextField categoryTextField;
-  TextField descriptionTextField;
-  TextField languageTextField;
-  TextField scriptTextField;
+  bool editable = false;
 
-  TemplateViewState() {
-    nameTextField = TextField(decoration: textFieldDecoration(text: "名字"), controller: nameController, enabled: false);
-    categoryTextField = TextField(
-      decoration: textFieldDecoration(text: "分类"),
-      controller: categoryController,
-      enabled: false,
-    );
-    descriptionTextField = TextField(
-      decoration: textFieldDecoration(text: "描述"),
-      controller: descriptionController,
-      enabled: false,
-    );
-    languageTextField = TextField(
-      decoration: textFieldDecoration(text: "语言"),
-      controller: languageController,
-      enabled: false,
-    );
-    scriptTextField = TextField(
-      decoration: textFieldDecoration(text: "脚本"),
-      minLines: 10,
-      maxLines: 20,
-      controller: scriptController,
-      enabled: false,
+  TextField textField({String name, TextEditingController controller, bool enabled}) {
+    return TextField(
+      decoration: textFieldDecoration(text: name),
+      controller: controller,
+      enabled: enabled,
     );
   }
-
-  bool editable = false;
 
   InputDecoration textFieldDecoration({text: String}) {
     return InputDecoration(
@@ -165,15 +141,33 @@ class TemplateViewState extends State<TemplateView> {
                   ],
                 ),
                 const SizedBox(height: 40),
-                editable ? nameTextField : Text(nameController.value.text),
+                TextField(decoration: textFieldDecoration(text: "名字"), controller: nameController, enabled: editable),
                 const SizedBox(height: 20),
-                editable ? categoryTextField : Text(categoryController.value.text),
+                TextField(
+                  decoration: textFieldDecoration(text: "类别"),
+                  controller: categoryController,
+                  enabled: editable,
+                ),
                 const SizedBox(height: 20),
-                editable ? descriptionTextField : Text(descriptionController.value.text),
+                TextField(
+                  decoration: textFieldDecoration(text: "描述"),
+                  controller: descriptionController,
+                  enabled: editable,
+                ),
                 const SizedBox(height: 20),
-                editable ? languageTextField : Text(languageController.value.text),
+                TextField(
+                  decoration: textFieldDecoration(text: "语言"),
+                  controller: languageController,
+                  enabled: editable,
+                ),
                 const SizedBox(height: 20),
-                editable ? scriptTextField : Text(scriptController.value.text),
+                TextField(
+                  decoration: textFieldDecoration(text: "脚本"),
+                  controller: scriptController,
+                  minLines: 10,
+                  maxLines: 20,
+                  enabled: editable,
+                ),
                 const SizedBox(height: 20),
               ],
             ),
