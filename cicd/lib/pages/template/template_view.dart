@@ -125,16 +125,31 @@ class TemplateViewState extends State<TemplateView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    CircleIconButton(tooltip: "保存", color: Colors.white, onPressed: save, icon: Icons.save),
+                    CircleIconButton(
+                      tooltip: "保存",
+                      color: Colors.white,
+                      onPressed: editable ? save : null,
+                      icon: Icons.save,
+                    ),
                     const SizedBox(width: 10),
-                    CircleIconButton(tooltip: "编辑", color: Colors.white, onPressed: edit, icon: Icons.edit),
+                    CircleIconButton(
+                      tooltip: "编辑",
+                      color: Colors.white,
+                      onPressed: editable ? null : edit,
+                      icon: Icons.edit,
+                    ),
                     const SizedBox(width: 10),
-                    CircleIconButton(tooltip: "取消", color: Colors.white, onPressed: cancel, icon: Icons.cancel),
+                    CircleIconButton(
+                      tooltip: "取消",
+                      color: Colors.white,
+                      onPressed: editable ? cancel : null,
+                      icon: Icons.cancel,
+                    ),
                     const SizedBox(width: 10),
                     CircleIconButton(
                         tooltip: "删除",
                         color: Colors.white,
-                        onPressed: delete,
+                        onPressed: editable ? null : delete,
                         icon: Icons.delete,
                         iconColor: Colors.red),
                   ],
@@ -165,12 +180,12 @@ class TemplateViewState extends State<TemplateView> {
   }
 }
 
-class CircleIconButton extends RawMaterialButton {
+class CircleIconButton extends FlatButton {
   CircleIconButton({Function onPressed, Color color, IconData icon, String tooltip, Color iconColor})
       : super(
-          fillColor: color,
+          color: color,
           child: Tooltip(message: tooltip, child: Icon(icon, color: iconColor)),
-          padding: EdgeInsets.all(5.0),
+          padding: EdgeInsets.all(15),
           shape: CircleBorder(),
           onPressed: onPressed,
         );
