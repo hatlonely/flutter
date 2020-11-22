@@ -27,15 +27,13 @@ class TemplateView extends StatefulWidget {
 }
 
 class TemplateViewState extends State<TemplateView> {
-  var nameController = TextEditingController();
-  var categoryController = TextEditingController();
-  var descriptionController = TextEditingController();
-  var languageController = TextEditingController();
-  var scriptController = TextEditingController();
-
-  bool editable = false;
-  var template = api.Template();
-
+  var _nameController = TextEditingController();
+  var _categoryController = TextEditingController();
+  var _descriptionController = TextEditingController();
+  var _languageController = TextEditingController();
+  var _scriptController = TextEditingController();
+  bool _editable = false;
+  var _template = api.Template();
   final _formKey = GlobalKey<FormState>();
 
   String validate(String value) {
@@ -55,7 +53,7 @@ class TemplateViewState extends State<TemplateView> {
 
   void edit() {
     setState(() {
-      editable = true;
+      _editable = true;
     });
   }
 
@@ -66,7 +64,7 @@ class TemplateViewState extends State<TemplateView> {
 
     var cli = http.Client();
     var template = createTemplateByTextEditControllers();
-    if (this.template == template) {
+    if (_template == template) {
       Trac(context, "无需更新");
       return;
     }
@@ -75,9 +73,9 @@ class TemplateViewState extends State<TemplateView> {
     if (res.statusCode == 200) {
       Info(context, "更新成功");
       setState(() {
-        editable = false;
+        _editable = false;
       });
-      this.template = template;
+      _template = template;
     } else {
       Warn(context, "更新失败: ${res.body}");
     }
@@ -95,30 +93,30 @@ class TemplateViewState extends State<TemplateView> {
   }
 
   void cancel() {
-    setTextEditControllersByTemplate(this.template);
+    setTextEditControllersByTemplate(_template);
     setState(() {
-      editable = false;
+      _editable = false;
     });
   }
 
   void setTextEditControllersByTemplate(api.Template template) {
-    nameController.text = template.name;
-    categoryController.text = template.category;
-    descriptionController.text = template.description;
-    languageController.text = template.scriptTemplate.language;
-    scriptController.text = template.scriptTemplate.script;
+    _nameController.text = template.name;
+    _categoryController.text = template.category;
+    _descriptionController.text = template.description;
+    _languageController.text = template.scriptTemplate.language;
+    _scriptController.text = template.scriptTemplate.script;
   }
 
   api.Template createTemplateByTextEditControllers() {
     var template = api.Template();
     template.id = widget.id;
-    template.name = nameController.value.text;
-    template.description = descriptionController.value.text;
-    template.category = categoryController.value.text;
+    template.name = _nameController.value.text;
+    template.description = _descriptionController.value.text;
+    template.category = _categoryController.value.text;
     template.type = "script";
     template.scriptTemplate = api.ScriptTemplate();
-    template.scriptTemplate.language = languageController.value.text;
-    template.scriptTemplate.script = scriptController.value.text;
+    template.scriptTemplate.language = _languageController.value.text;
+    template.scriptTemplate.script = _scriptController.value.text;
     return template;
   }
 
@@ -129,7 +127,7 @@ class TemplateViewState extends State<TemplateView> {
       future: getTemplate(),
       builder: (context, value) {
         var res = value.data as api.Template;
-        this.template = res;
+        _template = res;
 
         setTextEditControllersByTemplate(res);
 
@@ -151,28 +149,28 @@ class TemplateViewState extends State<TemplateView> {
                     CircleIconButton(
                       tooltip: "保存",
                       color: Colors.white,
-                      onPressed: editable ? save : null,
+                      onPressed: _editable ? save : null,
                       icon: Icons.save,
                     ),
                     const SizedBox(width: 10),
                     CircleIconButton(
                       tooltip: "编辑",
                       color: Colors.white,
-                      onPressed: editable ? null : edit,
+                      onPressed: _editable ? null : edit,
                       icon: Icons.edit,
                     ),
                     const SizedBox(width: 10),
                     CircleIconButton(
                       tooltip: "取消",
                       color: Colors.white,
-                      onPressed: editable ? cancel : null,
+                      onPressed: _editable ? cancel : null,
                       icon: Icons.cancel,
                     ),
                     const SizedBox(width: 10),
                     CircleIconButton(
                         tooltip: "删除",
                         color: Colors.white,
-                        onPressed: editable ? null : delete,
+                        onPressed: _editable ? null : delete,
                         icon: Icons.delete,
                         iconColor: Colors.red),
                   ],
@@ -182,20 +180,20 @@ class TemplateViewState extends State<TemplateView> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      MyTextField(key: "名字", controller: nameController, editable: editable, validator: validate),
+                      MyTextField(key: "名字", controller: _nameController, editable: _editable, validator: validate),
                       const SizedBox(height: 20),
-                      MyTextField(key: "类别", controller: categoryController, editable: editable),
+                      MyTextField(key: "类别", controller: _categoryController, editable: _editable),
                       const SizedBox(height: 20),
-                      MyTextField(key: "描述", controller: descriptionController, editable: editable),
+                      MyTextField(key: "描述", controller: _descriptionController, editable: _editable),
                       const SizedBox(height: 20),
-                      MyTextField(key: "语言", controller: languageController, editable: editable),
+                      MyTextField(key: "语言", controller: _languageController, editable: _editable),
                       const SizedBox(height: 20),
                       MyTextField(
                         key: "脚本",
-                        controller: scriptController,
+                        controller: _scriptController,
                         minLines: 10,
                         maxLines: 20,
-                        editable: editable,
+                        editable: _editable,
                       ),
                     ],
                   ),

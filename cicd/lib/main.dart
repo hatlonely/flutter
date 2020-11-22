@@ -14,7 +14,7 @@ class CICDApp extends StatelessWidget {
     return MaterialApp(
       title: "CICD Service",
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: VariablePage(),
+      home: HomePage(),
     );
   }
 }
