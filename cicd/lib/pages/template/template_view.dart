@@ -37,15 +37,7 @@ class TemplateViewState extends State<TemplateView> {
 
   void save() async {
     var cli = http.Client();
-    var template = api.Template();
-    template.id = widget.id;
-    template.name = nameController.value.text;
-    template.description = descriptionController.value.text;
-    template.category = categoryController.value.text;
-    template.type = "script";
-    template.scriptTemplate = api.ScriptTemplate();
-    template.scriptTemplate.language = languageController.value.text;
-    template.scriptTemplate.script = scriptController.value.text;
+    var template = createTemplateByTextEditControllers();
 
     if (this.template == template) {
       Scaffold.of(context).showSnackBar(SnackBar(
@@ -75,7 +67,7 @@ class TemplateViewState extends State<TemplateView> {
   }
 
   void cancel() {
-    setController(this.template);
+    setTextEditControllersByTemplate(this.template);
     setState(() {
       editable = false;
     });
@@ -83,12 +75,25 @@ class TemplateViewState extends State<TemplateView> {
 
   void delete() {}
 
-  void setController(api.Template template) {
+  void setTextEditControllersByTemplate(api.Template template) {
     nameController.text = template.name;
     categoryController.text = template.category;
     descriptionController.text = template.description;
     languageController.text = template.scriptTemplate.language;
     scriptController.text = template.scriptTemplate.script;
+  }
+
+  api.Template createTemplateByTextEditControllers() {
+    var template = api.Template();
+    template.id = widget.id;
+    template.name = nameController.value.text;
+    template.description = descriptionController.value.text;
+    template.category = categoryController.value.text;
+    template.type = "script";
+    template.scriptTemplate = api.ScriptTemplate();
+    template.scriptTemplate.language = languageController.value.text;
+    template.scriptTemplate.script = scriptController.value.text;
+    return template;
   }
 
   @override
@@ -103,7 +108,7 @@ class TemplateViewState extends State<TemplateView> {
         var res = value.data as api.Template;
         this.template = res;
 
-        setController(res);
+        setTextEditControllersByTemplate(res);
 
         return Card(
           margin: EdgeInsets.zero,
