@@ -19,6 +19,7 @@ class TemplateViewState extends State<TemplateView> {
   var scriptController = TextEditingController();
 
   bool editable = false;
+  var template = api.Template();
 
   TextField textField({String name, TextEditingController controller, bool enabled}) {
     return TextField(
@@ -63,6 +64,15 @@ class TemplateViewState extends State<TemplateView> {
     template.scriptTemplate = api.ScriptTemplate();
     template.scriptTemplate.language = languageController.value.text;
     template.scriptTemplate.script = scriptController.value.text;
+
+    if (this.template == template) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.blue,
+        content: Text("无需更新", style: TextStyle(color: Colors.white)),
+      ));
+      return;
+    }
+
     var res = await cli.put("http://127.0.0.1/v1/template/${widget.id}", body: json.encode(template.toProto3Json()));
 
     if (res.statusCode == 200) {
@@ -73,12 +83,21 @@ class TemplateViewState extends State<TemplateView> {
       setState(() {
         editable = false;
       });
+      this.template = template;
     } else {
       Scaffold.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.red,
         content: Text(res.body, style: TextStyle(color: Colors.white)),
       ));
     }
+  }
+
+  void cancel() {
+    nameController.text = template.name;
+    categoryController.text = template.category;
+    descriptionController.text = template.description;
+    languageController.text = template.scriptTemplate.language;
+    scriptController.text = template.scriptTemplate.script;
   }
 
   void delete() {}
@@ -93,6 +112,7 @@ class TemplateViewState extends State<TemplateView> {
       future: getTemplate(),
       builder: (context, value) {
         var res = value.data as api.Template;
+        this.template = res;
 
         nameController.text = res.name;
         categoryController.text = res.category;
@@ -117,23 +137,31 @@ class TemplateViewState extends State<TemplateView> {
                   children: [
                     RawMaterialButton(
                       fillColor: Colors.white,
-                      child: Icon(Icons.save),
+                      child: Tooltip(message: "保存", child: Icon(Icons.save)),
                       padding: EdgeInsets.all(5.0),
                       shape: CircleBorder(),
                       onPressed: save,
                     ),
-                    const SizedBox(width: 20),
+                    const SizedBox(width: 10),
                     RawMaterialButton(
                       fillColor: Colors.white,
-                      child: Icon(Icons.edit),
+                      child: Tooltip(message: "编辑", child: Icon(Icons.edit)),
                       padding: EdgeInsets.all(5.0),
                       shape: CircleBorder(),
                       onPressed: edit,
                     ),
-                    const SizedBox(width: 20),
+                    const SizedBox(width: 10),
                     RawMaterialButton(
                       fillColor: Colors.white,
-                      child: Icon(Icons.delete, color: Colors.red),
+                      child: Tooltip(message: "取消", child: Icon(Icons.cancel)),
+                      padding: EdgeInsets.all(5.0),
+                      shape: CircleBorder(),
+                      onPressed: cancel,
+                    ),
+                    const SizedBox(width: 10),
+                    RawMaterialButton(
+                      fillColor: Colors.white,
+                      child: Tooltip(message: "删除", child: Icon(Icons.delete, color: Colors.red)),
                       padding: EdgeInsets.all(5.0),
                       shape: CircleBorder(),
                       onPressed: delete,
