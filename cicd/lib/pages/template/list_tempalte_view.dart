@@ -3,6 +3,7 @@ import 'package:cicd/api/cicd.pb.dart' as api;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'template_view.dart';
+import 'put_template_view.dart';
 
 class ListTemplateView extends StatefulWidget {
   @override
@@ -54,7 +55,7 @@ class ListTemplateViewState extends State<ListTemplateView> {
         }
 
         cards.add(GestureDetector(
-            onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => TemplateViewPage(id: "")))},
+            onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => PutTemplateViewPage()))},
             child: Card(
                 margin: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                 clipBehavior: Clip.antiAlias,

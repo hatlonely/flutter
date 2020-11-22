@@ -218,7 +218,7 @@ class MyTextField extends TextField {
   }) : super(
           decoration: InputDecoration(
             isDense: true,
-            prefix: Text("$key: "),
+            labelText: key,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
               borderSide: BorderSide(),
