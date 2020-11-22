@@ -24,12 +24,10 @@ class PutVariableView extends StatefulWidget {
 }
 
 class PutVariableViewState extends State<PutVariableView> {
-  var nameController = TextEditingController();
-  var descriptionController = TextEditingController();
-  var kvsController = TextEditingController();
-
-  bool editable = true;
-
+  var _nameController = TextEditingController();
+  var _descriptionController = TextEditingController();
+  var _kvsController = TextEditingController();
+  bool _editable = true;
   final _formKey = GlobalKey<FormState>();
 
   String validate(String value) {
@@ -59,16 +57,16 @@ class PutVariableViewState extends State<PutVariableView> {
   }
 
   void setTextEditControllersByVariable(api.Variable variable) {
-    nameController.text = variable.name;
-    descriptionController.text = variable.description;
-    kvsController.text = variable.kvs;
+    _nameController.text = variable.name;
+    _descriptionController.text = variable.description;
+    _kvsController.text = variable.kvs;
   }
 
   api.Variable createVariableByTextEditControllers() {
     var variable = api.Variable();
-    variable.name = nameController.value.text;
-    variable.description = descriptionController.value.text;
-    variable.kvs = kvsController.value.text;
+    variable.name = _nameController.value.text;
+    variable.description = _descriptionController.value.text;
+    variable.kvs = _kvsController.value.text;
     return variable;
   }
 
@@ -92,14 +90,14 @@ class PutVariableViewState extends State<PutVariableView> {
                 CircleIconButton(
                   tooltip: "保存",
                   color: Colors.white,
-                  onPressed: editable ? save : null,
+                  onPressed: _editable ? save : null,
                   icon: Icons.save,
                 ),
                 const SizedBox(width: 10),
                 CircleIconButton(
                   tooltip: "取消",
                   color: Colors.white,
-                  onPressed: editable ? cancel : null,
+                  onPressed: _editable ? cancel : null,
                   icon: Icons.cancel,
                 ),
               ],
@@ -109,16 +107,16 @@ class PutVariableViewState extends State<PutVariableView> {
               key: _formKey,
               child: Column(
                 children: [
-                  MyTextField(key: "名字", controller: nameController, editable: editable, validator: validate),
+                  MyTextField(key: "名字", controller: _nameController, editable: _editable, validator: validate),
                   const SizedBox(height: 20),
-                  MyTextField(key: "描述", controller: descriptionController, editable: editable),
+                  MyTextField(key: "描述", controller: _descriptionController, editable: _editable),
                   const SizedBox(height: 20),
                   MyTextField(
                     key: "键值",
-                    controller: kvsController,
+                    controller: _kvsController,
                     minLines: 10,
                     maxLines: 20,
-                    editable: editable,
+                    editable: _editable,
                   ),
                 ],
               ),

@@ -27,13 +27,11 @@ class VariableView extends StatefulWidget {
 }
 
 class VariableViewState extends State<VariableView> {
-  var nameController = TextEditingController();
-  var descriptionController = TextEditingController();
-  var kvsController = TextEditingController();
-
-  bool editable = false;
-  var variable = api.Variable();
-
+  var _nameController = TextEditingController();
+  var _descriptionController = TextEditingController();
+  var _kvsController = TextEditingController();
+  bool _editable = false;
+  var _variable = api.Variable();
   final _formKey = GlobalKey<FormState>();
 
   String validate(String value) {
@@ -53,7 +51,7 @@ class VariableViewState extends State<VariableView> {
 
   void edit() {
     setState(() {
-      editable = true;
+      _editable = true;
     });
   }
 
@@ -64,7 +62,7 @@ class VariableViewState extends State<VariableView> {
 
     var cli = http.Client();
     var variable = createVariableByTextEditControllers();
-    if (this.variable == variable) {
+    if (_variable == variable) {
       Trac(context, "无需更新");
       return;
     }
@@ -73,9 +71,9 @@ class VariableViewState extends State<VariableView> {
     if (res.statusCode == 200) {
       Info(context, "更新成功");
       setState(() {
-        editable = false;
+        _editable = false;
       });
-      this.variable = variable;
+      _variable = variable;
     } else {
       Warn(context, "更新失败: ${res.body}");
     }
@@ -93,24 +91,24 @@ class VariableViewState extends State<VariableView> {
   }
 
   void cancel() {
-    setTextEditControllersByVariable(this.variable);
+    setTextEditControllersByVariable(_variable);
     setState(() {
-      editable = false;
+      _editable = false;
     });
   }
 
   void setTextEditControllersByVariable(api.Variable variable) {
-    nameController.text = variable.name;
-    descriptionController.text = variable.description;
-    kvsController.text = variable.kvs;
+    _nameController.text = variable.name;
+    _descriptionController.text = variable.description;
+    _kvsController.text = variable.kvs;
   }
 
   api.Variable createVariableByTextEditControllers() {
     var variable = api.Variable();
     variable.id = widget.id;
-    variable.name = nameController.value.text;
-    variable.description = descriptionController.value.text;
-    variable.kvs = kvsController.value.text;
+    variable.name = _nameController.value.text;
+    variable.description = _descriptionController.value.text;
+    variable.kvs = _kvsController.value.text;
     return variable;
   }
 
@@ -121,7 +119,7 @@ class VariableViewState extends State<VariableView> {
       future: getVariable(),
       builder: (context, value) {
         var res = value.data as api.Variable;
-        this.variable = res;
+        _variable = res;
 
         setTextEditControllersByVariable(res);
 
@@ -143,28 +141,28 @@ class VariableViewState extends State<VariableView> {
                     CircleIconButton(
                       tooltip: "保存",
                       color: Colors.white,
-                      onPressed: editable ? save : null,
+                      onPressed: _editable ? save : null,
                       icon: Icons.save,
                     ),
                     const SizedBox(width: 10),
                     CircleIconButton(
                       tooltip: "编辑",
                       color: Colors.white,
-                      onPressed: editable ? null : edit,
+                      onPressed: _editable ? null : edit,
                       icon: Icons.edit,
                     ),
                     const SizedBox(width: 10),
                     CircleIconButton(
                       tooltip: "取消",
                       color: Colors.white,
-                      onPressed: editable ? cancel : null,
+                      onPressed: _editable ? cancel : null,
                       icon: Icons.cancel,
                     ),
                     const SizedBox(width: 10),
                     CircleIconButton(
                         tooltip: "删除",
                         color: Colors.white,
-                        onPressed: editable ? null : delete,
+                        onPressed: _editable ? null : delete,
                         icon: Icons.delete,
                         iconColor: Colors.red),
                   ],
@@ -174,16 +172,16 @@ class VariableViewState extends State<VariableView> {
                   key: _formKey,
                   child: Column(
                     children: [
-                      MyTextField(key: "名字", controller: nameController, editable: editable, validator: validate),
+                      MyTextField(key: "名字", controller: _nameController, editable: _editable, validator: validate),
                       const SizedBox(height: 20),
-                      MyTextField(key: "描述", controller: descriptionController, editable: editable),
+                      MyTextField(key: "描述", controller: _descriptionController, editable: _editable),
                       const SizedBox(height: 20),
                       MyTextField(
                         key: "键值",
-                        controller: kvsController,
+                        controller: _kvsController,
                         minLines: 10,
                         maxLines: 20,
-                        editable: editable,
+                        editable: _editable,
                       ),
                     ],
                   ),
