@@ -76,7 +76,34 @@ class TemplateViewState extends State<TemplateView> {
     });
   }
 
-  void save() {}
+  void save() async {
+    var cli = http.Client();
+    var template = api.Template();
+    template.id = widget.id;
+    template.name = nameController.value.text;
+    template.description = descriptionController.value.text;
+    template.category = categoryController.value.text;
+    template.type = "script";
+    template.scriptTemplate = api.ScriptTemplate();
+    template.scriptTemplate.language = languageController.value.text;
+    template.scriptTemplate.script = scriptController.value.text;
+    var res = await cli.put("http://127.0.0.1/v1/template/${widget.id}", body: json.encode(template.toProto3Json()));
+
+    if (res.statusCode == 200) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.green,
+        content: Text("更新成功", style: TextStyle(color: Colors.white)),
+      ));
+      setState(() {
+        editable = false;
+      });
+    } else {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(res.body, style: TextStyle(color: Colors.white)),
+      ));
+    }
+  }
 
   void delete() {}
 

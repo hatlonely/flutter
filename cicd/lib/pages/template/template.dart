@@ -47,7 +47,6 @@ class PutTemplateCardState extends State<PutTemplateCard> {
             "script": scriptController.value.text,
           }
         }));
-    var body = res.body;
 
     if (res.statusCode == 200) {
       Scaffold.of(context).showSnackBar(SnackBar(
@@ -57,7 +56,7 @@ class PutTemplateCardState extends State<PutTemplateCard> {
     } else {
       Scaffold.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.red,
-        content: Text(body, style: TextStyle(color: Colors.white)),
+        content: Text(res.body, style: TextStyle(color: Colors.white)),
       ));
     }
   }
