@@ -55,29 +55,31 @@ class TemplateViewState extends State<TemplateView> {
     var template = createTemplateByTextEditControllers();
 
     if (this.template == template) {
-      Scaffold.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.blue,
-        content: Text("无需更新", style: TextStyle(color: Colors.white)),
-      ));
+      Trac(context, "无需更新");
       return;
     }
 
     var res = await cli.put("http://127.0.0.1/v1/template/${widget.id}", body: json.encode(template.toProto3Json()));
 
     if (res.statusCode == 200) {
-      Scaffold.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.green,
-        content: Text("更新成功", style: TextStyle(color: Colors.white)),
-      ));
+      Info(context, "更新成功");
       setState(() {
         editable = false;
       });
       this.template = template;
     } else {
-      Scaffold.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.red,
-        content: Text(res.body, style: TextStyle(color: Colors.white)),
-      ));
+      Warn(context, "更新失败: ${res.body}");
+    }
+  }
+
+  void delete() async {
+    var cli = http.Client();
+    var res = await cli.delete("http://127.0.0.1/v1/template/${widget.id}");
+    if (res.statusCode == 200) {
+      Info(context, "删除成功");
+      Navigator.pop(context);
+    } else {
+      Warn(context, "删除失败: ${res.body}");
     }
   }
 
@@ -87,8 +89,6 @@ class TemplateViewState extends State<TemplateView> {
       editable = false;
     });
   }
-
-  void delete() {}
 
   void setTextEditControllersByTemplate(api.Template template) {
     nameController.text = template.name;
@@ -232,4 +232,25 @@ class MyTextField extends TextField {
           controller: controller,
           enabled: editable,
         );
+}
+
+void Info(BuildContext context, String message) {
+  Scaffold.of(context).showSnackBar(SnackBar(
+    backgroundColor: Colors.green,
+    content: Text(message, style: TextStyle(color: Colors.white)),
+  ));
+}
+
+void Warn(BuildContext context, String message) {
+  Scaffold.of(context).showSnackBar(SnackBar(
+    backgroundColor: Colors.red,
+    content: Text(message, style: TextStyle(color: Colors.white)),
+  ));
+}
+
+void Trac(BuildContext context, String message) {
+  Scaffold.of(context).showSnackBar(SnackBar(
+    backgroundColor: Colors.blue,
+    content: Text(message, style: TextStyle(color: Colors.white)),
+  ));
 }
