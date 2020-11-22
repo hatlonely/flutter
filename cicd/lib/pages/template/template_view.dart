@@ -113,9 +113,6 @@ class TemplateViewState extends State<TemplateView> {
 
   @override
   Widget build(BuildContext context) {
-    var res = getTemplate();
-    print(res.then((value) => {print(value)}));
-
     return FutureBuilder(
       initialData: api.Template(),
       future: getTemplate(),

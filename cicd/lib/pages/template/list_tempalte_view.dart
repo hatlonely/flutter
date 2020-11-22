@@ -52,6 +52,23 @@ class ListTemplateViewState extends State<ListTemplateView> {
             ),
           ));
         }
+
+        cards.add(GestureDetector(
+            onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => TemplateViewPage(id: "")))},
+            child: Card(
+                margin: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                clipBehavior: Clip.antiAlias,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                elevation: 2,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.add, size: 60),
+                  ],
+                ))));
+
         return GridView.count(
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
           crossAxisCount: 3,
