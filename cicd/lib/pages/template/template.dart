@@ -30,7 +30,7 @@ class ListTemplateView extends StatefulWidget {
 class ListTemplateViewState extends State<ListTemplateView> {
   Future<api.ListTemplateRes> listTemplate() async {
     var httpClient = http.Client();
-    var res = await httpClient.get("http://127.0.0.1/v1/listTemplate?offset=0&limit=20");
+    var res = await httpClient.get("http://127.0.0.1/v1/template?offset=0&limit=20");
 
     var listTemplateRes = api.ListTemplateRes();
     listTemplateRes.mergeFromProto3Json(json.decode(res.body));
