@@ -32,17 +32,28 @@ class PutTemplateViewState extends State<PutTemplateView> {
 
   bool editable = true;
 
+  final _formKey = GlobalKey<FormState>();
+
   void save() async {
+    if (!_formKey.currentState.validate()) {
+      return;
+    }
+
     var cli = http.Client();
     var template = createTemplateByTextEditControllers();
-
     var res = await cli.post("http://127.0.0.1/v1/template", body: json.encode(template.toProto3Json()));
-
     if (res.statusCode == 200) {
       Info(context, "插入成功");
     } else {
       Warn(context, "插入失败: ${res.body}");
     }
+  }
+
+  String validate(String value) {
+    if (value.isEmpty) {
+      return "不能为空";
+    }
+    return null;
   }
 
   void cancel() {
@@ -102,22 +113,28 @@ class PutTemplateViewState extends State<PutTemplateView> {
               ],
             ),
             const SizedBox(height: 40),
-            MyTextField(key: "名字", controller: nameController, editable: editable),
-            const SizedBox(height: 20),
-            MyTextField(key: "类别", controller: categoryController, editable: editable),
-            const SizedBox(height: 20),
-            MyTextField(key: "描述", controller: descriptionController, editable: editable),
-            const SizedBox(height: 20),
-            MyTextField(key: "语言", controller: languageController, editable: editable),
-            const SizedBox(height: 20),
-            MyTextField(
-              key: "脚本",
-              controller: scriptController,
-              minLines: 10,
-              maxLines: 20,
-              editable: editable,
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  MyTextField(key: "名字", controller: nameController, editable: editable, validator: validate),
+                  const SizedBox(height: 20),
+                  MyTextField(key: "类别", controller: categoryController, editable: editable),
+                  const SizedBox(height: 20),
+                  MyTextField(key: "描述", controller: descriptionController, editable: editable),
+                  const SizedBox(height: 20),
+                  MyTextField(key: "语言", controller: languageController, editable: editable),
+                  const SizedBox(height: 20),
+                  MyTextField(
+                    key: "脚本",
+                    controller: scriptController,
+                    minLines: 10,
+                    maxLines: 20,
+                    editable: editable,
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -141,14 +158,16 @@ class CircleIconButton extends FlatButton {
         );
 }
 
-class MyTextField extends TextField {
+class MyTextField extends TextFormField {
   MyTextField({
     TextEditingController controller,
     String key,
     bool editable,
     int minLines,
     int maxLines,
+    String Function(String) validator,
   }) : super(
+          validator: validator,
           decoration: InputDecoration(
             isDense: true,
             labelText: key,
