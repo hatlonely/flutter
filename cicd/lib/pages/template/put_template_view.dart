@@ -34,6 +34,13 @@ class PutTemplateViewState extends State<PutTemplateView> {
 
   final _formKey = GlobalKey<FormState>();
 
+  String validate(String value) {
+    if (value.isEmpty) {
+      return "不能为空";
+    }
+    return null;
+  }
+
   void save() async {
     if (!_formKey.currentState.validate()) {
       return;
@@ -47,13 +54,6 @@ class PutTemplateViewState extends State<PutTemplateView> {
     } else {
       Warn(context, "插入失败: ${res.body}");
     }
-  }
-
-  String validate(String value) {
-    if (value.isEmpty) {
-      return "不能为空";
-    }
-    return null;
   }
 
   void cancel() {
