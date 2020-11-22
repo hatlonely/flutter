@@ -140,37 +140,18 @@ class TemplateViewState extends State<TemplateView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    RawMaterialButton(
-                      fillColor: Colors.white,
-                      child: Tooltip(message: "保存", child: Icon(Icons.save)),
-                      padding: EdgeInsets.all(5.0),
-                      shape: CircleBorder(),
-                      onPressed: save,
-                    ),
+                    CircleIconButton(tooltip: "保存", color: Colors.white, onPressed: save, icon: Icons.save),
                     const SizedBox(width: 10),
-                    RawMaterialButton(
-                      fillColor: Colors.white,
-                      child: Tooltip(message: "编辑", child: Icon(Icons.edit)),
-                      padding: EdgeInsets.all(5.0),
-                      shape: CircleBorder(),
-                      onPressed: edit,
-                    ),
+                    CircleIconButton(tooltip: "编辑", color: Colors.white, onPressed: edit, icon: Icons.edit),
                     const SizedBox(width: 10),
-                    RawMaterialButton(
-                      fillColor: Colors.white,
-                      child: Tooltip(message: "取消", child: Icon(Icons.cancel)),
-                      padding: EdgeInsets.all(5.0),
-                      shape: CircleBorder(),
-                      onPressed: cancel,
-                    ),
+                    CircleIconButton(tooltip: "取消", color: Colors.white, onPressed: cancel, icon: Icons.cancel),
                     const SizedBox(width: 10),
-                    RawMaterialButton(
-                      fillColor: Colors.white,
-                      child: Tooltip(message: "删除", child: Icon(Icons.delete, color: Colors.red)),
-                      padding: EdgeInsets.all(5.0),
-                      shape: CircleBorder(),
-                      onPressed: delete,
-                    ),
+                    CircleIconButton(
+                        tooltip: "删除",
+                        color: Colors.white,
+                        onPressed: delete,
+                        icon: Icons.delete,
+                        iconColor: Colors.red),
                   ],
                 ),
                 const SizedBox(height: 40),
@@ -209,4 +190,15 @@ class TemplateViewState extends State<TemplateView> {
       },
     );
   }
+}
+
+class CircleIconButton extends RawMaterialButton {
+  CircleIconButton({Function onPressed, Color color, IconData icon, String tooltip, Color iconColor})
+      : super(
+          fillColor: color,
+          child: Tooltip(message: tooltip, child: Icon(icon, color: iconColor)),
+          padding: EdgeInsets.all(5.0),
+          shape: CircleBorder(),
+          onPressed: onPressed,
+        );
 }
