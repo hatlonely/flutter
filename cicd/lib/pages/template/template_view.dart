@@ -3,6 +3,21 @@ import 'package:cicd/api/cicd.pb.dart' as api;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+class TemplateViewPage extends StatelessWidget {
+  final String id;
+  TemplateViewPage({Key key, this.id}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("template")),
+      body: Center(
+        child: TemplateView(id: this.id),
+      ),
+    );
+  }
+}
+
 class TemplateView extends StatefulWidget {
   final String id;
   TemplateView({Key key, this.id}) : super(key: key);

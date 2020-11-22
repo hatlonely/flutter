@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:cicd/api/cicd.pb.dart' as api;
 import 'template_view.dart';
+import 'list_tempalte_view.dart';
 
 class TemplatePage extends StatefulWidget {
   @override
@@ -15,8 +15,7 @@ class TemplatePageState extends State<TemplatePage> {
     return Scaffold(
       appBar: AppBar(title: Text("template")),
       body: Center(
-        child: TemplateView(id: "5fb914c60ed06f871ea7d87d"),
-//        child: ListTemplateView(),
+        child: ListTemplateView(),
       ),
     );
   }

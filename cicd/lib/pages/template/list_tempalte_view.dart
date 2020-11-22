@@ -33,7 +33,8 @@ class ListTemplateViewState extends State<ListTemplateView> {
         var cards = <Widget>[];
         for (var tpl in res.templates) {
           cards.add(GestureDetector(
-            onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => TemplateView(id: tpl.id)))},
+            onTap: () =>
+                {Navigator.push(context, MaterialPageRoute(builder: (context) => TemplateViewPage(id: tpl.id)))},
             child: Card(
               margin: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
               clipBehavior: Clip.antiAlias,
