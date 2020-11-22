@@ -14,8 +14,42 @@ class TemplatePageState extends State<TemplatePage> {
     return Scaffold(
       appBar: AppBar(title: Text("template")),
       body: Center(
-        child: ListTemplateView(),
+        child: GetTemplateView(id: "5fb914c60ed06f871ea7d87d"),
+//        child: ListTemplateView(),
       ),
+    );
+  }
+}
+
+class GetTemplateView extends StatefulWidget {
+  final String id;
+  GetTemplateView({Key key, this.id}) : super(key: key);
+
+  @override
+  State<GetTemplateView> createState() => GetTemplateViewState();
+}
+
+class GetTemplateViewState extends State<GetTemplateView> {
+  Future<Template> getTemplate() async {
+    var httpClient = http.Client();
+    var res = await httpClient.get("http://127.0.0.1/v1/template/${widget.id}");
+    var template = Template();
+    template.mergeFromProto3Json(json.decode(res.body));
+    return template;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var res = getTemplate();
+    print(res.then((value) => {print(value)}));
+
+    return FutureBuilder(
+      initialData: Template(),
+      future: getTemplate(),
+      builder: (context, value) {
+        var res = value.data as Template;
+        return Text(res.description);
+      },
     );
   }
 }
@@ -48,19 +82,23 @@ class ListTemplateViewState extends State<ListTemplateView> {
         var res = value.data as ListTemplateRes;
         var cards = <Widget>[];
         for (var tpl in res.templates) {
-          cards.add(Card(
-            margin: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            elevation: 2,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(tpl.name),
-                Text(tpl.description),
-              ],
+          cards.add(GestureDetector(
+            onTap: () =>
+                {Navigator.push(context, MaterialPageRoute(builder: (context) => GetTemplateView(id: tpl.id)))},
+            child: Card(
+              margin: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+              clipBehavior: Clip.antiAlias,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              elevation: 2,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(tpl.name),
+                  Text(tpl.description),
+                ],
+              ),
             ),
           ));
         }
@@ -133,7 +171,7 @@ class PutTemplateCardState extends State<PutTemplateCard> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      elevation: 4,
+      elevation: 2,
       child: Padding(
         padding: EdgeInsets.all(40.0),
         child: Column(
@@ -141,25 +179,13 @@ class PutTemplateCardState extends State<PutTemplateCard> {
           children: [
             Text("新增模板", style: Theme.of(context).textTheme.headline5),
             const SizedBox(height: 40),
-            TextField(
-              decoration: textFieldDecoration(text: "名字"),
-              controller: nameController,
-            ),
+            TextField(decoration: textFieldDecoration(text: "名字"), controller: nameController),
             const SizedBox(height: 20),
-            TextField(
-              decoration: textFieldDecoration(text: "分类"),
-              controller: categoryController,
-            ),
+            TextField(decoration: textFieldDecoration(text: "分类"), controller: categoryController),
             const SizedBox(height: 20),
-            TextField(
-              decoration: textFieldDecoration(text: "描述"),
-              controller: descriptionController,
-            ),
+            TextField(decoration: textFieldDecoration(text: "描述"), controller: descriptionController),
             const SizedBox(height: 20),
-            TextField(
-              decoration: textFieldDecoration(text: "语言"),
-              controller: languageController,
-            ),
+            TextField(decoration: textFieldDecoration(text: "语言"), controller: languageController),
             const SizedBox(height: 20),
             TextField(
               decoration: textFieldDecoration(text: "脚本"),
@@ -173,19 +199,13 @@ class PutTemplateCardState extends State<PutTemplateCard> {
               children: [
                 RaisedButton(
                   color: Theme.of(context).accentColor,
-                  child: Text(
-                    "保存",
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  child: Text("保存", style: TextStyle(color: Colors.white)),
                   onPressed: putTemplate,
                 ),
                 const SizedBox(width: 100),
                 RaisedButton(
                   color: Theme.of(context).accentColor,
-                  child: Text(
-                    "取消",
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  child: Text("取消", style: TextStyle(color: Colors.white)),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
