@@ -12,11 +12,45 @@ class TemplateView extends StatefulWidget {
 }
 
 class TemplateViewState extends State<TemplateView> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController categoryController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController languageController = TextEditingController();
-  TextEditingController scriptController = TextEditingController();
+  var nameController = TextEditingController();
+  var categoryController = TextEditingController();
+  var descriptionController = TextEditingController();
+  var languageController = TextEditingController();
+  var scriptController = TextEditingController();
+
+  TextField nameTextField;
+  TextField categoryTextField;
+  TextField descriptionTextField;
+  TextField languageTextField;
+  TextField scriptTextField;
+
+  TemplateViewState() {
+    nameTextField = TextField(decoration: textFieldDecoration(text: "名字"), controller: nameController, enabled: false);
+    categoryTextField = TextField(
+      decoration: textFieldDecoration(text: "分类"),
+      controller: categoryController,
+      enabled: false,
+    );
+    descriptionTextField = TextField(
+      decoration: textFieldDecoration(text: "描述"),
+      controller: descriptionController,
+      enabled: false,
+    );
+    languageTextField = TextField(
+      decoration: textFieldDecoration(text: "语言"),
+      controller: languageController,
+      enabled: false,
+    );
+    scriptTextField = TextField(
+      decoration: textFieldDecoration(text: "脚本"),
+      minLines: 10,
+      maxLines: 20,
+      controller: scriptController,
+      enabled: false,
+    );
+  }
+
+  bool editable = false;
 
   InputDecoration textFieldDecoration({text: String}) {
     return InputDecoration(
@@ -35,6 +69,16 @@ class TemplateViewState extends State<TemplateView> {
     template.mergeFromProto3Json(json.decode(res.body));
     return template;
   }
+
+  void edit() {
+    setState(() {
+      editable = true;
+    });
+  }
+
+  void save() {}
+
+  void delete() {}
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +117,7 @@ class TemplateViewState extends State<TemplateView> {
                       child: Icon(Icons.save),
                       padding: EdgeInsets.all(5.0),
                       shape: CircleBorder(),
-                      onPressed: () => {},
+                      onPressed: save,
                     ),
                     const SizedBox(width: 20),
                     RawMaterialButton(
@@ -81,7 +125,7 @@ class TemplateViewState extends State<TemplateView> {
                       child: Icon(Icons.edit),
                       padding: EdgeInsets.all(5.0),
                       shape: CircleBorder(),
-                      onPressed: () => {},
+                      onPressed: edit,
                     ),
                     const SizedBox(width: 20),
                     RawMaterialButton(
@@ -89,25 +133,21 @@ class TemplateViewState extends State<TemplateView> {
                       child: Icon(Icons.delete, color: Colors.red),
                       padding: EdgeInsets.all(5.0),
                       shape: CircleBorder(),
-                      onPressed: () => {},
+                      onPressed: delete,
                     ),
                   ],
                 ),
                 const SizedBox(height: 40),
-                TextField(decoration: textFieldDecoration(text: "名字"), controller: nameController, enabled: false),
+                editable ? nameTextField : Text(nameController.value.text),
                 const SizedBox(height: 20),
-                TextField(decoration: textFieldDecoration(text: "分类"), controller: categoryController),
+                editable ? categoryTextField : Text(categoryController.value.text),
                 const SizedBox(height: 20),
-                TextField(decoration: textFieldDecoration(text: "描述"), controller: descriptionController),
+                editable ? descriptionTextField : Text(descriptionController.value.text),
                 const SizedBox(height: 20),
-                TextField(decoration: textFieldDecoration(text: "语言"), controller: languageController),
+                editable ? languageTextField : Text(languageController.value.text),
                 const SizedBox(height: 20),
-                TextField(
-                  decoration: textFieldDecoration(text: "脚本"),
-                  minLines: 10,
-                  maxLines: 20,
-                  controller: scriptController,
-                ),
+                editable ? scriptTextField : Text(scriptController.value.text),
+                const SizedBox(height: 20),
               ],
             ),
           ),
