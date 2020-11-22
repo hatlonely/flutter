@@ -21,26 +21,6 @@ class TemplateViewState extends State<TemplateView> {
   bool editable = false;
   var template = api.Template();
 
-  TextField textField({String name, TextEditingController controller, bool enabled}) {
-    return TextField(
-      decoration: textFieldDecoration(text: name),
-      controller: controller,
-      enabled: enabled,
-    );
-  }
-
-  InputDecoration textFieldDecoration({text: String}) {
-    return InputDecoration(
-      hintText: text,
-      isDense: true,
-      prefix: Text("$text: "),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(5.0),
-        borderSide: BorderSide(),
-      ),
-    );
-  }
-
   Future<api.Template> getTemplate() async {
     var httpClient = http.Client();
     var res = await httpClient.get("http://127.0.0.1/v1/template/${widget.id}");
@@ -155,32 +135,20 @@ class TemplateViewState extends State<TemplateView> {
                   ],
                 ),
                 const SizedBox(height: 40),
-                TextField(decoration: textFieldDecoration(text: "名字"), controller: nameController, enabled: editable),
+                MyTextField(key: "名字", controller: nameController, editable: editable),
                 const SizedBox(height: 20),
-                TextField(
-                  decoration: textFieldDecoration(text: "类别"),
-                  controller: categoryController,
-                  enabled: editable,
-                ),
+                MyTextField(key: "类别", controller: categoryController, editable: editable),
                 const SizedBox(height: 20),
-                TextField(
-                  decoration: textFieldDecoration(text: "描述"),
-                  controller: descriptionController,
-                  enabled: editable,
-                ),
+                MyTextField(key: "描述", controller: descriptionController, editable: editable),
                 const SizedBox(height: 20),
-                TextField(
-                  decoration: textFieldDecoration(text: "语言"),
-                  controller: languageController,
-                  enabled: editable,
-                ),
+                MyTextField(key: "语言", controller: languageController, editable: editable),
                 const SizedBox(height: 20),
-                TextField(
-                  decoration: textFieldDecoration(text: "脚本"),
+                MyTextField(
+                  key: "脚本",
                   controller: scriptController,
                   minLines: 10,
                   maxLines: 20,
-                  enabled: editable,
+                  editable: editable,
                 ),
                 const SizedBox(height: 20),
               ],
@@ -200,5 +168,23 @@ class CircleIconButton extends RawMaterialButton {
           padding: EdgeInsets.all(5.0),
           shape: CircleBorder(),
           onPressed: onPressed,
+        );
+}
+
+class MyTextField extends TextField {
+  MyTextField({TextEditingController controller, String key, bool editable, int minLines, int maxLines})
+      : super(
+          decoration: InputDecoration(
+            isDense: true,
+            prefix: Text("$key: "),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5.0),
+              borderSide: BorderSide(),
+            ),
+          ),
+          maxLines: maxLines,
+          minLines: minLines,
+          controller: controller,
+          enabled: editable,
         );
 }
