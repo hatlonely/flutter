@@ -39,7 +39,7 @@ class TemplateViewState extends State<TemplateView> {
   final _formKey = GlobalKey<FormState>();
 
   String validate(String value) {
-    if (value.isEmpty) {
+    if (value.isEmpty || value.trim().isEmpty) {
       return "不能为空";
     }
     return null;
