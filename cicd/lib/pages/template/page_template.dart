@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:cicd/api/cicd.pb.dart';
+import 'package:cicd/api/cicd.pb.dart' as api;
+import 'template_view.dart';
 
 class TemplatePage extends StatefulWidget {
   @override
@@ -14,155 +15,9 @@ class TemplatePageState extends State<TemplatePage> {
     return Scaffold(
       appBar: AppBar(title: Text("template")),
       body: Center(
-        child: GetTemplateView(id: "5fb914c60ed06f871ea7d87d"),
+        child: TemplateView(id: "5fb914c60ed06f871ea7d87d"),
 //        child: ListTemplateView(),
       ),
-    );
-  }
-}
-
-class GetTemplateView extends StatefulWidget {
-  final String id;
-  GetTemplateView({Key key, this.id}) : super(key: key);
-
-  @override
-  State<GetTemplateView> createState() => GetTemplateViewState();
-}
-
-class GetTemplateViewState extends State<GetTemplateView> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController categoryController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
-  TextEditingController languageController = TextEditingController();
-  TextEditingController scriptController = TextEditingController();
-
-  InputDecoration textFieldDecoration({text: String}) {
-    return InputDecoration(
-      hintText: text,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(5.0),
-        borderSide: BorderSide(),
-      ),
-    );
-  }
-
-  Future<Template> getTemplate() async {
-    var httpClient = http.Client();
-    var res = await httpClient.get("http://127.0.0.1/v1/template/${widget.id}");
-    var template = Template();
-    template.mergeFromProto3Json(json.decode(res.body));
-    return template;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var res = getTemplate();
-    print(res.then((value) => {print(value)}));
-
-    return FutureBuilder(
-      initialData: Template(),
-      future: getTemplate(),
-      builder: (context, value) {
-        var res = value.data as Template;
-
-        nameController.text = res.name;
-        categoryController.text = res.category;
-        descriptionController.text = res.description;
-        languageController.text = res.scriptTemplate.language;
-        scriptController.text = res.scriptTemplate.script;
-
-        return Card(
-          margin: EdgeInsets.zero,
-          clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          elevation: 2,
-          child: Padding(
-            padding: EdgeInsets.all(40.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("template", style: Theme.of(context).textTheme.headline5),
-                const SizedBox(height: 40),
-                TextField(decoration: textFieldDecoration(text: "名字"), controller: nameController, enabled: false),
-                const SizedBox(height: 20),
-                TextField(decoration: textFieldDecoration(text: "分类"), controller: categoryController),
-                const SizedBox(height: 20),
-                TextField(decoration: textFieldDecoration(text: "描述"), controller: descriptionController),
-                const SizedBox(height: 20),
-                TextField(decoration: textFieldDecoration(text: "语言"), controller: languageController),
-                const SizedBox(height: 20),
-                TextField(
-                  decoration: textFieldDecoration(text: "脚本"),
-                  minLines: 10,
-                  maxLines: 20,
-                  controller: scriptController,
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class ListTemplateView extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => ListTemplateViewState();
-}
-
-class ListTemplateViewState extends State<ListTemplateView> {
-  Future<ListTemplateRes> listTemplate() async {
-    var httpClient = http.Client();
-    var res = await httpClient.get("http://127.0.0.1/v1/listTemplate?offset=0&limit=20");
-
-    var listTemplateRes = ListTemplateRes();
-    listTemplateRes.mergeFromProto3Json(json.decode(res.body));
-
-    return listTemplateRes;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    var res = listTemplate();
-    print(res.then((value) => {print(value)}));
-
-    return FutureBuilder(
-      initialData: ListTemplateRes(),
-      future: listTemplate(),
-      builder: (context, value) {
-        var res = value.data as ListTemplateRes;
-        var cards = <Widget>[];
-        for (var tpl in res.templates) {
-          cards.add(GestureDetector(
-            onTap: () =>
-                {Navigator.push(context, MaterialPageRoute(builder: (context) => GetTemplateView(id: tpl.id)))},
-            child: Card(
-              margin: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-              clipBehavior: Clip.antiAlias,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              elevation: 2,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(tpl.name),
-                  Text(tpl.description),
-                ],
-              ),
-            ),
-          ));
-        }
-        return GridView.count(
-          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-          crossAxisCount: 3,
-          childAspectRatio: 1.618,
-          children: cards,
-        );
-      },
     );
   }
 }
