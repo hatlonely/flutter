@@ -65,7 +65,34 @@ class TemplateViewState extends State<TemplateView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("template", style: Theme.of(context).textTheme.headline5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    RawMaterialButton(
+                      fillColor: Colors.white,
+                      child: Icon(Icons.save),
+                      padding: EdgeInsets.all(5.0),
+                      shape: CircleBorder(),
+                      onPressed: () => {},
+                    ),
+                    const SizedBox(width: 20),
+                    RawMaterialButton(
+                      fillColor: Colors.white,
+                      child: Icon(Icons.edit),
+                      padding: EdgeInsets.all(5.0),
+                      shape: CircleBorder(),
+                      onPressed: () => {},
+                    ),
+                    const SizedBox(width: 20),
+                    RawMaterialButton(
+                      fillColor: Colors.white,
+                      child: Icon(Icons.delete, color: Colors.red),
+                      padding: EdgeInsets.all(5.0),
+                      shape: CircleBorder(),
+                      onPressed: () => {},
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 40),
                 TextField(decoration: textFieldDecoration(text: "名字"), controller: nameController, enabled: false),
                 const SizedBox(height: 20),
