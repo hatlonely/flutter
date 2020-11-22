@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'api/cicd.pb.dart';
 
 class TemplatePage extends StatefulWidget {
   @override
@@ -13,12 +14,63 @@ class TemplatePageState extends State<TemplatePage> {
     return Scaffold(
       appBar: AppBar(title: Text("template")),
       body: Center(
-        child: SizedBox(
-          width: 600,
-          height: 800,
-          child: PutTemplateCard(),
-        ),
+        child: ListTemplateView(),
       ),
+    );
+  }
+}
+
+class ListTemplateView extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => ListTemplateViewState();
+}
+
+class ListTemplateViewState extends State<ListTemplateView> {
+  Future<ListTemplateRes> listTemplate() async {
+    var httpClient = http.Client();
+    var res = await httpClient.get("http://127.0.0.1/v1/listTemplate?offset=0&limit=20");
+
+    var listTemplateRes = ListTemplateRes();
+    listTemplateRes.mergeFromProto3Json(json.decode(res.body));
+
+    return listTemplateRes;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var res = listTemplate();
+    print(res.then((value) => {print(value)}));
+
+    return FutureBuilder(
+      initialData: ListTemplateRes(),
+      future: listTemplate(),
+      builder: (context, value) {
+        var res = value.data as ListTemplateRes;
+        var cards = <Widget>[];
+        for (var tpl in res.templates) {
+          cards.add(Card(
+            margin: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            elevation: 2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(tpl.name),
+                Text(tpl.description),
+              ],
+            ),
+          ));
+        }
+        return GridView.count(
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+          crossAxisCount: 3,
+          childAspectRatio: 1.618,
+          children: cards,
+        );
+      },
     );
   }
 }
@@ -35,12 +87,7 @@ class PutTemplateCardState extends State<PutTemplateCard> {
   TextEditingController languageController = TextEditingController();
   TextEditingController scriptController = TextEditingController();
 
-  void save() async {
-    print("name");
-    print(nameController.value.text);
-    print(descriptionController.value.text);
-    print(languageController.value.text);
-    print(scriptController.value.text);
+  void putTemplate() async {
     var httpClient = http.Client();
     var res = await httpClient.post("http://127.0.0.1/v1/template",
         body: json.encode({
@@ -130,7 +177,7 @@ class PutTemplateCardState extends State<PutTemplateCard> {
                     "保存",
                     style: TextStyle(color: Colors.white),
                   ),
-                  onPressed: save,
+                  onPressed: putTemplate,
                 ),
                 const SizedBox(width: 100),
                 RaisedButton(
@@ -139,7 +186,9 @@ class PutTemplateCardState extends State<PutTemplateCard> {
                     "取消",
                     style: TextStyle(color: Colors.white),
                   ),
-                  onPressed: save,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                 )
               ],
             )
