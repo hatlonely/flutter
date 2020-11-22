@@ -196,8 +196,13 @@ class TemplateViewState extends State<TemplateView> {
 }
 
 class CircleIconButton extends FlatButton {
-  CircleIconButton({Function onPressed, Color color, IconData icon, String tooltip, Color iconColor})
-      : super(
+  CircleIconButton({
+    Function onPressed,
+    Color color,
+    IconData icon,
+    String tooltip,
+    Color iconColor,
+  }) : super(
           color: color,
           child: Tooltip(message: tooltip, child: Icon(icon, color: iconColor)),
           padding: EdgeInsets.all(15),
@@ -207,8 +212,13 @@ class CircleIconButton extends FlatButton {
 }
 
 class MyTextField extends TextField {
-  MyTextField({TextEditingController controller, String key, bool editable, int minLines, int maxLines})
-      : super(
+  MyTextField({
+    TextEditingController controller,
+    String key,
+    bool editable,
+    int minLines,
+    int maxLines,
+  }) : super(
           decoration: InputDecoration(
             isDense: true,
             prefix: Text("$key: "),
