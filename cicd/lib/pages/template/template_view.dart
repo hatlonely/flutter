@@ -32,6 +32,8 @@ class TemplateViewState extends State<TemplateView> {
   InputDecoration textFieldDecoration({text: String}) {
     return InputDecoration(
       hintText: text,
+      isDense: true,
+      prefix: Text("$text: "),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(5.0),
         borderSide: BorderSide(),
@@ -93,14 +95,21 @@ class TemplateViewState extends State<TemplateView> {
   }
 
   void cancel() {
+    setController(this.template);
+    setState(() {
+      editable = false;
+    });
+  }
+
+  void delete() {}
+
+  void setController(api.Template template) {
     nameController.text = template.name;
     categoryController.text = template.category;
     descriptionController.text = template.description;
     languageController.text = template.scriptTemplate.language;
     scriptController.text = template.scriptTemplate.script;
   }
-
-  void delete() {}
 
   @override
   Widget build(BuildContext context) {
@@ -114,11 +123,7 @@ class TemplateViewState extends State<TemplateView> {
         var res = value.data as api.Template;
         this.template = res;
 
-        nameController.text = res.name;
-        categoryController.text = res.category;
-        descriptionController.text = res.description;
-        languageController.text = res.scriptTemplate.language;
-        scriptController.text = res.scriptTemplate.script;
+        setController(res);
 
         return Card(
           margin: EdgeInsets.zero,
