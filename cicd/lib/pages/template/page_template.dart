@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'api/cicd.pb.dart';
+import 'package:cicd/api/cicd.pb.dart';
 
 class TemplatePage extends StatefulWidget {
   @override
