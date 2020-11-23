@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:cicd/api/cicd.pb.dart' as api;
-import 'package:http/http.dart' as http;
-import 'package:cicd/widget/widget.dart';
 import 'dart:convert';
+
+import 'package:cicd/api/cicd.pb.dart' as api;
+import 'package:cicd/widget/widget.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class PutTaskViewPage extends StatelessWidget {
   final String id;
@@ -32,6 +33,17 @@ class PutTaskViewState extends State<PutTaskView> {
   var _scriptController = TextEditingController();
   bool _editable = true;
   final _formKey = GlobalKey<FormState>();
+
+  var _task = api.Task();
+
+  List<api.Template> _templates = ["Food", "Transport", "Personal", "Shopping", "Medical"].map((e) {
+    var tpl = api.Template();
+    tpl.id = e;
+    tpl.name = e;
+    return tpl;
+  }).toList();
+
+  var _variables = <api.Variable>[];
 
   String validate(String value) {
     if (value.isEmpty || value.trim().isEmpty) {
@@ -107,10 +119,51 @@ class PutTaskViewState extends State<PutTaskView> {
             Form(
               key: _formKey,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   MyTextField(key: "名字", controller: _nameController, editable: _editable, validator: validate),
                   const SizedBox(height: 20),
                   MyTextField(key: "描述", controller: _descriptionController, editable: _editable),
+                  const SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Wrap(
+                      spacing: 20,
+                      children: [
+                        Text("variables", style: TextStyle(fontSize: 20)),
+                        ..._templates.map(
+                          (e) => Chip(
+                            label: Text(e.name),
+                            deleteIcon: Icon(Icons.close, size: 10),
+                            onDeleted: () {
+                              setState(() {
+                                _templates.removeWhere((tpl) => tpl.name == e.name);
+                                print("[${e.name}] hello");
+                                print(_templates);
+                              });
+                            },
+                          ),
+                        ),
+                        DropdownButton(
+                          isDense: true,
+                          icon: const Chip(label: Icon(Icons.add, size: 24)),
+                          onChanged: (String value) {
+                            setState(() {
+                              var template = api.Template();
+                              template.name = value;
+                              _templates.add(template);
+                            });
+                          },
+                          items: <String>['One', 'Two', 'Free', 'Four'].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 20),
                 ],
               ),
