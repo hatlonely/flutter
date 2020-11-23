@@ -48,11 +48,9 @@ class VariableViewState extends State<VariableView> {
       future: listVariable(),
       builder: (context, value) {
         var res = value.data as api.ListVariableRes;
-        var cards = <Widget>[];
-        for (var tpl in res.variables) {
-          cards.add(GestureDetector(
-            onTap: () =>
-                {Navigator.push(context, MaterialPageRoute(builder: (context) => VariableViewPage(id: tpl.id)))},
+        var cards = res.variables.map((e) {
+          return GestureDetector(
+            onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => VariableViewPage(id: e.id)))},
             child: Card(
               margin: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
               clipBehavior: Clip.antiAlias,
@@ -63,13 +61,13 @@ class VariableViewState extends State<VariableView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(tpl.name),
-                  Text(tpl.description),
+                  Text(e.name),
+                  Text(e.description),
                 ],
               ),
             ),
-          ));
-        }
+          );
+        }).toList();
 
         cards.add(GestureDetector(
             onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => PutVariableViewPage()))},
@@ -89,7 +87,7 @@ class VariableViewState extends State<VariableView> {
 
         return GridView.count(
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-          crossAxisCount: 3,
+          crossAxisCount: MediaQuery.of(context).size.width ~/ 300.0,
           childAspectRatio: 1.618,
           children: cards,
         );
