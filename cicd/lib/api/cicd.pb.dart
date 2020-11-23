@@ -40,35 +40,35 @@ class Empty extends $pb.GeneratedMessage {
   static Empty _defaultInstance;
 }
 
-class ScriptTemplate extends $pb.GeneratedMessage {
-  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ScriptTemplate', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'api'), createEmptyInstance: create)
+class Template_ScriptTemplate extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Template.ScriptTemplate', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'api'), createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'language')
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'script')
     ..hasRequiredFields = false
   ;
 
-  ScriptTemplate._() : super();
-  factory ScriptTemplate() => create();
-  factory ScriptTemplate.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
-  factory ScriptTemplate.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  Template_ScriptTemplate._() : super();
+  factory Template_ScriptTemplate() => create();
+  factory Template_ScriptTemplate.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Template_ScriptTemplate.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
   'Will be removed in next major version')
-  ScriptTemplate clone() => ScriptTemplate()..mergeFromMessage(this);
+  Template_ScriptTemplate clone() => Template_ScriptTemplate()..mergeFromMessage(this);
   @$core.Deprecated(
   'Using this can add significant overhead to your binary. '
   'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
   'Will be removed in next major version')
-  ScriptTemplate copyWith(void Function(ScriptTemplate) updates) => super.copyWith((message) => updates(message as ScriptTemplate)); // ignore: deprecated_member_use
+  Template_ScriptTemplate copyWith(void Function(Template_ScriptTemplate) updates) => super.copyWith((message) => updates(message as Template_ScriptTemplate)); // ignore: deprecated_member_use
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
-  static ScriptTemplate create() => ScriptTemplate._();
-  ScriptTemplate createEmptyInstance() => create();
-  static $pb.PbList<ScriptTemplate> createRepeated() => $pb.PbList<ScriptTemplate>();
+  static Template_ScriptTemplate create() => Template_ScriptTemplate._();
+  Template_ScriptTemplate createEmptyInstance() => create();
+  static $pb.PbList<Template_ScriptTemplate> createRepeated() => $pb.PbList<Template_ScriptTemplate>();
   @$core.pragma('dart2js:noInline')
-  static ScriptTemplate getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ScriptTemplate>(create);
-  static ScriptTemplate _defaultInstance;
+  static Template_ScriptTemplate getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Template_ScriptTemplate>(create);
+  static Template_ScriptTemplate _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.String get language => $_getSZ(0);
@@ -96,7 +96,7 @@ class Template extends $pb.GeneratedMessage {
     ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'description')
     ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'type')
     ..aOS(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'category')
-    ..aOM<ScriptTemplate>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'scriptTemplate', protoName: 'scriptTemplate', subBuilder: ScriptTemplate.create)
+    ..aOM<Template_ScriptTemplate>(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'scriptTemplate', protoName: 'scriptTemplate', subBuilder: Template_ScriptTemplate.create)
     ..hasRequiredFields = false
   ;
 
@@ -169,15 +169,15 @@ class Template extends $pb.GeneratedMessage {
   void clearCategory() => clearField(5);
 
   @$pb.TagNumber(6)
-  ScriptTemplate get scriptTemplate => $_getN(5);
+  Template_ScriptTemplate get scriptTemplate => $_getN(5);
   @$pb.TagNumber(6)
-  set scriptTemplate(ScriptTemplate v) { setField(6, v); }
+  set scriptTemplate(Template_ScriptTemplate v) { setField(6, v); }
   @$pb.TagNumber(6)
   $core.bool hasScriptTemplate() => $_has(5);
   @$pb.TagNumber(6)
   void clearScriptTemplate() => clearField(6);
   @$pb.TagNumber(6)
-  ScriptTemplate ensureScriptTemplate() => $_ensure(5);
+  Template_ScriptTemplate ensureScriptTemplate() => $_ensure(5);
 }
 
 class GetTemplateReq extends $pb.GeneratedMessage {

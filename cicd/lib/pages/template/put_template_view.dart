@@ -72,7 +72,7 @@ class PutTemplateViewState extends State<PutTemplateView> {
     template.description = _descriptionController.value.text;
     template.category = _categoryController.value.text;
     template.type = "script";
-    template.scriptTemplate = api.ScriptTemplate();
+    template.scriptTemplate = api.Template_ScriptTemplate();
     template.scriptTemplate.language = _languageController.value.text;
     template.scriptTemplate.script = _scriptController.value.text;
     return template;

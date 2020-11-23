@@ -9,14 +9,6 @@ const Empty$json = const {
   '1': 'Empty',
 };
 
-const ScriptTemplate$json = const {
-  '1': 'ScriptTemplate',
-  '2': const [
-    const {'1': 'language', '3': 1, '4': 1, '5': 9, '10': 'language'},
-    const {'1': 'script', '3': 2, '4': 1, '5': 9, '10': 'script'},
-  ],
-};
-
 const Template$json = const {
   '1': 'Template',
   '2': const [
@@ -25,7 +17,16 @@ const Template$json = const {
     const {'1': 'description', '3': 3, '4': 1, '5': 9, '8': const {}, '10': 'description'},
     const {'1': 'type', '3': 4, '4': 1, '5': 9, '8': const {}, '10': 'type'},
     const {'1': 'category', '3': 5, '4': 1, '5': 9, '8': const {}, '10': 'category'},
-    const {'1': 'scriptTemplate', '3': 6, '4': 1, '5': 11, '6': '.api.ScriptTemplate', '8': const {}, '10': 'scriptTemplate'},
+    const {'1': 'scriptTemplate', '3': 6, '4': 1, '5': 11, '6': '.api.Template.ScriptTemplate', '8': const {}, '10': 'scriptTemplate'},
+  ],
+  '3': const [Template_ScriptTemplate$json],
+};
+
+const Template_ScriptTemplate$json = const {
+  '1': 'ScriptTemplate',
+  '2': const [
+    const {'1': 'language', '3': 1, '4': 1, '5': 9, '10': 'language'},
+    const {'1': 'script', '3': 2, '4': 1, '5': 9, '10': 'script'},
   ],
 };
 
@@ -231,7 +232,7 @@ const CICDServiceBase$messageJson = const {
   '.api.ListTaskRes': ListTaskRes$json,
   '.api.GetTemplateReq': GetTemplateReq$json,
   '.api.Template': Template$json,
-  '.api.ScriptTemplate': ScriptTemplate$json,
+  '.api.Template.ScriptTemplate': Template_ScriptTemplate$json,
   '.api.DelTemplateReq': DelTemplateReq$json,
   '.api.PutTemplateReq': PutTemplateReq$json,
   '.api.UpdateTemplateReq': UpdateTemplateReq$json,
