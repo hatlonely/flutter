@@ -27,10 +27,7 @@ class PutTaskView extends StatefulWidget {
 
 class PutTaskViewState extends State<PutTaskView> {
   var _nameController = TextEditingController();
-  var _categoryController = TextEditingController();
   var _descriptionController = TextEditingController();
-  var _languageController = TextEditingController();
-  var _scriptController = TextEditingController();
   bool _editable = true;
   final _formKey = GlobalKey<FormState>();
 
