@@ -1,9 +1,11 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
-import 'package:cicd/pages/task/task_view.dart';
+
 import 'package:cicd/api/cicd.pb.dart' as api;
 import 'package:cicd/pages/task/put_task_view.dart';
+import 'package:cicd/pages/task/task_view.dart';
+import 'package:cicd/widget/widget.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class TaskPage extends StatefulWidget {
   @override
@@ -69,21 +71,9 @@ class ListTaskViewState extends State<ListTaskView> {
           );
         }).toList();
 
-        cards.add(GestureDetector(
-            onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => PutTaskViewPage()))},
-            child: Card(
-                margin: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                clipBehavior: Clip.antiAlias,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                elevation: 2,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.add, size: 60),
-                  ],
-                ))));
+        cards.add(ElementAddCard(
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PutTaskViewPage())),
+        ));
 
         return GridView.count(
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),

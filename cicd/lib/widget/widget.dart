@@ -41,6 +41,27 @@ class MyTextField extends TextFormField {
         );
 }
 
+class ElementAddCard extends GestureDetector {
+  ElementAddCard({void Function() onTap})
+      : super(
+          onTap: onTap,
+          child: Card(
+            margin: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            elevation: 2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add, size: 60),
+              ],
+            ),
+          ),
+        );
+}
+
 void Info(BuildContext context, String message) {
   Scaffold.of(context).showSnackBar(SnackBar(
     backgroundColor: Colors.green,
