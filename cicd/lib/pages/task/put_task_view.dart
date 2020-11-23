@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cicd/api/cicd.pb.dart' as api;
 import 'package:http/http.dart' as http;
+import 'package:cicd/widget/widget.dart';
 import 'dart:convert';
 
 class PutTaskViewPage extends StatelessWidget {
@@ -111,7 +112,6 @@ class PutTaskViewState extends State<PutTaskView> {
                   const SizedBox(height: 20),
                   MyTextField(key: "描述", controller: _descriptionController, editable: _editable),
                   const SizedBox(height: 20),
-                  MyTextField(key: "语言", controller: _languageController, editable: _editable),
                 ],
               ),
             ),
@@ -120,66 +120,4 @@ class PutTaskViewState extends State<PutTaskView> {
       ),
     );
   }
-}
-
-class CircleIconButton extends FlatButton {
-  CircleIconButton({
-    Function onPressed,
-    Color color,
-    IconData icon,
-    String tooltip,
-    Color iconColor,
-  }) : super(
-          color: color,
-          child: Tooltip(message: tooltip, child: Icon(icon, color: iconColor)),
-          padding: EdgeInsets.all(15),
-          shape: CircleBorder(),
-          onPressed: onPressed,
-        );
-}
-
-class MyTextField extends TextFormField {
-  MyTextField({
-    TextEditingController controller,
-    String key,
-    bool editable,
-    int minLines,
-    int maxLines,
-    String Function(String) validator,
-  }) : super(
-          validator: validator,
-          decoration: InputDecoration(
-            isDense: true,
-            labelText: key,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5.0),
-              borderSide: BorderSide(),
-            ),
-          ),
-          maxLines: maxLines,
-          minLines: minLines,
-          controller: controller,
-          enabled: editable,
-        );
-}
-
-void Info(BuildContext context, String message) {
-  Scaffold.of(context).showSnackBar(SnackBar(
-    backgroundColor: Colors.green,
-    content: Text(message, style: TextStyle(color: Colors.white)),
-  ));
-}
-
-void Warn(BuildContext context, String message) {
-  Scaffold.of(context).showSnackBar(SnackBar(
-    backgroundColor: Colors.red,
-    content: Text(message, style: TextStyle(color: Colors.white)),
-  ));
-}
-
-void Trac(BuildContext context, String message) {
-  Scaffold.of(context).showSnackBar(SnackBar(
-    backgroundColor: Colors.blue,
-    content: Text(message, style: TextStyle(color: Colors.white)),
-  ));
 }
