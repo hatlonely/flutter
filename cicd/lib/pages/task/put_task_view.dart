@@ -32,16 +32,22 @@ class PutTaskViewState extends State<PutTaskView> {
   final _formKey = GlobalKey<FormState>();
 
   var _task = api.Task();
-  var _templates = <api.Template>[];
-  var _allTemplates = <api.Template>[];
 
+  var _templates = <api.Template>[];
   var _variables = <api.Variable>[];
+  var _allTemplates = <api.Template>[];
+  var _allVariables = <api.Variable>[];
 
   PutTaskViewState() {
-    var templates = listTemplate();
-    templates.then(
+    listTemplate().then(
       (value) => setState(() {
         _allTemplates = value.templates;
+      }),
+    );
+
+    listVariable().then(
+      (value) => setState(() {
+        _allVariables = value.variables;
       }),
     );
   }
@@ -52,6 +58,14 @@ class PutTaskViewState extends State<PutTaskView> {
     var listTemplateRes = api.ListTemplateRes();
     listTemplateRes.mergeFromProto3Json(json.decode(res.body));
     return listTemplateRes;
+  }
+
+  Future<api.ListVariableRes> listVariable() async {
+    var httpClient = http.Client();
+    var res = await httpClient.get("http://127.0.0.1/v1/variable?offset=0&limit=20");
+    var listVariableRes = api.ListVariableRes();
+    listVariableRes.mergeFromProto3Json(json.decode(res.body));
+    return listVariableRes;
   }
 
   String validate(String value) {
@@ -89,6 +103,8 @@ class PutTaskViewState extends State<PutTaskView> {
     var task = api.Task();
     task.name = _nameController.value.text;
     task.description = _descriptionController.value.text;
+    task.variableIDs.addAll(_variables.map((e) => e.id).toList());
+    task.templateIDs.addAll(_templates.map((e) => e.id).toList());
     return task;
   }
 
@@ -139,32 +155,98 @@ class PutTaskViewState extends State<PutTaskView> {
                     child: Wrap(
                       spacing: 20,
                       children: [
-                        Text("variables", style: TextStyle(fontSize: 20)),
-                        ..._templates.map(
-                          (e) => Chip(
-                            label: Text(e.name),
-                            deleteIcon: Icon(Icons.close, size: 10),
-                            onDeleted: () {
-                              setState(() {
-                                _allTemplates.addAll(_templates.where((element) => element.name == e.name));
-                                _templates.removeWhere((element) => element.name == e.name);
-                                print("[${e.name}] hello");
-                                print(_templates);
-                              });
-                            },
+                        Padding(padding: EdgeInsets.all(6), child: Text("变量")),
+                        ..._variables.map(
+                          (e) => Padding(
+                            padding: EdgeInsets.all(6),
+                            child: Chip(
+                              label: Text(e.name),
+                              deleteIcon: Icon(Icons.close, size: 10),
+                              onDeleted: () {
+                                setState(() {
+                                  _allVariables.addAll(_variables.where((element) => element.name == e.name));
+                                  _variables.removeWhere((element) => element.name == e.name);
+                                  print("[${e.name}] hello");
+                                  print(_variables);
+                                });
+                              },
+                            ),
                           ),
                         ),
-                        DropdownButton(
-                          isDense: true,
-                          icon: const Chip(label: Icon(Icons.add, size: 24)),
-                          onChanged: (api.Template value) {
+                        PopupMenuButton<api.Variable>(
+                          tooltip: "添加变量",
+                          padding: EdgeInsets.zero,
+                          offset: Offset.zero,
+                          icon: Container(
+                            padding: EdgeInsets.zero,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black, width: 2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(Icons.add, size: 24.0),
+                          ),
+                          onSelected: (api.Variable value) {
+                            setState(() {
+                              _variables.add(value);
+                              _allVariables.removeWhere((element) => element.name == value.name);
+                            });
+                          },
+                          itemBuilder: (BuildContext context) =>
+                              _allVariables.map<PopupMenuEntry<api.Variable>>((api.Variable value) {
+                            return PopupMenuItem<api.Variable>(
+                              value: value,
+                              child: Text(value.name),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Wrap(
+                      spacing: 20,
+                      children: [
+                        Padding(padding: EdgeInsets.all(6), child: Text("模板")),
+                        ..._templates.map(
+                          (e) => Padding(
+                            padding: EdgeInsets.all(6),
+                            child: Chip(
+                              label: Text(e.name),
+                              deleteIcon: Icon(Icons.close, size: 10),
+                              onDeleted: () {
+                                setState(() {
+                                  _allTemplates.addAll(_templates.where((element) => element.name == e.name));
+                                  _templates.removeWhere((element) => element.name == e.name);
+                                  print("[${e.name}] hello");
+                                  print(_templates);
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                        PopupMenuButton<api.Template>(
+                          tooltip: "添加模板",
+                          padding: EdgeInsets.zero,
+                          offset: Offset.zero,
+                          icon: Container(
+                            padding: EdgeInsets.zero,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black, width: 2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(Icons.add, size: 24.0),
+                          ),
+                          onSelected: (api.Template value) {
                             setState(() {
                               _templates.add(value);
                               _allTemplates.removeWhere((element) => element.name == value.name);
                             });
                           },
-                          items: _allTemplates.map<DropdownMenuItem<api.Template>>((api.Template value) {
-                            return DropdownMenuItem<api.Template>(
+                          itemBuilder: (BuildContext context) =>
+                              _allTemplates.map<PopupMenuEntry<api.Template>>((api.Template value) {
+                            return PopupMenuItem<api.Template>(
                               value: value,
                               child: Text(value.name),
                             );

@@ -344,6 +344,7 @@ class ListTemplateReq extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ListTemplateReq', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'api'), createEmptyInstance: create)
     ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'offset')
     ..aInt64(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'limit')
+    ..aOB(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'brief')
     ..hasRequiredFields = false
   ;
 
@@ -387,6 +388,15 @@ class ListTemplateReq extends $pb.GeneratedMessage {
   $core.bool hasLimit() => $_has(1);
   @$pb.TagNumber(2)
   void clearLimit() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.bool get brief => $_getBF(2);
+  @$pb.TagNumber(3)
+  set brief($core.bool v) { $_setBool(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasBrief() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearBrief() => clearField(3);
 }
 
 class ListTemplateRes extends $pb.GeneratedMessage {
@@ -655,6 +665,7 @@ class ListVariableReq extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ListVariableReq', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'api'), createEmptyInstance: create)
     ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'offset')
     ..aInt64(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'limit')
+    ..aOB(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'brief')
     ..hasRequiredFields = false
   ;
 
@@ -698,6 +709,15 @@ class ListVariableReq extends $pb.GeneratedMessage {
   $core.bool hasLimit() => $_has(1);
   @$pb.TagNumber(2)
   void clearLimit() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.bool get brief => $_getBF(2);
+  @$pb.TagNumber(3)
+  set brief($core.bool v) { $_setBool(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasBrief() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearBrief() => clearField(3);
 }
 
 class ListVariableRes extends $pb.GeneratedMessage {
@@ -738,7 +758,7 @@ class Task extends $pb.GeneratedMessage {
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'id')
     ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name')
     ..aOS(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'description')
-    ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'templateID', protoName: 'templateID')
+    ..pPS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'templateIDs', protoName: 'templateIDs')
     ..pPS(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'variableIDs', protoName: 'variableIDs')
     ..hasRequiredFields = false
   ;
@@ -794,13 +814,7 @@ class Task extends $pb.GeneratedMessage {
   void clearDescription() => clearField(3);
 
   @$pb.TagNumber(4)
-  $core.String get templateID => $_getSZ(3);
-  @$pb.TagNumber(4)
-  set templateID($core.String v) { $_setString(3, v); }
-  @$pb.TagNumber(4)
-  $core.bool hasTemplateID() => $_has(3);
-  @$pb.TagNumber(4)
-  void clearTemplateID() => clearField(4);
+  $core.List<$core.String> get templateIDs => $_getList(3);
 
   @$pb.TagNumber(5)
   $core.List<$core.String> get variableIDs => $_getList(4);
@@ -970,6 +984,7 @@ class ListTaskReq extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'ListTaskReq', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'api'), createEmptyInstance: create)
     ..aInt64(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'offset')
     ..aInt64(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'limit')
+    ..aOB(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'brief')
     ..hasRequiredFields = false
   ;
 
@@ -1013,6 +1028,15 @@ class ListTaskReq extends $pb.GeneratedMessage {
   $core.bool hasLimit() => $_has(1);
   @$pb.TagNumber(2)
   void clearLimit() => clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.bool get brief => $_getBF(2);
+  @$pb.TagNumber(3)
+  set brief($core.bool v) { $_setBool(2, v); }
+  @$pb.TagNumber(3)
+  $core.bool hasBrief() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearBrief() => clearField(3);
 }
 
 class ListTaskRes extends $pb.GeneratedMessage {

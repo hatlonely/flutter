@@ -1,9 +1,10 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
-import 'package:cicd/pages/variable/variable_view.dart';
+
 import 'package:cicd/api/cicd.pb.dart' as api;
 import 'package:cicd/pages/variable/put_variable_view.dart';
+import 'package:cicd/pages/variable/variable_view.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class VariablePage extends StatefulWidget {
   @override
@@ -31,10 +32,8 @@ class VariableViewState extends State<VariableView> {
   Future<api.ListVariableRes> listVariable() async {
     var httpClient = http.Client();
     var res = await httpClient.get("http://127.0.0.1/v1/variable?offset=0&limit=20");
-
     var listVariableRes = api.ListVariableRes();
     listVariableRes.mergeFromProto3Json(json.decode(res.body));
-
     return listVariableRes;
   }
 

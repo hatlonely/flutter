@@ -63,6 +63,7 @@ const ListTemplateReq$json = const {
   '2': const [
     const {'1': 'offset', '3': 1, '4': 1, '5': 3, '10': 'offset'},
     const {'1': 'limit', '3': 2, '4': 1, '5': 3, '10': 'limit'},
+    const {'1': 'brief', '3': 3, '4': 1, '5': 8, '10': 'brief'},
   ],
 };
 
@@ -116,6 +117,7 @@ const ListVariableReq$json = const {
   '2': const [
     const {'1': 'offset', '3': 1, '4': 1, '5': 3, '10': 'offset'},
     const {'1': 'limit', '3': 2, '4': 1, '5': 3, '10': 'limit'},
+    const {'1': 'brief', '3': 3, '4': 1, '5': 8, '10': 'brief'},
   ],
 };
 
@@ -132,7 +134,7 @@ const Task$json = const {
     const {'1': 'id', '3': 1, '4': 1, '5': 9, '8': const {}, '10': 'id'},
     const {'1': 'name', '3': 2, '4': 1, '5': 9, '8': const {}, '10': 'name'},
     const {'1': 'description', '3': 3, '4': 1, '5': 9, '8': const {}, '10': 'description'},
-    const {'1': 'templateID', '3': 4, '4': 1, '5': 9, '8': const {}, '10': 'templateID'},
+    const {'1': 'templateIDs', '3': 4, '4': 3, '5': 9, '8': const {}, '10': 'templateIDs'},
     const {'1': 'variableIDs', '3': 5, '4': 3, '5': 9, '8': const {}, '10': 'variableIDs'},
   ],
 };
@@ -170,6 +172,7 @@ const ListTaskReq$json = const {
   '2': const [
     const {'1': 'offset', '3': 1, '4': 1, '5': 3, '10': 'offset'},
     const {'1': 'limit', '3': 2, '4': 1, '5': 3, '10': 'limit'},
+    const {'1': 'brief', '3': 3, '4': 1, '5': 8, '10': 'brief'},
   ],
 };
 
