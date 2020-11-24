@@ -32,15 +32,27 @@ class PutTaskViewState extends State<PutTaskView> {
   final _formKey = GlobalKey<FormState>();
 
   var _task = api.Task();
-
-  List<api.Template> _templates = ["Food", "Transport", "Personal", "Shopping", "Medical"].map((e) {
-    var tpl = api.Template();
-    tpl.id = e;
-    tpl.name = e;
-    return tpl;
-  }).toList();
+  var _templates = <api.Template>[];
+  var _allTemplates = <api.Template>[];
 
   var _variables = <api.Variable>[];
+
+  PutTaskViewState() {
+    var templates = listTemplate();
+    templates.then(
+      (value) => setState(() {
+        _allTemplates = value.templates;
+      }),
+    );
+  }
+
+  Future<api.ListTemplateRes> listTemplate() async {
+    var httpClient = http.Client();
+    var res = await httpClient.get("http://127.0.0.1/v1/template?offset=0&limit=20");
+    var listTemplateRes = api.ListTemplateRes();
+    listTemplateRes.mergeFromProto3Json(json.decode(res.body));
+    return listTemplateRes;
+  }
 
   String validate(String value) {
     if (value.isEmpty || value.trim().isEmpty) {
@@ -134,7 +146,8 @@ class PutTaskViewState extends State<PutTaskView> {
                             deleteIcon: Icon(Icons.close, size: 10),
                             onDeleted: () {
                               setState(() {
-                                _templates.removeWhere((tpl) => tpl.name == e.name);
+                                _allTemplates.addAll(_templates.where((element) => element.name == e.name));
+                                _templates.removeWhere((element) => element.name == e.name);
                                 print("[${e.name}] hello");
                                 print(_templates);
                               });
@@ -144,17 +157,16 @@ class PutTaskViewState extends State<PutTaskView> {
                         DropdownButton(
                           isDense: true,
                           icon: const Chip(label: Icon(Icons.add, size: 24)),
-                          onChanged: (String value) {
+                          onChanged: (api.Template value) {
                             setState(() {
-                              var template = api.Template();
-                              template.name = value;
-                              _templates.add(template);
+                              _templates.add(value);
+                              _allTemplates.removeWhere((element) => element.name == value.name);
                             });
                           },
-                          items: <String>['One', 'Two', 'Free', 'Four'].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
+                          items: _allTemplates.map<DropdownMenuItem<api.Template>>((api.Template value) {
+                            return DropdownMenuItem<api.Template>(
                               value: value,
-                              child: Text(value),
+                              child: Text(value.name),
                             );
                           }).toList(),
                         ),
