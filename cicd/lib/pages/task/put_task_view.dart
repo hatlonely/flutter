@@ -69,13 +69,6 @@ class PutTaskViewState extends State<PutTaskView> {
     return listVariableRes;
   }
 
-//  String validate(String value) {
-//    if (value.isEmpty || value.trim().isEmpty) {
-//      return "不能为空";
-//    }
-//    return null;
-//  }
-
   void save() async {
     if (!_formKey.currentState.validate()) {
       return;
