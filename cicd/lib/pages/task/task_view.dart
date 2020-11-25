@@ -1,4 +1,6 @@
 import 'package:cicd/api2/api.dart';
+import 'package:cicd/config/config.dart';
+import 'package:cicd/validator/validator.dart';
 import 'package:cicd/widget/widget.dart';
 import 'package:flutter/material.dart';
 
@@ -38,7 +40,7 @@ class TaskViewState extends State<TaskView> {
   var _allVariables = <ApiVariable>[];
 
   TaskViewState({this.id}) {
-    var client = CICDServiceApi(ApiClient(basePath: "http://localhost"));
+    var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     client.cICDServiceGetTask(id).then((value) {
       _task = value;
       _nameController.text = _task.name;
@@ -61,13 +63,6 @@ class TaskViewState extends State<TaskView> {
     });
   }
 
-  String validate(String value) {
-    if (value.isEmpty || value.trim().isEmpty) {
-      return "不能为空";
-    }
-    return null;
-  }
-
   void edit() {
     setState(() {
       _editable = true;
@@ -85,7 +80,7 @@ class TaskViewState extends State<TaskView> {
       return;
     }
 
-    var client = CICDServiceApi(ApiClient(basePath: "http://localhost"));
+    var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     client.cICDServiceUpdateTask(id, task).then((value) {
       Info(context, "更新成功");
       setState(() {
@@ -98,7 +93,7 @@ class TaskViewState extends State<TaskView> {
   }
 
   void delete() async {
-    var client = CICDServiceApi(ApiClient(basePath: "http://localhost"));
+    var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     client.cICDServiceDelTask(id).then((value) {
       Info(context, "删除成功");
       Navigator.pop(context);
@@ -186,7 +181,8 @@ class TaskViewState extends State<TaskView> {
               key: _formKey,
               child: Column(
                 children: [
-                  MyTextField(key: "名字", controller: _nameController, editable: _editable, validator: validate),
+                  MyTextField(
+                      key: "名字", controller: _nameController, editable: _editable, validator: StringValidator.required),
                   const SizedBox(height: 20),
                   MyTextField(key: "描述", controller: _descriptionController, editable: _editable),
                   const SizedBox(height: 20),
