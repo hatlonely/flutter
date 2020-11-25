@@ -1,10 +1,8 @@
-import 'dart:convert';
-
-import 'package:cicd/api/cicd.pb.dart' as api;
+import 'package:cicd/api2/api.dart';
+import 'package:cicd/config/config.dart';
 import 'package:cicd/validator/validator.dart';
 import 'package:cicd/widget/widget.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class PutTaskViewPage extends StatelessWidget {
   final String id;
@@ -32,69 +30,42 @@ class PutTaskViewState extends State<PutTaskView> {
   bool _editable = true;
   final _formKey = GlobalKey<FormState>();
 
-  var _task = api.Task();
-
-  var _templates = <api.Template>[];
-  var _variables = <api.Variable>[];
-  var _allTemplates = <api.Template>[];
-  var _allVariables = <api.Variable>[];
+  var _templates = <ApiTemplate>[];
+  var _variables = <ApiVariable>[];
+  var _allTemplates = <ApiTemplate>[];
+  var _allVariables = <ApiVariable>[];
 
   PutTaskViewState() {
-    listTemplate().then(
-      (value) => setState(() {
-        _allTemplates = value.templates;
-      }),
-    );
+    var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
 
-    listVariable().then(
-      (value) => setState(() {
-        _allVariables = value.variables;
-      }),
-    );
-  }
+    client.cICDServiceListTemplate(offset: "0", limit: "20").then(
+          (value) => setState(() {
+            _allTemplates = value.templates;
+          }),
+        );
 
-  Future<api.ListTemplateRes> listTemplate() async {
-    var httpClient = http.Client();
-    var res = await httpClient.get("http://127.0.0.1/v1/template?offset=0&limit=20");
-    var listTemplateRes = api.ListTemplateRes();
-    listTemplateRes.mergeFromProto3Json(json.decode(res.body));
-    return listTemplateRes;
-  }
-
-  Future<api.ListVariableRes> listVariable() async {
-    var httpClient = http.Client();
-    var res = await httpClient.get("http://127.0.0.1/v1/variable?offset=0&limit=20");
-    var listVariableRes = api.ListVariableRes();
-    listVariableRes.mergeFromProto3Json(json.decode(res.body));
-    return listVariableRes;
+    client.cICDServiceListVariable(offset: "0", limit: "20").then(
+          (value) => setState(() {
+            _allVariables = value.variables;
+          }),
+        );
   }
 
   void save() async {
     if (!_formKey.currentState.validate()) {
       return;
     }
-
-    var cli = http.Client();
+    var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     var task = createTaskByTextEditControllers();
-    var res = await cli.post("http://127.0.0.1/v1/task", body: json.encode(task.toProto3Json()));
-    if (res.statusCode == 200) {
-      Info(context, "插入成功");
-    } else {
-      Warn(context, "插入失败: ${res.body}");
-    }
+    client.cICDServicePutTask(task).then((value) => Info(context, "插入成功")).catchError((e) => Warn(context, "插入失败: $e"));
   }
 
   void cancel() {
     Navigator.pop(context);
   }
 
-  void setTextEditControllersByTask(api.Task task) {
-    _nameController.text = task.name;
-    _descriptionController.text = task.description;
-  }
-
-  api.Task createTaskByTextEditControllers() {
-    var task = api.Task();
+  ApiTask createTaskByTextEditControllers() {
+    var task = ApiTask();
     task.name = _nameController.value.text;
     task.description = _descriptionController.value.text;
     task.variableIDs.addAll(_variables.map((e) => e.id).toList());
@@ -172,7 +143,7 @@ class PutTaskViewState extends State<PutTaskView> {
                             ),
                           ),
                         ),
-                        PopupMenuButton<api.Variable>(
+                        PopupMenuButton<ApiVariable>(
                           tooltip: "添加变量",
                           padding: EdgeInsets.zero,
                           offset: Offset.zero,
@@ -184,15 +155,15 @@ class PutTaskViewState extends State<PutTaskView> {
                             ),
                             child: Icon(Icons.add, size: 24.0),
                           ),
-                          onSelected: (api.Variable value) {
+                          onSelected: (ApiVariable value) {
                             setState(() {
                               _variables.add(value);
                               _allVariables.removeWhere((element) => element.name == value.name);
                             });
                           },
                           itemBuilder: (BuildContext context) =>
-                              _allVariables.map<PopupMenuEntry<api.Variable>>((api.Variable value) {
-                            return PopupMenuItem<api.Variable>(
+                              _allVariables.map<PopupMenuEntry<ApiVariable>>((ApiVariable value) {
+                            return PopupMenuItem<ApiVariable>(
                               value: value,
                               child: Text(value.name),
                             );
@@ -225,7 +196,7 @@ class PutTaskViewState extends State<PutTaskView> {
                             ),
                           ),
                         ),
-                        PopupMenuButton<api.Template>(
+                        PopupMenuButton<ApiTemplate>(
                           tooltip: "添加模板",
                           padding: EdgeInsets.zero,
                           offset: Offset.zero,
@@ -237,15 +208,15 @@ class PutTaskViewState extends State<PutTaskView> {
                             ),
                             child: Icon(Icons.add, size: 24.0),
                           ),
-                          onSelected: (api.Template value) {
+                          onSelected: (ApiTemplate value) {
                             setState(() {
                               _templates.add(value);
                               _allTemplates.removeWhere((element) => element.name == value.name);
                             });
                           },
                           itemBuilder: (BuildContext context) =>
-                              _allTemplates.map<PopupMenuEntry<api.Template>>((api.Template value) {
-                            return PopupMenuItem<api.Template>(
+                              _allTemplates.map<PopupMenuEntry<ApiTemplate>>((ApiTemplate value) {
+                            return PopupMenuItem<ApiTemplate>(
                               value: value,
                               child: Text(value.name),
                             );
