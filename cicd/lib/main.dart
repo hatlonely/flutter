@@ -1,9 +1,5 @@
-import 'package:cicd/pages/task/task.dart';
-import 'package:cicd/pages/variable/variable.dart';
-import 'package:flutter/material.dart';
-import 'dart:math';
-import 'page_home.dart';
 import 'package:cicd/pages/template/template.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(CICDApp());
@@ -15,7 +11,7 @@ class CICDApp extends StatelessWidget {
     return MaterialApp(
       title: "CICD Service",
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: TaskPage(),
+      home: TemplatePage(),
     );
   }
 }
