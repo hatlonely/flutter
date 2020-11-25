@@ -5,7 +5,6 @@
 // @dart = 2.3
 // ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
 
-import 'dart:async' as $async;
 import 'dart:core' as $core;
 
 import 'package:fixnum/fixnum.dart' as $fixnum;
@@ -1178,75 +1177,5 @@ class RunTaskRes extends $pb.GeneratedMessage {
   $core.bool hasStderr() => $_has(3);
   @$pb.TagNumber(4)
   void clearStderr() => clearField(4);
-}
-
-class CICDServiceApi {
-  $pb.RpcClient _client;
-  CICDServiceApi(this._client);
-
-  $async.Future<RunTaskRes> runTask($pb.ClientContext ctx, RunTaskReq request) {
-    var emptyResponse = RunTaskRes();
-    return _client.invoke<RunTaskRes>(ctx, 'CICDService', 'RunTask', request, emptyResponse);
-  }
-  $async.Future<Task> getTask($pb.ClientContext ctx, GetTaskReq request) {
-    var emptyResponse = Task();
-    return _client.invoke<Task>(ctx, 'CICDService', 'GetTask', request, emptyResponse);
-  }
-  $async.Future<Empty> delTask($pb.ClientContext ctx, DelTaskReq request) {
-    var emptyResponse = Empty();
-    return _client.invoke<Empty>(ctx, 'CICDService', 'DelTask', request, emptyResponse);
-  }
-  $async.Future<Empty> putTask($pb.ClientContext ctx, PutTaskReq request) {
-    var emptyResponse = Empty();
-    return _client.invoke<Empty>(ctx, 'CICDService', 'PutTask', request, emptyResponse);
-  }
-  $async.Future<Empty> updateTask($pb.ClientContext ctx, UpdateTaskReq request) {
-    var emptyResponse = Empty();
-    return _client.invoke<Empty>(ctx, 'CICDService', 'UpdateTask', request, emptyResponse);
-  }
-  $async.Future<ListTaskRes> listTask($pb.ClientContext ctx, ListTaskReq request) {
-    var emptyResponse = ListTaskRes();
-    return _client.invoke<ListTaskRes>(ctx, 'CICDService', 'ListTask', request, emptyResponse);
-  }
-  $async.Future<Template> getTemplate($pb.ClientContext ctx, GetTemplateReq request) {
-    var emptyResponse = Template();
-    return _client.invoke<Template>(ctx, 'CICDService', 'GetTemplate', request, emptyResponse);
-  }
-  $async.Future<Empty> delTemplate($pb.ClientContext ctx, DelTemplateReq request) {
-    var emptyResponse = Empty();
-    return _client.invoke<Empty>(ctx, 'CICDService', 'DelTemplate', request, emptyResponse);
-  }
-  $async.Future<Empty> putTemplate($pb.ClientContext ctx, PutTemplateReq request) {
-    var emptyResponse = Empty();
-    return _client.invoke<Empty>(ctx, 'CICDService', 'PutTemplate', request, emptyResponse);
-  }
-  $async.Future<Empty> updateTemplate($pb.ClientContext ctx, UpdateTemplateReq request) {
-    var emptyResponse = Empty();
-    return _client.invoke<Empty>(ctx, 'CICDService', 'UpdateTemplate', request, emptyResponse);
-  }
-  $async.Future<ListTemplateRes> listTemplate($pb.ClientContext ctx, ListTemplateReq request) {
-    var emptyResponse = ListTemplateRes();
-    return _client.invoke<ListTemplateRes>(ctx, 'CICDService', 'ListTemplate', request, emptyResponse);
-  }
-  $async.Future<Variable> getVariable($pb.ClientContext ctx, GetVariableReq request) {
-    var emptyResponse = Variable();
-    return _client.invoke<Variable>(ctx, 'CICDService', 'GetVariable', request, emptyResponse);
-  }
-  $async.Future<Empty> delVariable($pb.ClientContext ctx, DelVariableReq request) {
-    var emptyResponse = Empty();
-    return _client.invoke<Empty>(ctx, 'CICDService', 'DelVariable', request, emptyResponse);
-  }
-  $async.Future<Empty> putVariable($pb.ClientContext ctx, PutVariableReq request) {
-    var emptyResponse = Empty();
-    return _client.invoke<Empty>(ctx, 'CICDService', 'PutVariable', request, emptyResponse);
-  }
-  $async.Future<Empty> updateVariable($pb.ClientContext ctx, UpdateVariableReq request) {
-    var emptyResponse = Empty();
-    return _client.invoke<Empty>(ctx, 'CICDService', 'UpdateVariable', request, emptyResponse);
-  }
-  $async.Future<ListVariableRes> listVariable($pb.ClientContext ctx, ListVariableReq request) {
-    var emptyResponse = ListVariableRes();
-    return _client.invoke<ListVariableRes>(ctx, 'CICDService', 'ListVariable', request, emptyResponse);
-  }
 }
 

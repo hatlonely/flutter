@@ -1,9 +1,6 @@
-import 'dart:convert';
-
-import 'package:cicd/api/cicd.pb.dart' as api;
+import 'package:cicd/api2/api.dart';
 import 'package:cicd/widget/widget.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class TaskViewPage extends StatelessWidget {
   final String id;
@@ -34,32 +31,33 @@ class TaskViewState extends State<TaskView> {
   var _descriptionController = TextEditingController();
   bool _editable = true;
   final _formKey = GlobalKey<FormState>();
-
-  var _task = api.Task();
-
-  var _templates = <api.Template>[];
-  var _variables = <api.Variable>[];
-  var _allTemplates = <api.Template>[];
-  var _allVariables = <api.Variable>[];
+  var _task = ApiTask();
+  var _templates = <ApiTemplate>[];
+  var _variables = <ApiVariable>[];
+  var _allTemplates = <ApiTemplate>[];
+  var _allVariables = <ApiVariable>[];
 
   TaskViewState({this.id}) {
-    getTask().then((value) {
+    var client = CICDServiceApi(ApiClient(basePath: "http://localhost"));
+    client.cICDServiceGetTask(id).then((value) {
       _task = value;
-      listTemplate().then(
-        (value) => setState(() {
-          _allTemplates = value.templates;
-          _templates = _allTemplates.where((element) => _task.templateIDs.contains(element.id)).toList();
-          _allTemplates.removeWhere((element) => _task.templateIDs.contains(element.id));
-        }),
-      );
+      _nameController.text = _task.name;
+      _descriptionController.text = _task.description;
+      client.cICDServiceListTemplate(offset: "0", limit: "20").then(
+            (value) => setState(() {
+              _allTemplates = value.templates;
+              _templates = _allTemplates.where((element) => _task.templateIDs.contains(element.id)).toList();
+              _allTemplates.removeWhere((element) => _task.templateIDs.contains(element.id));
+            }),
+          );
 
-      listVariable().then(
-        (value) => setState(() {
-          _allVariables = value.variables;
-          _variables = _allVariables.where((element) => _task.variableIDs.contains(element.id)).toList();
-          _allVariables.removeWhere((element) => _task.variableIDs.contains(element.id));
-        }),
-      );
+      client.cICDServiceListVariable(offset: "0", limit: "20").then(
+            (value) => setState(() {
+              _allVariables = value.variables;
+              _variables = _allVariables.where((element) => _task.variableIDs.contains(element.id)).toList();
+              _allVariables.removeWhere((element) => _task.variableIDs.contains(element.id));
+            }),
+          );
     });
   }
 
@@ -68,30 +66,6 @@ class TaskViewState extends State<TaskView> {
       return "不能为空";
     }
     return null;
-  }
-
-  Future<api.Task> getTask() async {
-    var httpClient = http.Client();
-    var res = await httpClient.get("http://127.0.0.1/v1/task/$id");
-    var task = api.Task();
-    task.mergeFromProto3Json(json.decode(res.body));
-    return task;
-  }
-
-  Future<api.ListTemplateRes> listTemplate() async {
-    var httpClient = http.Client();
-    var res = await httpClient.get("http://127.0.0.1/v1/template?offset=0&limit=20");
-    var listTemplateRes = api.ListTemplateRes();
-    listTemplateRes.mergeFromProto3Json(json.decode(res.body));
-    return listTemplateRes;
-  }
-
-  Future<api.ListVariableRes> listVariable() async {
-    var httpClient = http.Client();
-    var res = await httpClient.get("http://127.0.0.1/v1/variable?offset=0&limit=20");
-    var listVariableRes = api.ListVariableRes();
-    listVariableRes.mergeFromProto3Json(json.decode(res.body));
-    return listVariableRes;
   }
 
   void edit() {
@@ -105,34 +79,32 @@ class TaskViewState extends State<TaskView> {
       return;
     }
 
-    var cli = http.Client();
     var task = createTaskByTextEditControllers();
     if (_task == task) {
       Trac(context, "无需更新");
       return;
     }
 
-    var res = await cli.put("http://127.0.0.1/v1/task/$id", body: json.encode(task.toProto3Json()));
-    if (res.statusCode == 200) {
+    var client = CICDServiceApi(ApiClient(basePath: "http://localhost"));
+    client.cICDServiceUpdateTask(id, task).then((value) {
       Info(context, "更新成功");
       setState(() {
         _editable = false;
       });
       _task = task;
-    } else {
-      Warn(context, "更新失败: ${res.body}");
-    }
+    }).catchError((e) {
+      Warn(context, "更新失败: $e");
+    });
   }
 
   void delete() async {
-    var cli = http.Client();
-    var res = await cli.delete("http://127.0.0.1/v1/task/$id");
-    if (res.statusCode == 200) {
+    var client = CICDServiceApi(ApiClient(basePath: "http://localhost"));
+    client.cICDServiceDelTask(id).then((value) {
       Info(context, "删除成功");
       Navigator.pop(context);
-    } else {
-      Warn(context, "删除失败: ${res.body}");
-    }
+    }).catchError((e) {
+      Warn(context, "删除失败: $e");
+    });
   }
 
   void cancel() {
@@ -142,7 +114,7 @@ class TaskViewState extends State<TaskView> {
     });
   }
 
-  void setTextEditControllersByTask(api.Task task) {
+  void setTextEditControllersByTask(ApiTask task) {
     _nameController.text = task.name;
     _descriptionController.text = task.description;
     _allTemplates.addAll(_templates);
@@ -153,8 +125,8 @@ class TaskViewState extends State<TaskView> {
     _allVariables.removeWhere((element) => _task.variableIDs.contains(element.id));
   }
 
-  api.Task createTaskByTextEditControllers() {
-    var task = api.Task();
+  ApiTask createTaskByTextEditControllers() {
+    var task = ApiTask();
     task.id = widget.id;
     task.name = _nameController.value.text;
     task.description = _descriptionController.value.text;
@@ -230,18 +202,20 @@ class TaskViewState extends State<TaskView> {
                             child: Chip(
                               label: Text(e.name),
                               deleteIcon: Icon(Icons.close, size: 10),
-                              onDeleted: () {
-                                setState(() {
-                                  _allVariables.addAll(_variables.where((element) => element.name == e.name));
-                                  _variables.removeWhere((element) => element.name == e.name);
-                                  print("[${e.name}] hello");
-                                  print(_variables);
-                                });
-                              },
+                              onDeleted: _editable
+                                  ? () {
+                                      setState(() {
+                                        _allVariables.addAll(_variables.where((element) => element.name == e.name));
+                                        _variables.removeWhere((element) => element.name == e.name);
+                                        print("[${e.name}] hello");
+                                        print(_variables);
+                                      });
+                                    }
+                                  : null,
                             ),
                           ),
                         ),
-                        PopupMenuButton<api.Variable>(
+                        PopupMenuButton<ApiVariable>(
                           tooltip: "添加变量",
                           padding: EdgeInsets.zero,
                           offset: Offset.zero,
@@ -254,15 +228,15 @@ class TaskViewState extends State<TaskView> {
                             ),
                             child: Icon(Icons.add, size: 24.0),
                           ),
-                          onSelected: (api.Variable value) {
+                          onSelected: (ApiVariable value) {
                             setState(() {
                               _variables.add(value);
                               _allVariables.removeWhere((element) => element.name == value.name);
                             });
                           },
                           itemBuilder: (BuildContext context) =>
-                              _allVariables.map<PopupMenuEntry<api.Variable>>((api.Variable value) {
-                            return PopupMenuItem<api.Variable>(
+                              _allVariables.map<PopupMenuEntry<ApiVariable>>((ApiVariable value) {
+                            return PopupMenuItem<ApiVariable>(
                               value: value,
                               child: Text(value.name),
                             );
@@ -284,18 +258,20 @@ class TaskViewState extends State<TaskView> {
                             child: Chip(
                               label: Text(e.name),
                               deleteIcon: Icon(Icons.close, size: 10),
-                              onDeleted: () {
-                                setState(() {
-                                  _allTemplates.addAll(_templates.where((element) => element.name == e.name));
-                                  _templates.removeWhere((element) => element.name == e.name);
-                                  print("[${e.name}] hello");
-                                  print(_templates);
-                                });
-                              },
+                              onDeleted: _editable
+                                  ? () {
+                                      setState(() {
+                                        _allTemplates.addAll(_templates.where((element) => element.name == e.name));
+                                        _templates.removeWhere((element) => element.name == e.name);
+                                        print("[${e.name}] hello");
+                                        print(_templates);
+                                      });
+                                    }
+                                  : null,
                             ),
                           ),
                         ),
-                        PopupMenuButton<api.Template>(
+                        PopupMenuButton<ApiTemplate>(
                           tooltip: "添加模板",
                           padding: EdgeInsets.zero,
                           offset: Offset.zero,
@@ -308,15 +284,15 @@ class TaskViewState extends State<TaskView> {
                             ),
                             child: Icon(Icons.add, size: 24.0),
                           ),
-                          onSelected: (api.Template value) {
+                          onSelected: (ApiTemplate value) {
                             setState(() {
                               _templates.add(value);
                               _allTemplates.removeWhere((element) => element.name == value.name);
                             });
                           },
                           itemBuilder: (BuildContext context) =>
-                              _allTemplates.map<PopupMenuEntry<api.Template>>((api.Template value) {
-                            return PopupMenuItem<api.Template>(
+                              _allTemplates.map<PopupMenuEntry<ApiTemplate>>((ApiTemplate value) {
+                            return PopupMenuItem<ApiTemplate>(
                               value: value,
                               child: Text(value.name),
                             );

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cicd/api/cicd.pb.dart' as api;
+import 'package:cicd/validator/validator.dart';
 import 'package:cicd/widget/widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -68,12 +69,12 @@ class PutTaskViewState extends State<PutTaskView> {
     return listVariableRes;
   }
 
-  String validate(String value) {
-    if (value.isEmpty || value.trim().isEmpty) {
-      return "不能为空";
-    }
-    return null;
-  }
+//  String validate(String value) {
+//    if (value.isEmpty || value.trim().isEmpty) {
+//      return "不能为空";
+//    }
+//    return null;
+//  }
 
   void save() async {
     if (!_formKey.currentState.validate()) {
@@ -146,7 +147,12 @@ class PutTaskViewState extends State<PutTaskView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  MyTextField(key: "名字", controller: _nameController, editable: _editable, validator: validate),
+                  MyTextField(
+                    key: "名字",
+                    controller: _nameController,
+                    editable: _editable,
+                    validator: StringValidator.required,
+                  ),
                   const SizedBox(height: 20),
                   MyTextField(key: "描述", controller: _descriptionController, editable: _editable),
                   const SizedBox(height: 20),

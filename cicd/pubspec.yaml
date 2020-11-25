@@ -23,6 +23,7 @@ environment:
 dependencies:
   fixnum: ^0.10.11
   protobuf: ^1.1.0
+  grpc: ^2.8.0
   http: "^0.12.0+2"
   flutter:
     sdk: flutter
