@@ -1,4 +1,5 @@
 import 'package:cicd/api2/api.dart';
+import 'package:cicd/config/config.dart';
 import 'package:cicd/pages/task/put_task_view.dart';
 import 'package:cicd/pages/task/task_view.dart';
 import 'package:cicd/widget/widget.dart';
@@ -30,7 +31,7 @@ class ListTaskViewState extends State<ListTaskView> {
   var _tasks = <ApiTask>[];
 
   ListTaskViewState() {
-    var client = CICDServiceApi(ApiClient(basePath: "http://localhost"));
+    var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     client.cICDServiceListTask(offset: "0", limit: "20").then((value) {
       setState(() {
         _tasks = value.tasks;
