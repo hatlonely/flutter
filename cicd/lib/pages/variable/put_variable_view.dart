@@ -1,7 +1,8 @@
+import 'package:cicd/api2/api.dart';
+import 'package:cicd/config/config.dart';
+import 'package:cicd/validator/validator.dart';
+import 'package:cicd/widget/widget.dart';
 import 'package:flutter/material.dart';
-import 'package:cicd/api/cicd.pb.dart' as api;
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class PutVariableViewPage extends StatelessWidget {
   final String id;
@@ -30,40 +31,30 @@ class PutVariableViewState extends State<PutVariableView> {
   bool _editable = true;
   final _formKey = GlobalKey<FormState>();
 
-  String validate(String value) {
-    if (value.isEmpty || value.trim().isEmpty) {
-      return "不能为空";
-    }
-    return null;
-  }
-
   void save() async {
     if (!_formKey.currentState.validate()) {
       return;
     }
-
-    var cli = http.Client();
+    var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     var variable = createVariableByTextEditControllers();
-    var res = await cli.post("http://127.0.0.1/v1/variable", body: json.encode(variable.toProto3Json()));
-    if (res.statusCode == 200) {
-      Info(context, "插入成功");
-    } else {
-      Warn(context, "插入失败: ${res.body}");
-    }
+    client
+        .cICDServicePutVariable(variable)
+        .then((value) => Info(context, "插入成功"))
+        .catchError((e) => Warn(context, "插入失败: $e"));
   }
 
   void cancel() {
     Navigator.pop(context);
   }
 
-  void setTextEditControllersByVariable(api.Variable variable) {
+  void setTextEditControllersByVariable(ApiVariable variable) {
     _nameController.text = variable.name;
     _descriptionController.text = variable.description;
     _kvsController.text = variable.kvs;
   }
 
-  api.Variable createVariableByTextEditControllers() {
-    var variable = api.Variable();
+  ApiVariable createVariableByTextEditControllers() {
+    var variable = ApiVariable();
     variable.name = _nameController.value.text;
     variable.description = _descriptionController.value.text;
     variable.kvs = _kvsController.value.text;
@@ -107,7 +98,8 @@ class PutVariableViewState extends State<PutVariableView> {
               key: _formKey,
               child: Column(
                 children: [
-                  MyTextField(key: "名字", controller: _nameController, editable: _editable, validator: validate),
+                  MyTextField(
+                      key: "名字", controller: _nameController, editable: _editable, validator: StringValidator.required),
                   const SizedBox(height: 20),
                   MyTextField(key: "描述", controller: _descriptionController, editable: _editable),
                   const SizedBox(height: 20),
@@ -126,66 +118,4 @@ class PutVariableViewState extends State<PutVariableView> {
       ),
     );
   }
-}
-
-class CircleIconButton extends FlatButton {
-  CircleIconButton({
-    Function onPressed,
-    Color color,
-    IconData icon,
-    String tooltip,
-    Color iconColor,
-  }) : super(
-          color: color,
-          child: Tooltip(message: tooltip, child: Icon(icon, color: iconColor)),
-          padding: EdgeInsets.all(15),
-          shape: CircleBorder(),
-          onPressed: onPressed,
-        );
-}
-
-class MyTextField extends TextFormField {
-  MyTextField({
-    TextEditingController controller,
-    String key,
-    bool editable,
-    int minLines,
-    int maxLines,
-    String Function(String) validator,
-  }) : super(
-          validator: validator,
-          decoration: InputDecoration(
-            isDense: true,
-            labelText: key,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5.0),
-              borderSide: BorderSide(),
-            ),
-          ),
-          maxLines: maxLines,
-          minLines: minLines,
-          controller: controller,
-          enabled: editable,
-        );
-}
-
-void Info(BuildContext context, String message) {
-  Scaffold.of(context).showSnackBar(SnackBar(
-    backgroundColor: Colors.green,
-    content: Text(message, style: TextStyle(color: Colors.white)),
-  ));
-}
-
-void Warn(BuildContext context, String message) {
-  Scaffold.of(context).showSnackBar(SnackBar(
-    backgroundColor: Colors.red,
-    content: Text(message, style: TextStyle(color: Colors.white)),
-  ));
-}
-
-void Trac(BuildContext context, String message) {
-  Scaffold.of(context).showSnackBar(SnackBar(
-    backgroundColor: Colors.blue,
-    content: Text(message, style: TextStyle(color: Colors.white)),
-  ));
 }

@@ -1,7 +1,8 @@
+import 'package:cicd/api2/api.dart';
+import 'package:cicd/config/config.dart';
+import 'package:cicd/validator/validator.dart';
+import 'package:cicd/widget/widget.dart';
 import 'package:flutter/material.dart';
-import 'package:cicd/api/cicd.pb.dart' as api;
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class VariableViewPage extends StatelessWidget {
   final String id;
@@ -23,30 +24,21 @@ class VariableView extends StatefulWidget {
   VariableView({Key key, this.id}) : super(key: key);
 
   @override
-  State<VariableView> createState() => VariableViewState();
+  State<VariableView> createState() => VariableViewState(id: id);
 }
 
 class VariableViewState extends State<VariableView> {
+  final String id;
   var _nameController = TextEditingController();
   var _descriptionController = TextEditingController();
   var _kvsController = TextEditingController();
   bool _editable = false;
-  var _variable = api.Variable();
+  var _variable = ApiVariable();
   final _formKey = GlobalKey<FormState>();
 
-  String validate(String value) {
-    if (value.isEmpty || value.trim().isEmpty) {
-      return "不能为空";
-    }
-    return null;
-  }
-
-  Future<api.Variable> getVariable() async {
-    var httpClient = http.Client();
-    var res = await httpClient.get("http://127.0.0.1/v1/variable/${widget.id}");
-    var variable = api.Variable();
-    variable.mergeFromProto3Json(json.decode(res.body));
-    return variable;
+  VariableViewState({this.id}) {
+    var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
+    client.cICDServiceGetVariable(id).then((value) => setState(() => _variable = value));
   }
 
   void edit() {
@@ -60,34 +52,28 @@ class VariableViewState extends State<VariableView> {
       return;
     }
 
-    var cli = http.Client();
     var variable = createVariableByTextEditControllers();
     if (_variable == variable) {
       Trac(context, "无需更新");
       return;
     }
 
-    var res = await cli.put("http://127.0.0.1/v1/variable/${widget.id}", body: json.encode(variable.toProto3Json()));
-    if (res.statusCode == 200) {
+    var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
+    client.cICDServiceUpdateVariable(id, variable).then((value) {
       Info(context, "更新成功");
       setState(() {
         _editable = false;
       });
       _variable = variable;
-    } else {
-      Warn(context, "更新失败: ${res.body}");
-    }
+    }).catchError((e) => Warn(context, "更新失败: $e"));
   }
 
   void delete() async {
-    var cli = http.Client();
-    var res = await cli.delete("http://127.0.0.1/v1/variable/${widget.id}");
-    if (res.statusCode == 200) {
+    var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
+    client.cICDServiceDelVariable(id).then((value) {
       Info(context, "删除成功");
       Navigator.pop(context);
-    } else {
-      Warn(context, "删除失败: ${res.body}");
-    }
+    }).catchError((e) => Warn(context, "删除失败: $e"));
   }
 
   void cancel() {
@@ -97,14 +83,14 @@ class VariableViewState extends State<VariableView> {
     });
   }
 
-  void setTextEditControllersByVariable(api.Variable variable) {
+  void setTextEditControllersByVariable(ApiVariable variable) {
     _nameController.text = variable.name;
     _descriptionController.text = variable.description;
     _kvsController.text = variable.kvs;
   }
 
-  api.Variable createVariableByTextEditControllers() {
-    var variable = api.Variable();
+  ApiVariable createVariableByTextEditControllers() {
+    var variable = ApiVariable();
     variable.id = widget.id;
     variable.name = _nameController.value.text;
     variable.description = _descriptionController.value.text;
@@ -114,145 +100,73 @@ class VariableViewState extends State<VariableView> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      initialData: api.Variable(),
-      future: getVariable(),
-      builder: (context, value) {
-        var res = value.data as api.Variable;
-        _variable = res;
-
-        setTextEditControllersByVariable(res);
-
-        return Card(
-          margin: EdgeInsets.zero,
-          clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          elevation: 2,
-          child: Padding(
-            padding: EdgeInsets.all(40.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+    return Card(
+      margin: EdgeInsets.zero,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      elevation: 2,
+      child: Padding(
+        padding: EdgeInsets.all(40.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    CircleIconButton(
-                      tooltip: "保存",
-                      color: Colors.white,
-                      onPressed: _editable ? save : null,
-                      icon: Icons.save,
-                    ),
-                    const SizedBox(width: 10),
-                    CircleIconButton(
-                      tooltip: "编辑",
-                      color: Colors.white,
-                      onPressed: _editable ? null : edit,
-                      icon: Icons.edit,
-                    ),
-                    const SizedBox(width: 10),
-                    CircleIconButton(
-                      tooltip: "取消",
-                      color: Colors.white,
-                      onPressed: _editable ? cancel : null,
-                      icon: Icons.cancel,
-                    ),
-                    const SizedBox(width: 10),
-                    CircleIconButton(
-                        tooltip: "删除",
-                        color: Colors.white,
-                        onPressed: _editable ? null : delete,
-                        icon: Icons.delete,
-                        iconColor: Colors.red),
-                  ],
+                CircleIconButton(
+                  tooltip: "保存",
+                  color: Colors.white,
+                  onPressed: _editable ? save : null,
+                  icon: Icons.save,
                 ),
-                const SizedBox(height: 40),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      MyTextField(key: "名字", controller: _nameController, editable: _editable, validator: validate),
-                      const SizedBox(height: 20),
-                      MyTextField(key: "描述", controller: _descriptionController, editable: _editable),
-                      const SizedBox(height: 20),
-                      MyTextField(
-                        key: "键值",
-                        controller: _kvsController,
-                        minLines: 10,
-                        maxLines: 20,
-                        editable: _editable,
-                      ),
-                    ],
-                  ),
+                const SizedBox(width: 10),
+                CircleIconButton(
+                  tooltip: "编辑",
+                  color: Colors.white,
+                  onPressed: _editable ? null : edit,
+                  icon: Icons.edit,
                 ),
+                const SizedBox(width: 10),
+                CircleIconButton(
+                  tooltip: "取消",
+                  color: Colors.white,
+                  onPressed: _editable ? cancel : null,
+                  icon: Icons.cancel,
+                ),
+                const SizedBox(width: 10),
+                CircleIconButton(
+                    tooltip: "删除",
+                    color: Colors.white,
+                    onPressed: _editable ? null : delete,
+                    icon: Icons.delete,
+                    iconColor: Colors.red),
               ],
             ),
-          ),
-        );
-      },
+            const SizedBox(height: 40),
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  MyTextField(
+                      key: "名字", controller: _nameController, editable: _editable, validator: StringValidator.required),
+                  const SizedBox(height: 20),
+                  MyTextField(key: "描述", controller: _descriptionController, editable: _editable),
+                  const SizedBox(height: 20),
+                  MyTextField(
+                    key: "键值",
+                    controller: _kvsController,
+                    minLines: 10,
+                    maxLines: 20,
+                    editable: _editable,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
-}
-
-class CircleIconButton extends FlatButton {
-  CircleIconButton({
-    Function onPressed,
-    Color color,
-    IconData icon,
-    String tooltip,
-    Color iconColor,
-  }) : super(
-          color: color,
-          child: Tooltip(message: tooltip, child: Icon(icon, color: iconColor)),
-          padding: EdgeInsets.all(15),
-          shape: CircleBorder(),
-          onPressed: onPressed,
-        );
-}
-
-class MyTextField extends TextFormField {
-  MyTextField({
-    TextEditingController controller,
-    String key,
-    bool editable,
-    int minLines,
-    int maxLines,
-    String Function(String) validator,
-  }) : super(
-          validator: validator,
-          decoration: InputDecoration(
-            isDense: true,
-            labelText: key,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5.0),
-              borderSide: BorderSide(),
-            ),
-          ),
-          maxLines: maxLines,
-          minLines: minLines,
-          controller: controller,
-          enabled: editable,
-        );
-}
-
-void Info(BuildContext context, String message) {
-  Scaffold.of(context).showSnackBar(SnackBar(
-    backgroundColor: Colors.green,
-    content: Text(message, style: TextStyle(color: Colors.white)),
-  ));
-}
-
-void Warn(BuildContext context, String message) {
-  Scaffold.of(context).showSnackBar(SnackBar(
-    backgroundColor: Colors.red,
-    content: Text(message, style: TextStyle(color: Colors.white)),
-  ));
-}
-
-void Trac(BuildContext context, String message) {
-  Scaffold.of(context).showSnackBar(SnackBar(
-    backgroundColor: Colors.blue,
-    content: Text(message, style: TextStyle(color: Colors.white)),
-  ));
 }

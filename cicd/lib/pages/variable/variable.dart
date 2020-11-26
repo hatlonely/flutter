@@ -1,10 +1,8 @@
-import 'dart:convert';
-
-import 'package:cicd/api/cicd.pb.dart' as api;
+import 'package:cicd/api2/api.dart';
+import 'package:cicd/config/config.dart';
 import 'package:cicd/pages/variable/put_variable_view.dart';
 import 'package:cicd/pages/variable/variable_view.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class VariablePage extends StatefulWidget {
   @override
@@ -29,68 +27,61 @@ class VariableView extends StatefulWidget {
 }
 
 class VariableViewState extends State<VariableView> {
-  Future<api.ListVariableRes> listVariable() async {
-    var httpClient = http.Client();
-    var res = await httpClient.get("http://127.0.0.1/v1/variable?offset=0&limit=20");
-    var listVariableRes = api.ListVariableRes();
-    listVariableRes.mergeFromProto3Json(json.decode(res.body));
-    return listVariableRes;
+  var _variables = <ApiVariable>[];
+
+  VariableViewState() {
+    var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
+    client.cICDServiceListVariable(offset: "0", limit: "20").then((res) {
+      setState(() {
+        _variables = res.variables;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    var res = listVariable();
-    print(res.then((value) => {print(value)}));
+    var cards = _variables.map((e) {
+      return GestureDetector(
+        onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => VariableViewPage(id: e.id)))},
+        child: Card(
+          margin: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          elevation: 2,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(e.name),
+              Text(e.description),
+            ],
+          ),
+        ),
+      );
+    }).toList();
 
-    return FutureBuilder(
-      initialData: api.ListVariableRes(),
-      future: listVariable(),
-      builder: (context, value) {
-        var res = value.data as api.ListVariableRes;
-        var cards = res.variables.map((e) {
-          return GestureDetector(
-            onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => VariableViewPage(id: e.id)))},
-            child: Card(
-              margin: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-              clipBehavior: Clip.antiAlias,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              elevation: 2,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(e.name),
-                  Text(e.description),
-                ],
-              ),
+    cards.add(GestureDetector(
+        onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => PutVariableViewPage()))},
+        child: Card(
+            margin: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
             ),
-          );
-        }).toList();
+            elevation: 2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add, size: 60),
+              ],
+            ))));
 
-        cards.add(GestureDetector(
-            onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => PutVariableViewPage()))},
-            child: Card(
-                margin: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                clipBehavior: Clip.antiAlias,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                elevation: 2,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.add, size: 60),
-                  ],
-                ))));
-
-        return GridView.count(
-          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-          crossAxisCount: MediaQuery.of(context).size.width ~/ 300.0,
-          childAspectRatio: 1.618,
-          children: cards,
-        );
-      },
+    return GridView.count(
+      padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+      crossAxisCount: MediaQuery.of(context).size.width ~/ 300.0,
+      childAspectRatio: 1.618,
+      children: cards,
     );
   }
 }
