@@ -1,4 +1,5 @@
 import 'package:cicd/api2/api.dart';
+import 'package:cicd/config/config.dart';
 import 'package:cicd/pages/template/put_template_view.dart';
 import 'package:cicd/pages/template/template_view.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ class ListTemplateViewState extends State<ListTemplateView> {
   var _templates = <ApiTemplate>[];
 
   ListTemplateViewState() {
-    var client = CICDServiceApi(ApiClient(basePath: "http://localhost"));
+    var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     client.cICDServiceListTemplate(offset: "0", limit: "20").then((res) {
       print(res.toJson());
       setState(() {

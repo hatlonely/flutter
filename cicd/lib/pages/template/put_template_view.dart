@@ -1,7 +1,8 @@
+import 'package:cicd/api2/api.dart';
+import 'package:cicd/config/config.dart';
+import 'package:cicd/validator/validator.dart';
+import 'package:cicd/widget/widget.dart';
 import 'package:flutter/material.dart';
-import 'package:cicd/api/cicd.pb.dart' as api;
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class PutTemplateViewPage extends StatelessWidget {
   final String id;
@@ -32,33 +33,23 @@ class PutTemplateViewState extends State<PutTemplateView> {
   bool _editable = true;
   final _formKey = GlobalKey<FormState>();
 
-  String validate(String value) {
-    if (value.isEmpty || value.trim().isEmpty) {
-      return "不能为空";
-    }
-    return null;
-  }
-
   void save() async {
     if (!_formKey.currentState.validate()) {
       return;
     }
-
-    var cli = http.Client();
+    var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     var template = createTemplateByTextEditControllers();
-    var res = await cli.post("http://127.0.0.1/v1/template", body: json.encode(template.toProto3Json()));
-    if (res.statusCode == 200) {
-      Info(context, "插入成功");
-    } else {
-      Warn(context, "插入失败: ${res.body}");
-    }
+    client
+        .cICDServicePutTemplate(template)
+        .then((value) => Info(context, "插入成功"))
+        .catchError((e) => Warn(context, "插入失败: $e"));
   }
 
   void cancel() {
     Navigator.pop(context);
   }
 
-  void setTextEditControllersByTemplate(api.Template template) {
+  void setTextEditControllersByTemplate(ApiTemplate template) {
     _nameController.text = template.name;
     _categoryController.text = template.category;
     _descriptionController.text = template.description;
@@ -66,13 +57,13 @@ class PutTemplateViewState extends State<PutTemplateView> {
     _scriptController.text = template.scriptTemplate.script;
   }
 
-  api.Template createTemplateByTextEditControllers() {
-    var template = api.Template();
+  ApiTemplate createTemplateByTextEditControllers() {
+    var template = ApiTemplate();
     template.name = _nameController.value.text;
     template.description = _descriptionController.value.text;
     template.category = _categoryController.value.text;
     template.type = "script";
-    template.scriptTemplate = api.Template_ScriptTemplate();
+    template.scriptTemplate = TemplateScriptTemplate();
     template.scriptTemplate.language = _languageController.value.text;
     template.scriptTemplate.script = _scriptController.value.text;
     return template;
@@ -115,7 +106,8 @@ class PutTemplateViewState extends State<PutTemplateView> {
               key: _formKey,
               child: Column(
                 children: [
-                  MyTextField(key: "名字", controller: _nameController, editable: _editable, validator: validate),
+                  MyTextField(
+                      key: "名字", controller: _nameController, editable: _editable, validator: StringValidator.required),
                   const SizedBox(height: 20),
                   MyTextField(key: "类别", controller: _categoryController, editable: _editable),
                   const SizedBox(height: 20),
@@ -138,66 +130,4 @@ class PutTemplateViewState extends State<PutTemplateView> {
       ),
     );
   }
-}
-
-class CircleIconButton extends FlatButton {
-  CircleIconButton({
-    Function onPressed,
-    Color color,
-    IconData icon,
-    String tooltip,
-    Color iconColor,
-  }) : super(
-          color: color,
-          child: Tooltip(message: tooltip, child: Icon(icon, color: iconColor)),
-          padding: EdgeInsets.all(15),
-          shape: CircleBorder(),
-          onPressed: onPressed,
-        );
-}
-
-class MyTextField extends TextFormField {
-  MyTextField({
-    TextEditingController controller,
-    String key,
-    bool editable,
-    int minLines,
-    int maxLines,
-    String Function(String) validator,
-  }) : super(
-          validator: validator,
-          decoration: InputDecoration(
-            isDense: true,
-            labelText: key,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(5.0),
-              borderSide: BorderSide(),
-            ),
-          ),
-          maxLines: maxLines,
-          minLines: minLines,
-          controller: controller,
-          enabled: editable,
-        );
-}
-
-void Info(BuildContext context, String message) {
-  Scaffold.of(context).showSnackBar(SnackBar(
-    backgroundColor: Colors.green,
-    content: Text(message, style: TextStyle(color: Colors.white)),
-  ));
-}
-
-void Warn(BuildContext context, String message) {
-  Scaffold.of(context).showSnackBar(SnackBar(
-    backgroundColor: Colors.red,
-    content: Text(message, style: TextStyle(color: Colors.white)),
-  ));
-}
-
-void Trac(BuildContext context, String message) {
-  Scaffold.of(context).showSnackBar(SnackBar(
-    backgroundColor: Colors.blue,
-    content: Text(message, style: TextStyle(color: Colors.white)),
-  ));
 }
