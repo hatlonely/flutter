@@ -1,4 +1,4 @@
-import 'package:cicd/api2/api.dart';
+import 'package:cicd/api/api.dart';
 import 'package:cicd/config/config.dart';
 import 'package:cicd/pages/variable/put_variable_view.dart';
 import 'package:cicd/pages/variable/variable_view.dart';

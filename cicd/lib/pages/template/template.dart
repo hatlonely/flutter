@@ -1,4 +1,4 @@
-import 'package:cicd/api2/api.dart';
+import 'package:cicd/api/api.dart';
 import 'package:cicd/config/config.dart';
 import 'package:cicd/pages/template/put_template_view.dart';
 import 'package:cicd/pages/template/template_view.dart';
