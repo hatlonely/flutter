@@ -100,6 +100,8 @@ class VariableViewState extends State<VariableView> {
 
   @override
   Widget build(BuildContext context) {
+    setTextEditControllersByVariable(_variable);
+
     return Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
