@@ -1,8 +1,10 @@
 import 'package:cicd/api/api.dart';
 import 'package:cicd/config/config.dart';
+import 'package:cicd/pages/variable/variable.dart';
 import 'package:cicd/validator/validator.dart';
 import 'package:cicd/widget/widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PutVariableViewPage extends StatelessWidget {
   final String id;
@@ -37,10 +39,10 @@ class PutVariableViewState extends State<PutVariableView> {
     }
     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     var variable = createVariableByTextEditControllers();
-    client
-        .cICDServicePutVariable(variable)
-        .then((value) => Info(context, "插入成功"))
-        .catchError((e) => Warn(context, "插入失败: $e"));
+    client.cICDServicePutVariable(variable).then((value) {
+      Info(context, "插入成功");
+      context.read<VariableModel>().update();
+    }).catchError((e) => Warn(context, "插入失败: $e"));
   }
 
   void cancel() {

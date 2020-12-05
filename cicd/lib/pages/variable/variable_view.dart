@@ -1,8 +1,10 @@
 import 'package:cicd/api/api.dart';
 import 'package:cicd/config/config.dart';
+import 'package:cicd/pages/variable/variable.dart';
 import 'package:cicd/validator/validator.dart';
 import 'package:cicd/widget/widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class VariableViewPage extends StatelessWidget {
   final String id;
@@ -72,6 +74,7 @@ class VariableViewState extends State<VariableView> {
     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     client.cICDServiceDelVariable(id).then((value) {
       Info(context, "删除成功");
+      context.read<VariableModel>().del(id);
       Navigator.pop(context);
     }).catchError((e) => Warn(context, "删除失败: $e"));
   }

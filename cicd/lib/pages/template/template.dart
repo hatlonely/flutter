@@ -29,7 +29,6 @@ class ListTemplateView extends StatefulWidget {
 
 class TemplateModel extends ChangeNotifier {
   var _templates = <ApiTemplate>[];
-
   List<ApiTemplate> get templates => _templates;
 
   TemplateModel() {

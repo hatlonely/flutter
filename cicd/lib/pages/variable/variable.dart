@@ -3,6 +3,7 @@ import 'package:cicd/config/config.dart';
 import 'package:cicd/pages/variable/put_variable_view.dart';
 import 'package:cicd/pages/variable/variable_view.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class VariablePage extends StatefulWidget {
   @override
@@ -26,21 +27,32 @@ class VariableView extends StatefulWidget {
   State<StatefulWidget> createState() => VariableViewState();
 }
 
-class VariableViewState extends State<VariableView> {
+class VariableModel extends ChangeNotifier {
   var _variables = <ApiVariable>[];
+  List<ApiVariable> get variables => _variables;
 
-  VariableViewState() {
+  VariableModel() {
+    update();
+  }
+
+  void update() {
     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     client.cICDServiceListVariable(offset: "0", limit: "20").then((res) {
-      setState(() {
-        _variables = res.variables;
-      });
+      _variables = res.variables;
+      notifyListeners();
     });
   }
 
+  void del(String id) {
+    _variables.removeWhere((element) => element.id == id);
+    notifyListeners();
+  }
+}
+
+class VariableViewState extends State<VariableView> {
   @override
   Widget build(BuildContext context) {
-    var cards = _variables.map((e) {
+    var cards = context.watch<VariableModel>().variables.map((e) {
       return GestureDetector(
         onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => VariableViewPage(id: e.id)))},
         child: Card(
