@@ -1,8 +1,16 @@
-import 'package:cicd/pages/variable/variable.dart';
+import 'package:cicd/pages/template/template.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(CICDApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => TemplateModel()),
+      ],
+      child: CICDApp(),
+    ),
+  );
 }
 
 class CICDApp extends StatelessWidget {
@@ -11,7 +19,7 @@ class CICDApp extends StatelessWidget {
     return MaterialApp(
       title: "CICD Service",
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: VariablePage(),
+      home: TemplatePage(),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:cicd/config/config.dart';
 import 'package:cicd/pages/template/put_template_view.dart';
 import 'package:cicd/pages/template/template_view.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class TemplatePage extends StatefulWidget {
   @override
@@ -26,22 +27,33 @@ class ListTemplateView extends StatefulWidget {
   State<StatefulWidget> createState() => ListTemplateViewState();
 }
 
-class ListTemplateViewState extends State<ListTemplateView> {
+class TemplateModel extends ChangeNotifier {
   var _templates = <ApiTemplate>[];
 
-  ListTemplateViewState() {
+  List<ApiTemplate> get templates => _templates;
+
+  TemplateModel() {
+    update();
+  }
+
+  void update() {
     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     client.cICDServiceListTemplate(offset: "0", limit: "20").then((res) {
-      print(res.toJson());
-      setState(() {
-        _templates = res.templates;
-      });
+      _templates = res.templates;
+      notifyListeners();
     });
   }
 
+  void del(String id) {
+    _templates.removeWhere((element) => element.id == id);
+    notifyListeners();
+  }
+}
+
+class ListTemplateViewState extends State<ListTemplateView> {
   @override
   Widget build(BuildContext context) {
-    var cards = _templates.map((e) {
+    var cards = context.watch<TemplateModel>().templates.map((e) {
       return GestureDetector(
         onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => TemplateViewPage(id: e.id)))},
         child: Card(

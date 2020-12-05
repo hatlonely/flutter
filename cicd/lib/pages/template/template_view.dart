@@ -1,8 +1,10 @@
 import 'package:cicd/api/api.dart';
 import 'package:cicd/config/config.dart';
+import 'package:cicd/pages/template/template.dart';
 import 'package:cicd/validator/validator.dart';
 import 'package:cicd/widget/widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class TemplateViewPage extends StatelessWidget {
   final String id;
@@ -74,6 +76,7 @@ class TemplateViewState extends State<TemplateView> {
     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     client.cICDServiceDelTemplate(id).then((value) {
       Info(context, "删除成功");
+      context.read<TemplateModel>().del(id);
       Navigator.pop(context);
     }).catchError((e) => Warn(context, "删除失败: $e"));
   }

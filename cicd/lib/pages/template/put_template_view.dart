@@ -1,8 +1,10 @@
 import 'package:cicd/api/api.dart';
 import 'package:cicd/config/config.dart';
+import 'package:cicd/pages/template/template.dart';
 import 'package:cicd/validator/validator.dart';
 import 'package:cicd/widget/widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PutTemplateViewPage extends StatelessWidget {
   final String id;
@@ -39,10 +41,10 @@ class PutTemplateViewState extends State<PutTemplateView> {
     }
     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     var template = createTemplateByTextEditControllers();
-    client
-        .cICDServicePutTemplate(template)
-        .then((value) => Info(context, "插入成功"))
-        .catchError((e) => Warn(context, "插入失败: $e"));
+    client.cICDServicePutTemplate(template).then((value) {
+      Info(context, "插入成功");
+      context.read<TemplateModel>().update();
+    }).catchError((e) => Warn(context, "插入失败: $e"));
   }
 
   void cancel() {
