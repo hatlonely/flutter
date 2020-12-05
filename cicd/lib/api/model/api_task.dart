@@ -1,21 +1,16 @@
-part of swagger.api;
+part of openapi.api;
 
 class ApiTask {
   
   String id = null;
   
-
   String name = null;
   
-
   String description = null;
   
-
   List<String> templateIDs = [];
   
-
   List<String> variableIDs = [];
-  
   ApiTask();
 
   @override
@@ -25,43 +20,53 @@ class ApiTask {
 
   ApiTask.fromJson(Map<String, dynamic> json) {
     if (json == null) return;
-    id =
-        json['id']
-    ;
-    name =
-        json['name']
-    ;
-    description =
-        json['description']
-    ;
-    templateIDs =
-        (json['templateIDs'] as List).map((item) => item as String).toList()
-    ;
-    variableIDs =
-        (json['variableIDs'] as List).map((item) => item as String).toList()
-    ;
+    id = json['id'];
+    name = json['name'];
+    description = json['description'];
+    templateIDs = (json['templateIDs'] == null) ?
+      null :
+      (json['templateIDs'] as List).cast<String>();
+    variableIDs = (json['variableIDs'] == null) ?
+      null :
+      (json['variableIDs'] as List).cast<String>();
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'templateIDs': templateIDs,
-      'variableIDs': variableIDs
-     };
+    Map <String, dynamic> json = {};
+    if (id != null)
+      json['id'] = id;
+    if (name != null)
+      json['name'] = name;
+    if (description != null)
+      json['description'] = description;
+    if (templateIDs != null)
+      json['templateIDs'] = templateIDs;
+    if (variableIDs != null)
+      json['variableIDs'] = variableIDs;
+    return json;
   }
 
   static List<ApiTask> listFromJson(List<dynamic> json) {
-    return json == null ? new List<ApiTask>() : json.map((value) => new ApiTask.fromJson(value)).toList();
+    return json == null ? List<ApiTask>() : json.map((value) => ApiTask.fromJson(value)).toList();
   }
 
-  static Map<String, ApiTask> mapFromJson(Map<String, Map<String, dynamic>> json) {
-    var map = new Map<String, ApiTask>();
-    if (json != null && json.length > 0) {
-      json.forEach((String key, Map<String, dynamic> value) => map[key] = new ApiTask.fromJson(value));
+  static Map<String, ApiTask> mapFromJson(Map<String, dynamic> json) {
+    var map = Map<String, ApiTask>();
+    if (json != null && json.isNotEmpty) {
+      json.forEach((String key, dynamic value) => map[key] = ApiTask.fromJson(value));
     }
     return map;
+  }
+
+  // maps a json object with a list of ApiTask-objects as value to a dart map
+  static Map<String, List<ApiTask>> mapListFromJson(Map<String, dynamic> json) {
+    var map = Map<String, List<ApiTask>>();
+     if (json != null && json.isNotEmpty) {
+       json.forEach((String key, dynamic value) {
+         map[key] = ApiTask.listFromJson(value);
+       });
+     }
+     return map;
   }
 }
 

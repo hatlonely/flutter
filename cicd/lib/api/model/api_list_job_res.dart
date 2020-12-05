@@ -1,9 +1,8 @@
-part of swagger.api;
+part of openapi.api;
 
 class ApiListJobRes {
   
   List<ApiJob> jobs = [];
-  
   ApiListJobRes();
 
   @override
@@ -13,27 +12,39 @@ class ApiListJobRes {
 
   ApiListJobRes.fromJson(Map<String, dynamic> json) {
     if (json == null) return;
-    jobs =
-      ApiJob.listFromJson(json['jobs'])
-;
+    jobs = (json['jobs'] == null) ?
+      null :
+      ApiJob.listFromJson(json['jobs']);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'jobs': jobs
-     };
+    Map <String, dynamic> json = {};
+    if (jobs != null)
+      json['jobs'] = jobs;
+    return json;
   }
 
   static List<ApiListJobRes> listFromJson(List<dynamic> json) {
-    return json == null ? new List<ApiListJobRes>() : json.map((value) => new ApiListJobRes.fromJson(value)).toList();
+    return json == null ? List<ApiListJobRes>() : json.map((value) => ApiListJobRes.fromJson(value)).toList();
   }
 
-  static Map<String, ApiListJobRes> mapFromJson(Map<String, Map<String, dynamic>> json) {
-    var map = new Map<String, ApiListJobRes>();
-    if (json != null && json.length > 0) {
-      json.forEach((String key, Map<String, dynamic> value) => map[key] = new ApiListJobRes.fromJson(value));
+  static Map<String, ApiListJobRes> mapFromJson(Map<String, dynamic> json) {
+    var map = Map<String, ApiListJobRes>();
+    if (json != null && json.isNotEmpty) {
+      json.forEach((String key, dynamic value) => map[key] = ApiListJobRes.fromJson(value));
     }
     return map;
+  }
+
+  // maps a json object with a list of ApiListJobRes-objects as value to a dart map
+  static Map<String, List<ApiListJobRes>> mapListFromJson(Map<String, dynamic> json) {
+    var map = Map<String, List<ApiListJobRes>>();
+     if (json != null && json.isNotEmpty) {
+       json.forEach((String key, dynamic value) {
+         map[key] = ApiListJobRes.listFromJson(value);
+       });
+     }
+     return map;
   }
 }
 

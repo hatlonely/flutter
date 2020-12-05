@@ -40,6 +40,7 @@ class TaskViewState extends State<TaskView> {
   var _variables = <ApiVariable>[];
   var _allTemplates = <ApiTemplate>[];
   var _allVariables = <ApiVariable>[];
+  var _jobs = <ApiJob>[];
 
   TaskViewState({this.id}) {
     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
@@ -62,6 +63,10 @@ class TaskViewState extends State<TaskView> {
               _allVariables.removeWhere((element) => _task.variableIDs.contains(element.id));
             }),
           );
+      client.cICDServiceListJob(offset: "0", limit: "20", taskID: id).then((value) => setState(() {
+            print(value);
+            _jobs = value.jobs;
+          }));
     });
   }
 
@@ -315,6 +320,19 @@ class TaskViewState extends State<TaskView> {
                   ),
                 ],
               ),
+            ),
+            const SizedBox(height: 40),
+            DataTable(
+              columns: <String>["ID", "CreateAt", "Status"].map((e) => DataColumn(label: Text(e))).toList(),
+              rows: _jobs
+                  .map((e) => DataRow(cells: <DataCell>[
+                        DataCell(Text(e.id)),
+                        DataCell(Text(e.createAt == null
+                            ? "unknown"
+                            : DateTime.fromMillisecondsSinceEpoch(e.createAt * 1000).toIso8601String())),
+                        DataCell(Text(e.status)),
+                      ]))
+                  .toList(),
             ),
           ],
         ),
