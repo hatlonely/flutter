@@ -329,8 +329,9 @@ class TaskViewState extends State<TaskView> {
             const SizedBox(height: 40),
             DataTable(
                 showCheckboxColumn: false,
-                columns:
-                    <String>["ID", "CreateAt", "Status", "Operation"].map((e) => DataColumn(label: Text(e))).toList(),
+                columns: <String>["ID", "CreateAt", "Status", "Operation"]
+                    .map((e) => DataColumn(label: Center(child: Text(e, textAlign: TextAlign.center))))
+                    .toList(),
                 rows: _jobs
                     .map((e) => DataRow(
                             cells: <DataCell>[
