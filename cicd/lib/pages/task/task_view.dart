@@ -33,7 +33,7 @@ class TaskViewState extends State<TaskView> {
   final String id;
   var _nameController = TextEditingController();
   var _descriptionController = TextEditingController();
-  bool _editable = true;
+  bool _editable = false;
   final _formKey = GlobalKey<FormState>();
   var _task = ApiTask();
   var _templates = <ApiTemplate>[];
@@ -105,6 +105,13 @@ class TaskViewState extends State<TaskView> {
     });
   }
 
+  void runTask() async {
+    var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
+    client.cICDServiceRunTask(ApiRunTaskReq()..taskID = id).then((value) {
+      print("run task");
+    });
+  }
+
   void cancel() {
     setTextEditControllersByTask(_task);
     setState(() {
@@ -150,6 +157,12 @@ class TaskViewState extends State<TaskView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                CircleIconButton(
+                  tooltip: "运行",
+                  color: Colors.white,
+                  onPressed: _editable ? null : runTask,
+                  icon: Icons.play_circle_filled,
+                ),
                 CircleIconButton(
                   tooltip: "保存",
                   color: Colors.white,
