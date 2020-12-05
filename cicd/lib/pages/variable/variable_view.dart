@@ -53,7 +53,7 @@ class VariableViewState extends State<VariableView> {
     }
 
     var variable = createVariableByTextEditControllers();
-    if (_variable == variable) {
+    if (_variable.toString() == variable.toString()) {
       Trac(context, "无需更新");
       return;
     }

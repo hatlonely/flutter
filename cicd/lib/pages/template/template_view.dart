@@ -55,7 +55,7 @@ class TemplateViewState extends State<TemplateView> {
     }
 
     var template = createTemplateByTextEditControllers();
-    if (_template == template) {
+    if (_template.toString() == template.toString()) {
       Trac(context, "无需更新");
       return;
     }

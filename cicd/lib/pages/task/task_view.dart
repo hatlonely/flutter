@@ -75,7 +75,7 @@ class TaskViewState extends State<TaskView> {
     }
 
     var task = createTaskByTextEditControllers();
-    if (_task == task) {
+    if (_task.toString() == task.toString()) {
       Trac(context, "无需更新");
       return;
     }
