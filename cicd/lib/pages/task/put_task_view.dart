@@ -141,8 +141,6 @@ class PutTaskViewState extends State<PutTaskView> {
                                 setState(() {
                                   _allVariables.addAll(_variables.where((element) => element.name == e.name));
                                   _variables.removeWhere((element) => element.name == e.name);
-                                  print("[${e.name}] hello");
-                                  print(_variables);
                                 });
                               },
                             ),
@@ -194,8 +192,6 @@ class PutTaskViewState extends State<PutTaskView> {
                                 setState(() {
                                   _allTemplates.addAll(_templates.where((element) => element.name == e.name));
                                   _templates.removeWhere((element) => element.name == e.name);
-                                  print("[${e.name}] hello");
-                                  print(_templates);
                                 });
                               },
                             ),
