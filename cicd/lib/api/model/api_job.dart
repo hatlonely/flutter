@@ -16,11 +16,17 @@ class ApiJob {
 
   List<JobSub> subs = [];
   
+
+  int createAt = null;
+  
+
+  int updateAt = null;
+  
   ApiJob();
 
   @override
   String toString() {
-    return 'ApiJob[id=$id, taskID=$taskID, status=$status, error=$error, subs=$subs, ]';
+    return 'ApiJob[id=$id, taskID=$taskID, status=$status, error=$error, subs=$subs, createAt=$createAt, updateAt=$updateAt, ]';
   }
 
   ApiJob.fromJson(Map<String, dynamic> json) {
@@ -40,6 +46,12 @@ class ApiJob {
     subs =
       JobSub.listFromJson(json['subs'])
 ;
+    createAt =
+        json['createAt']
+    ;
+    updateAt =
+        json['updateAt']
+    ;
   }
 
   Map<String, dynamic> toJson() {
@@ -48,7 +60,9 @@ class ApiJob {
       'taskID': taskID,
       'status': status,
       'error': error,
-      'subs': subs
+      'subs': subs,
+      'createAt': createAt,
+      'updateAt': updateAt
      };
   }
 
