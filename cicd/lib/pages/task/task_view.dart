@@ -113,7 +113,7 @@ class TaskViewState extends State<TaskView> {
   void runTask() async {
     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     client.cICDServiceRunTask(ApiRunTaskReq()..taskID = id).then((value) {
-      print("run task");
+      client.cICDServiceGetJob(value.jobID).then((value) => setState(() => _jobs.insert(0, value)));
     });
   }
 
