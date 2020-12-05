@@ -1,8 +1,10 @@
 import 'package:cicd/api/api.dart';
 import 'package:cicd/config/config.dart';
+import 'package:cicd/pages/task/task.dart';
 import 'package:cicd/validator/validator.dart';
 import 'package:cicd/widget/widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class TaskViewPage extends StatelessWidget {
   final String id;
@@ -96,6 +98,7 @@ class TaskViewState extends State<TaskView> {
     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     client.cICDServiceDelTask(id).then((value) {
       Info(context, "删除成功");
+      context.read<TaskModel>().del(id);
       Navigator.pop(context);
     }).catchError((e) {
       Warn(context, "删除失败: $e");

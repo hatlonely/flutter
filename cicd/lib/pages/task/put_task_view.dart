@@ -1,8 +1,10 @@
 import 'package:cicd/api/api.dart';
 import 'package:cicd/config/config.dart';
+import 'package:cicd/pages/task/task.dart';
 import 'package:cicd/validator/validator.dart';
 import 'package:cicd/widget/widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PutTaskViewPage extends StatelessWidget {
   final String id;
@@ -57,7 +59,10 @@ class PutTaskViewState extends State<PutTaskView> {
     }
     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     var task = createTaskByTextEditControllers();
-    client.cICDServicePutTask(task).then((value) => Info(context, "插入成功")).catchError((e) => Warn(context, "插入失败: $e"));
+    client.cICDServicePutTask(task).then((value) {
+      Info(context, "插入成功");
+      context.read<TaskModel>().update();
+    }).catchError((e) => Warn(context, "插入失败: $e"));
   }
 
   void cancel() {

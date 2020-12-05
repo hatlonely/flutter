@@ -4,6 +4,7 @@ import 'package:cicd/pages/task/put_task_view.dart';
 import 'package:cicd/pages/task/task_view.dart';
 import 'package:cicd/widget/widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class TaskPage extends StatefulWidget {
   @override
@@ -27,21 +28,32 @@ class ListTaskView extends StatefulWidget {
   State<StatefulWidget> createState() => ListTaskViewState();
 }
 
-class ListTaskViewState extends State<ListTaskView> {
+class TaskModel extends ChangeNotifier {
   var _tasks = <ApiTask>[];
+  List<ApiTask> get tasks => _tasks;
 
-  ListTaskViewState() {
+  TaskModel() {
+    update();
+  }
+
+  void update() {
     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     client.cICDServiceListTask(offset: "0", limit: "20").then((value) {
-      setState(() {
-        _tasks = value.tasks;
-      });
+      _tasks = value.tasks;
+      notifyListeners();
     });
   }
 
+  void del(String id) {
+    _tasks.removeWhere((element) => element.id == id);
+    notifyListeners();
+  }
+}
+
+class ListTaskViewState extends State<ListTaskView> {
   @override
   Widget build(BuildContext context) {
-    var cards = _tasks.map((e) {
+    var cards = context.watch<TaskModel>().tasks.map((e) {
       return GestureDetector(
         onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => TaskViewPage(id: e.id)))},
         child: Card(
