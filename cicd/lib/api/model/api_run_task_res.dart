@@ -4,20 +4,11 @@ class ApiRunTaskRes {
   
   String jobID = null;
   
-
-  String exitCode = null;
-  
-
-  String stdout = null;
-  
-
-  String stderr = null;
-  
   ApiRunTaskRes();
 
   @override
   String toString() {
-    return 'ApiRunTaskRes[jobID=$jobID, exitCode=$exitCode, stdout=$stdout, stderr=$stderr, ]';
+    return 'ApiRunTaskRes[jobID=$jobID, ]';
   }
 
   ApiRunTaskRes.fromJson(Map<String, dynamic> json) {
@@ -25,23 +16,11 @@ class ApiRunTaskRes {
     jobID =
         json['jobID']
     ;
-    exitCode =
-        json['exitCode']
-    ;
-    stdout =
-        json['stdout']
-    ;
-    stderr =
-        json['stderr']
-    ;
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'jobID': jobID,
-      'exitCode': exitCode,
-      'stdout': stdout,
-      'stderr': stderr
+      'jobID': jobID
      };
   }
 
