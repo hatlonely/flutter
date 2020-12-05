@@ -105,6 +105,7 @@ class PutVariableViewState extends State<PutVariableView> {
                   const SizedBox(height: 20),
                   MyTextField(
                     key: "键值",
+                    validator: StringValidator.isJson,
                     controller: _kvsController,
                     minLines: 10,
                     maxLines: 20,

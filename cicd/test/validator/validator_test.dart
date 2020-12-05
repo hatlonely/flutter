@@ -3,6 +3,9 @@ import 'package:test/test.dart';
 
 void main() {
   test("StringValidator.required", () {
+    expect(StringValidator.group([StringValidator.required, StringValidator.isJson])('{"key1": "val1", "key2": 2}'),
+        isNull);
+
     expect(StringValidator.required(""), isNotNull);
     expect(StringValidator.required(" "), isNotNull);
     expect(StringValidator.required(null), isNotNull);
@@ -12,5 +15,6 @@ void main() {
     expect(StringValidator.isJson(""), isNotNull);
     expect(StringValidator.isJson(null), isNotNull);
     expect(StringValidator.isJson('{"key1": "val1", "key2": 2}'), isNull);
+    expect(StringValidator.isJson('123'), isNull);
   });
 }
