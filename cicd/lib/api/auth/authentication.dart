@@ -1,4 +1,4 @@
-part of openapi.api;
+part of swagger.api;
 
 abstract class Authentication {
 

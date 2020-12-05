@@ -1,4 +1,4 @@
-part of openapi.api;
+part of swagger.api;
 
 class QueryParam {
   String name;
@@ -10,15 +10,16 @@ class QueryParam {
 class ApiClient {
 
   String basePath;
-  var client = Client();
+  var client = new BrowserClient();
 
   Map<String, String> _defaultHeaderMap = {};
   Map<String, Authentication> _authentications = {};
 
-  final _regList = RegExp(r'^List<(.*)>$');
-  final _regMap = RegExp(r'^Map<String,(.*)>$');
+  final _RegList = new RegExp(r'^List<(.*)>$');
+  final _RegMap = new RegExp(r'^Map<String,(.*)>$');
 
-  ApiClient({this.basePath = "http://localhost"}) {
+  ApiClient({this.basePath: "https://localhost"}) {
+    // Setup authentications (key: authentication name, value: authentication).
   }
 
   void addDefaultHeader(String key, String value) {
@@ -36,66 +37,68 @@ class ApiClient {
           return value is bool ? value : '$value'.toLowerCase() == 'true';
         case 'double':
           return value is double ? value : double.parse('$value');
+        case 'ApiEmpty':
+          return new ApiEmpty.fromJson(value);
         case 'ApiGetTemplatesReq':
-          return ApiGetTemplatesReq.fromJson(value);
+          return new ApiGetTemplatesReq.fromJson(value);
         case 'ApiGetVariablesReq':
-          return ApiGetVariablesReq.fromJson(value);
+          return new ApiGetVariablesReq.fromJson(value);
         case 'ApiJob':
-          return ApiJob.fromJson(value);
+          return new ApiJob.fromJson(value);
         case 'ApiListJobRes':
-          return ApiListJobRes.fromJson(value);
+          return new ApiListJobRes.fromJson(value);
         case 'ApiListTaskRes':
-          return ApiListTaskRes.fromJson(value);
+          return new ApiListTaskRes.fromJson(value);
         case 'ApiListTemplateRes':
-          return ApiListTemplateRes.fromJson(value);
+          return new ApiListTemplateRes.fromJson(value);
         case 'ApiListVariableRes':
-          return ApiListVariableRes.fromJson(value);
+          return new ApiListVariableRes.fromJson(value);
         case 'ApiRunTaskReq':
-          return ApiRunTaskReq.fromJson(value);
+          return new ApiRunTaskReq.fromJson(value);
         case 'ApiRunTaskRes':
-          return ApiRunTaskRes.fromJson(value);
+          return new ApiRunTaskRes.fromJson(value);
         case 'ApiTask':
-          return ApiTask.fromJson(value);
+          return new ApiTask.fromJson(value);
         case 'ApiTemplate':
-          return ApiTemplate.fromJson(value);
+          return new ApiTemplate.fromJson(value);
         case 'ApiVariable':
-          return ApiVariable.fromJson(value);
+          return new ApiVariable.fromJson(value);
         case 'JobSub':
-          return JobSub.fromJson(value);
+          return new JobSub.fromJson(value);
         case 'ProtobufAny':
-          return ProtobufAny.fromJson(value);
+          return new ProtobufAny.fromJson(value);
         case 'RuntimeError':
-          return RuntimeError.fromJson(value);
+          return new RuntimeError.fromJson(value);
         case 'TemplateScriptTemplate':
-          return TemplateScriptTemplate.fromJson(value);
+          return new TemplateScriptTemplate.fromJson(value);
         default:
           {
             Match match;
             if (value is List &&
-                (match = _regList.firstMatch(targetType)) != null) {
+                (match = _RegList.firstMatch(targetType)) != null) {
               var newTargetType = match[1];
               return value.map((v) => _deserialize(v, newTargetType)).toList();
             } else if (value is Map &&
-                (match = _regMap.firstMatch(targetType)) != null) {
+                (match = _RegMap.firstMatch(targetType)) != null) {
               var newTargetType = match[1];
-              return Map.fromIterables(value.keys,
+              return new Map.fromIterables(value.keys,
                   value.values.map((v) => _deserialize(v, newTargetType)));
             }
           }
       }
-    } on Exception catch (e, stack) {
-      throw ApiException.withInner(500, 'Exception during deserialization.', e, stack);
+    } catch (e, stack) {
+      throw new ApiException.withInner(500, 'Exception during deserialization.', e, stack);
     }
-    throw ApiException(500, 'Could not find a suitable class for deserialization');
+    throw new ApiException(500, 'Could not find a suitable class for deserialization');
   }
 
-  dynamic deserialize(String json, String targetType) {
+  dynamic deserialize(String jsonVal, String targetType) {
     // Remove all spaces.  Necessary for reg expressions as well.
     targetType = targetType.replaceAll(' ', '');
 
-    if (targetType == 'String') return json;
+    if (targetType == 'String') return jsonVal;
 
-    var decodedJson = jsonDecode(json);
+    var decodedJson = json.decode(jsonVal);
     return _deserialize(decodedJson, targetType);
   }
 
@@ -117,15 +120,12 @@ class ApiClient {
                              Object body,
                              Map<String, String> headerParams,
                              Map<String, String> formParams,
-                             String nullableContentType,
+                             String contentType,
                              List<String> authNames) async {
 
     _updateParamsForAuth(authNames, queryParams, headerParams);
 
-    var ps = queryParams
-      .where((p) => p.value != null)
-      .map((p) => '${p.name}=${Uri.encodeQueryComponent(p.value)}');
-
+    var ps = queryParams.where((p) => p.value != null).map((p) => '${p.name}=${p.value}');
     String queryString = ps.isNotEmpty ?
                          '?' + ps.join('&') :
                          '';
@@ -133,13 +133,10 @@ class ApiClient {
     String url = basePath + path + queryString;
 
     headerParams.addAll(_defaultHeaderMap);
-    if (nullableContentType != null) {
-      final contentType = nullableContentType;
-      headerParams['Content-Type'] = contentType;
-    }
+    headerParams['Content-Type'] = contentType;
 
     if(body is MultipartRequest) {
-      var request = MultipartRequest(method, Uri.parse(url));
+      var request = new MultipartRequest(method, Uri.parse(url));
       request.fields.addAll(body.fields);
       request.files.addAll(body.files);
       request.headers.addAll(body.headers);
@@ -147,21 +144,18 @@ class ApiClient {
       var response = await client.send(request);
       return Response.fromStream(response);
     } else {
-      var msgBody = nullableContentType == "application/x-www-form-urlencoded" ? formParams : serialize(body);
-      final nullableHeaderParams = (headerParams.isEmpty)? null: headerParams;
+      var msgBody = contentType == "application/x-www-form-urlencoded" ? formParams : serialize(body);
       switch(method) {
         case "POST":
-          return client.post(url, headers: nullableHeaderParams, body: msgBody);
+          return client.post(url, headers: headerParams, body: msgBody);
         case "PUT":
-          return client.put(url, headers: nullableHeaderParams, body: msgBody);
+          return client.put(url, headers: headerParams, body: msgBody);
         case "DELETE":
-          return client.delete(url, headers: nullableHeaderParams);
+          return client.delete(url, headers: headerParams);
         case "PATCH":
-          return client.patch(url, headers: nullableHeaderParams, body: msgBody);
-        case "HEAD":
-          return client.head(url, headers: nullableHeaderParams);
+          return client.patch(url, headers: headerParams, body: msgBody);
         default:
-          return client.get(url, headers: nullableHeaderParams);
+          return client.get(url, headers: headerParams);
       }
     }
   }
@@ -171,14 +165,16 @@ class ApiClient {
   void _updateParamsForAuth(List<String> authNames, List<QueryParam> queryParams, Map<String, String> headerParams) {
     authNames.forEach((authName) {
       Authentication auth = _authentications[authName];
-      if (auth == null) throw ArgumentError("Authentication undefined: " + authName);
+      if (auth == null) throw new ArgumentError("Authentication undefined: " + authName);
       auth.applyToParams(queryParams, headerParams);
     });
   }
 
-  T getAuthentication<T extends Authentication>(String name) {
-    var authentication = _authentications[name];
-
-    return authentication is T ? authentication : null;
+  void setAccessToken(String accessToken) {
+    _authentications.forEach((key, auth) {
+      if (auth is OAuth) {
+        auth.setAccessToken(accessToken);
+      }
+    });
   }
 }

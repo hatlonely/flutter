@@ -1,14 +1,18 @@
-part of openapi.api;
+part of swagger.api;
 
 class RuntimeError {
   
   String error = null;
   
+
   int code = null;
   
+
   String message = null;
   
+
   List<ProtobufAny> details = [];
+  
   RuntimeError();
 
   @override
@@ -18,48 +22,39 @@ class RuntimeError {
 
   RuntimeError.fromJson(Map<String, dynamic> json) {
     if (json == null) return;
-    error = json['error'];
-    code = json['code'];
-    message = json['message'];
-    details = (json['details'] == null) ?
-      null :
-      ProtobufAny.listFromJson(json['details']);
+    error =
+        json['error']
+    ;
+    code =
+        json['code']
+    ;
+    message =
+        json['message']
+    ;
+    details =
+      ProtobufAny.listFromJson(json['details'])
+;
   }
 
   Map<String, dynamic> toJson() {
-    Map <String, dynamic> json = {};
-    if (error != null)
-      json['error'] = error;
-    if (code != null)
-      json['code'] = code;
-    if (message != null)
-      json['message'] = message;
-    if (details != null)
-      json['details'] = details;
-    return json;
+    return {
+      'error': error,
+      'code': code,
+      'message': message,
+      'details': details
+     };
   }
 
   static List<RuntimeError> listFromJson(List<dynamic> json) {
-    return json == null ? List<RuntimeError>() : json.map((value) => RuntimeError.fromJson(value)).toList();
+    return json == null ? new List<RuntimeError>() : json.map((value) => new RuntimeError.fromJson(value)).toList();
   }
 
-  static Map<String, RuntimeError> mapFromJson(Map<String, dynamic> json) {
-    var map = Map<String, RuntimeError>();
-    if (json != null && json.isNotEmpty) {
-      json.forEach((String key, dynamic value) => map[key] = RuntimeError.fromJson(value));
+  static Map<String, RuntimeError> mapFromJson(Map<String, Map<String, dynamic>> json) {
+    var map = new Map<String, RuntimeError>();
+    if (json != null && json.length > 0) {
+      json.forEach((String key, Map<String, dynamic> value) => map[key] = new RuntimeError.fromJson(value));
     }
     return map;
-  }
-
-  // maps a json object with a list of RuntimeError-objects as value to a dart map
-  static Map<String, List<RuntimeError>> mapListFromJson(Map<String, dynamic> json) {
-    var map = Map<String, List<RuntimeError>>();
-     if (json != null && json.isNotEmpty) {
-       json.forEach((String key, dynamic value) {
-         map[key] = RuntimeError.listFromJson(value);
-       });
-     }
-     return map;
   }
 }
 
