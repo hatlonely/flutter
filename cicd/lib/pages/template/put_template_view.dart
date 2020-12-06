@@ -109,16 +109,19 @@ class PutTemplateViewState extends State<PutTemplateView> {
               child: Column(
                 children: [
                   MyTextField(
-                      key: "名字", controller: _nameController, editable: _editable, validator: StringValidator.required),
+                      label: "名字",
+                      controller: _nameController,
+                      editable: _editable,
+                      validator: StringValidator.required),
                   const SizedBox(height: 20),
-                  MyTextField(key: "类别", controller: _categoryController, editable: _editable),
+                  MyTextField(label: "类别", controller: _categoryController, editable: _editable),
                   const SizedBox(height: 20),
-                  MyTextField(key: "描述", controller: _descriptionController, editable: _editable),
+                  MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
                   const SizedBox(height: 20),
-                  MyTextField(key: "语言", controller: _languageController, editable: _editable),
+                  MyTextField(label: "语言", controller: _languageController, editable: _editable),
                   const SizedBox(height: 20),
                   MyTextField(
-                    key: "脚本",
+                    label: "脚本",
                     controller: _scriptController,
                     minLines: 10,
                     maxLines: 20,

@@ -21,7 +21,7 @@ class CircleIconButton extends FlatButton {
 class MyTextField extends TextFormField {
   MyTextField({
     TextEditingController controller,
-    String key,
+    String label,
     bool editable,
     int minLines,
     int maxLines,
@@ -30,7 +30,7 @@ class MyTextField extends TextFormField {
           validator: validator,
           decoration: InputDecoration(
             isDense: true,
-            labelText: key,
+            labelText: label,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(5.0),
               borderSide: BorderSide(),

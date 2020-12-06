@@ -101,12 +101,15 @@ class PutVariableViewState extends State<PutVariableView> {
               child: Column(
                 children: [
                   MyTextField(
-                      key: "名字", controller: _nameController, editable: _editable, validator: StringValidator.required),
+                      label: "名字",
+                      controller: _nameController,
+                      editable: _editable,
+                      validator: StringValidator.required),
                   const SizedBox(height: 20),
-                  MyTextField(key: "描述", controller: _descriptionController, editable: _editable),
+                  MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
                   const SizedBox(height: 20),
                   MyTextField(
-                    key: "键值",
+                    label: "键值",
                     validator: StringValidator.isJson,
                     controller: _kvsController,
                     minLines: 10,

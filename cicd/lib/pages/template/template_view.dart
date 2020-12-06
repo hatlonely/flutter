@@ -110,6 +110,8 @@ class TemplateViewState extends State<TemplateView> {
     template.scriptTemplate = TemplateScriptTemplate();
     template.scriptTemplate.language = _language;
     template.scriptTemplate.script = _scriptController.value.text;
+    template.createAt = _template.createAt;
+    template.updateAt = _template.updateAt;
     return template;
   }
 
@@ -165,11 +167,14 @@ class TemplateViewState extends State<TemplateView> {
               child: Column(
                 children: [
                   MyTextField(
-                      key: "名字", controller: _nameController, editable: _editable, validator: StringValidator.required),
+                      label: "名字",
+                      controller: _nameController,
+                      editable: _editable,
+                      validator: StringValidator.required),
                   const SizedBox(height: 20),
-                  MyTextField(key: "类别", controller: _categoryController, editable: _editable),
+                  MyTextField(label: "类别", controller: _categoryController, editable: _editable),
                   const SizedBox(height: 20),
-                  MyTextField(key: "描述", controller: _descriptionController, editable: _editable),
+                  MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
                   const SizedBox(height: 20),
                   MyDropDownTextFormField(
                     label: "语言",
@@ -184,7 +189,7 @@ class TemplateViewState extends State<TemplateView> {
                   ),
                   const SizedBox(height: 20),
                   MyTextField(
-                    key: "脚本",
+                    label: "脚本",
                     controller: _scriptController,
                     minLines: 10,
                     maxLines: 20,
