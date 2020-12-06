@@ -14,7 +14,7 @@ class TemplatePageState extends State<TemplatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("template")),
+      appBar: AppBar(title: Text("模板")),
       body: Center(
         child: ListTemplateView(),
       ),

@@ -13,7 +13,7 @@ class TemplateViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("template")),
+      appBar: AppBar(title: Text("模板详情")),
       body: Center(
         child: TemplateView(id: this.id),
       ),
