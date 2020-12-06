@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cicd/api/api.dart';
 import 'package:cicd/config/config.dart';
 import 'package:cicd/pages/variable/variable.dart';
@@ -40,7 +42,10 @@ class VariableViewState extends State<VariableView> {
 
   VariableViewState({this.id}) {
     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
-    client.cICDServiceGetVariable(id).then((value) => setState(() => _variable = value));
+    client.cICDServiceGetVariable(id).then((value) => setState(() {
+          _variable = value;
+          setTextEditControllersByVariable(_variable);
+        }));
   }
 
   void edit() {
@@ -103,88 +108,84 @@ class VariableViewState extends State<VariableView> {
 
   @override
   Widget build(BuildContext context) {
-    setTextEditControllersByVariable(_variable);
-
-    return Card(
-      margin: EdgeInsets.zero,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      elevation: 2,
-      child: Padding(
-        padding: EdgeInsets.all(40.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CircleIconButton(
-                  tooltip: "保存",
-                  color: Colors.white,
-                  onPressed: _editable ? save : null,
-                  icon: Icons.save,
-                ),
-                const SizedBox(width: 10),
-                CircleIconButton(
-                  tooltip: "编辑",
-                  color: Colors.white,
-                  onPressed: _editable ? null : edit,
-                  icon: Icons.edit,
-                ),
-                const SizedBox(width: 10),
-                CircleIconButton(
-                  tooltip: "取消",
-                  color: Colors.white,
-                  onPressed: _editable ? cancel : null,
-                  icon: Icons.cancel,
-                ),
-                const SizedBox(width: 10),
-                CircleIconButton(
-                    tooltip: "删除",
-                    color: Colors.white,
-                    onPressed: _editable ? null : delete,
-                    icon: Icons.delete,
-                    iconColor: Colors.red),
-              ],
-            ),
-            const SizedBox(height: 40),
-            Form(
-              key: _formKey,
-              child: Column(
+    var maxWidth = min(MediaQuery.of(context).size.width, 800);
+    return Center(
+      child: Container(
+        width: maxWidth,
+        child: Padding(
+          padding: EdgeInsets.all(40.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 2.5,
-                        child: MyTextField(
-                          label: "名字",
-                          controller: _nameController,
-                          editable: _editable,
-                          validator: StringValidator.required,
-                        ),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 2.5,
-                        child: MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
-                      ),
-                    ],
+                  CircleIconButton(
+                    tooltip: "保存",
+                    color: Colors.white,
+                    onPressed: _editable ? save : null,
+                    icon: Icons.save,
                   ),
-                  const SizedBox(height: 20),
-                  MyTextField(
-                    label: "键值",
-                    validator: StringValidator.isJson,
-                    controller: _kvsController,
-                    minLines: 10,
-                    maxLines: 20,
-                    editable: _editable,
+                  const SizedBox(width: 10),
+                  CircleIconButton(
+                    tooltip: "编辑",
+                    color: Colors.white,
+                    onPressed: _editable ? null : edit,
+                    icon: Icons.edit,
                   ),
+                  const SizedBox(width: 10),
+                  CircleIconButton(
+                    tooltip: "取消",
+                    color: Colors.white,
+                    onPressed: _editable ? cancel : null,
+                    icon: Icons.cancel,
+                  ),
+                  const SizedBox(width: 10),
+                  CircleIconButton(
+                      tooltip: "删除",
+                      color: Colors.white,
+                      onPressed: _editable ? null : delete,
+                      icon: Icons.delete,
+                      iconColor: Colors.red),
                 ],
               ),
-            ),
-          ],
+              const SizedBox(height: 40),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: maxWidth / 2.5,
+                          child: MyTextField(
+                            label: "名字",
+                            controller: _nameController,
+                            editable: _editable,
+                            validator: StringValidator.required,
+                          ),
+                        ),
+                        SizedBox(
+                          width: maxWidth / 2.5,
+                          child: MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    MyTextField(
+                      label: "键值",
+                      validator: StringValidator.isJson,
+                      controller: _kvsController,
+                      minLines: 10,
+                      maxLines: 20,
+                      editable: _editable,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

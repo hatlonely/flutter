@@ -1,3 +1,4 @@
+import 'package:cicd/page_home.dart';
 import 'package:cicd/pages/task/task.dart';
 import 'package:cicd/pages/template/template.dart';
 import 'package:cicd/pages/variable/variable.dart';
@@ -23,7 +24,7 @@ class CICDApp extends StatelessWidget {
     return MaterialApp(
       title: "CICD Service",
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: VariablePage(),
+      home: HomePage(),
     );
   }
 }
