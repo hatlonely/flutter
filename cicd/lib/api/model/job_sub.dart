@@ -5,6 +5,9 @@ class JobSub {
   String templateID = null;
   
 
+  String templateName = null;
+  
+
   String status = null;
   
 
@@ -26,13 +29,16 @@ class JobSub {
 
   @override
   String toString() {
-    return 'JobSub[templateID=$templateID, status=$status, language=$language, script=$script, exitCode=$exitCode, stdout=$stdout, stderr=$stderr, ]';
+    return 'JobSub[templateID=$templateID, templateName=$templateName, status=$status, language=$language, script=$script, exitCode=$exitCode, stdout=$stdout, stderr=$stderr, ]';
   }
 
   JobSub.fromJson(Map<String, dynamic> json) {
     if (json == null) return;
     templateID =
         json['templateID']
+    ;
+    templateName =
+        json['templateName']
     ;
     status =
         json['status']
@@ -57,6 +63,7 @@ class JobSub {
   Map<String, dynamic> toJson() {
     return {
       'templateID': templateID,
+      'templateName': templateName,
       'status': status,
       'language': language,
       'script': script,

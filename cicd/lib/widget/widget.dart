@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_highlight/flutter_highlight.dart';
+import 'package:flutter_highlight/themes/github.dart';
 
 class CircleIconButton extends FlatButton {
   CircleIconButton({
@@ -60,6 +62,38 @@ class ElementAddCard extends GestureDetector {
             ),
           ),
         );
+}
+
+class CodeView extends SizedBox {
+  CodeView({String code, String language, String title, double width})
+      : super(
+            width: width,
+            child: Card(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.left,
+                  ),
+                  SizedBox(
+                    width: width,
+                    child: HighlightView(
+                      code,
+                      language: language,
+                      theme: githubTheme,
+                      padding: EdgeInsets.all(12),
+                      textStyle: TextStyle(
+                        fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace',
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ));
 }
 
 void Info(BuildContext context, String message) {
