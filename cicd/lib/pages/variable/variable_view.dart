@@ -17,7 +17,7 @@ class VariableViewPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text("变量详情")),
       body: Center(
-        child: VariableView(id: this.id),
+        child: ListView(children: [VariableView(id: this.id)]),
       ),
     );
   }
