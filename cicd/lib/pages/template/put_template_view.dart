@@ -13,7 +13,7 @@ class PutTemplateViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("put template")),
+      appBar: AppBar(title: Text("新增模板")),
       body: Center(
         child: PutTemplateView(),
       ),
@@ -30,8 +30,8 @@ class PutTemplateViewState extends State<PutTemplateView> {
   var _nameController = TextEditingController();
   var _categoryController = TextEditingController();
   var _descriptionController = TextEditingController();
-  var _languageController = TextEditingController();
   var _scriptController = TextEditingController();
+  String _language;
   bool _editable = true;
   final _formKey = GlobalKey<FormState>();
 
@@ -55,7 +55,7 @@ class PutTemplateViewState extends State<PutTemplateView> {
     _nameController.text = template.name;
     _categoryController.text = template.category;
     _descriptionController.text = template.description;
-    _languageController.text = template.scriptTemplate.language;
+    _language = template.scriptTemplate.language;
     _scriptController.text = template.scriptTemplate.script;
   }
 
@@ -66,7 +66,7 @@ class PutTemplateViewState extends State<PutTemplateView> {
     template.category = _categoryController.value.text;
     template.type = "script";
     template.scriptTemplate = TemplateScriptTemplate();
-    template.scriptTemplate.language = _languageController.value.text;
+    template.scriptTemplate.language = _language;
     template.scriptTemplate.script = _scriptController.value.text;
     return template;
   }
@@ -108,17 +108,40 @@ class PutTemplateViewState extends State<PutTemplateView> {
               key: _formKey,
               child: Column(
                 children: [
-                  MyTextField(
-                      label: "名字",
-                      controller: _nameController,
-                      editable: _editable,
-                      validator: StringValidator.required),
-                  const SizedBox(height: 20),
-                  MyTextField(label: "类别", controller: _categoryController, editable: _editable),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 4,
+                        child: MyTextField(
+                          label: "名字",
+                          controller: _nameController,
+                          editable: _editable,
+                          validator: StringValidator.required,
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 4,
+                        child: MyDropDownTextFormField(
+                          label: "语言",
+                          items: ["shell", "python3"],
+                          value: _language,
+                          enable: _editable,
+                          onChanged: (value) {
+                            setState(() {
+                              _language = value;
+                            });
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 4,
+                        child: MyTextField(label: "类别", controller: _categoryController, editable: _editable),
+                      )
+                    ],
+                  ),
                   const SizedBox(height: 20),
                   MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
-                  const SizedBox(height: 20),
-                  MyTextField(label: "语言", controller: _languageController, editable: _editable),
                   const SizedBox(height: 20),
                   MyTextField(
                     label: "脚本",
