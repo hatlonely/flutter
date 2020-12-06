@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cicd/api/api.dart';
 import 'package:cicd/config/config.dart';
 import 'package:cicd/pages/task/task.dart';
@@ -13,9 +15,9 @@ class PutTaskViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("put task")),
+      appBar: AppBar(title: Text("新增任务")),
       body: Center(
-        child: PutTaskView(),
+        child: ListView(children: [PutTaskView()]),
       ),
     );
   }
@@ -80,157 +82,155 @@ class PutTaskViewState extends State<PutTaskView> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.zero,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      elevation: 2,
-      child: Padding(
-        padding: EdgeInsets.all(40.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CircleIconButton(
-                  tooltip: "保存",
-                  color: Colors.white,
-                  onPressed: _editable ? save : null,
-                  icon: Icons.save,
-                ),
-                const SizedBox(width: 10),
-                CircleIconButton(
-                  tooltip: "取消",
-                  color: Colors.white,
-                  onPressed: _editable ? cancel : null,
-                  icon: Icons.cancel,
-                ),
-              ],
-            ),
-            const SizedBox(height: 40),
-            Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+    var maxWidth = min(MediaQuery.of(context).size.width, 800);
+    return Center(
+      child: Container(
+        width: maxWidth,
+        child: Padding(
+          padding: EdgeInsets.all(40.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  MyTextField(
-                    label: "名字",
-                    controller: _nameController,
-                    editable: _editable,
-                    validator: StringValidator.required,
+                  CircleIconButton(
+                    tooltip: "保存",
+                    color: Colors.white,
+                    onPressed: _editable ? save : null,
+                    icon: Icons.save,
                   ),
-                  const SizedBox(height: 20),
-                  MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
-                  const SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Wrap(
-                      spacing: 20,
-                      children: [
-                        Padding(padding: EdgeInsets.all(6), child: Text("变量")),
-                        ..._variables.map(
-                          (e) => Padding(
-                            padding: EdgeInsets.all(6),
-                            child: Chip(
-                              label: Text(e.name),
-                              deleteIcon: Icon(Icons.close, size: 10),
-                              onDeleted: () {
-                                setState(() {
-                                  _allVariables.addAll(_variables.where((element) => element.name == e.name));
-                                  _variables.removeWhere((element) => element.name == e.name);
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                        PopupMenuButton<ApiVariable>(
-                          tooltip: "添加变量",
-                          padding: EdgeInsets.zero,
-                          offset: Offset.zero,
-                          icon: Container(
-                            padding: EdgeInsets.zero,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black, width: 2),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(Icons.add, size: 24.0),
-                          ),
-                          onSelected: (ApiVariable value) {
-                            setState(() {
-                              _variables.add(value);
-                              _allVariables.removeWhere((element) => element.name == value.name);
-                            });
-                          },
-                          itemBuilder: (BuildContext context) =>
-                              _allVariables.map<PopupMenuEntry<ApiVariable>>((ApiVariable value) {
-                            return PopupMenuItem<ApiVariable>(
-                              value: value,
-                              child: Text(value.name),
-                            );
-                          }).toList(),
-                        ),
-                      ],
-                    ),
+                  const SizedBox(width: 10),
+                  CircleIconButton(
+                    tooltip: "取消",
+                    color: Colors.white,
+                    onPressed: _editable ? cancel : null,
+                    icon: Icons.cancel,
                   ),
-                  const SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Wrap(
-                      spacing: 20,
-                      children: [
-                        Padding(padding: EdgeInsets.all(6), child: Text("模板")),
-                        ..._templates.map(
-                          (e) => Padding(
-                            padding: EdgeInsets.all(6),
-                            child: Chip(
-                              label: Text(e.name),
-                              deleteIcon: Icon(Icons.close, size: 10),
-                              onDeleted: () {
-                                setState(() {
-                                  _allTemplates.addAll(_templates.where((element) => element.name == e.name));
-                                  _templates.removeWhere((element) => element.name == e.name);
-                                });
-                              },
-                            ),
-                          ),
-                        ),
-                        PopupMenuButton<ApiTemplate>(
-                          tooltip: "添加模板",
-                          padding: EdgeInsets.zero,
-                          offset: Offset.zero,
-                          icon: Container(
-                            padding: EdgeInsets.zero,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black, width: 2),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(Icons.add, size: 24.0),
-                          ),
-                          onSelected: (ApiTemplate value) {
-                            setState(() {
-                              _templates.add(value);
-                              _allTemplates.removeWhere((element) => element.name == value.name);
-                            });
-                          },
-                          itemBuilder: (BuildContext context) =>
-                              _allTemplates.map<PopupMenuEntry<ApiTemplate>>((ApiTemplate value) {
-                            return PopupMenuItem<ApiTemplate>(
-                              value: value,
-                              child: Text(value.name),
-                            );
-                          }).toList(),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
                 ],
               ),
-            ),
-          ],
+              const SizedBox(height: 40),
+              Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    MyTextField(
+                      label: "名字",
+                      controller: _nameController,
+                      editable: _editable,
+                      validator: StringValidator.required,
+                    ),
+                    const SizedBox(height: 20),
+                    MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
+                    const SizedBox(height: 20),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Wrap(
+                        spacing: 20,
+                        children: [
+                          Padding(padding: EdgeInsets.all(6), child: Text("变量")),
+                          ..._variables.map(
+                            (e) => Padding(
+                              padding: EdgeInsets.all(6),
+                              child: Chip(
+                                label: Text(e.name),
+                                deleteIcon: Icon(Icons.close, size: 10),
+                                onDeleted: () {
+                                  setState(() {
+                                    _allVariables.addAll(_variables.where((element) => element.name == e.name));
+                                    _variables.removeWhere((element) => element.name == e.name);
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                          PopupMenuButton<ApiVariable>(
+                            tooltip: "添加变量",
+                            padding: EdgeInsets.zero,
+                            offset: Offset.zero,
+                            icon: Container(
+                              padding: EdgeInsets.zero,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black, width: 2),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.add, size: 24.0),
+                            ),
+                            onSelected: (ApiVariable value) {
+                              setState(() {
+                                _variables.add(value);
+                                _allVariables.removeWhere((element) => element.name == value.name);
+                              });
+                            },
+                            itemBuilder: (BuildContext context) =>
+                                _allVariables.map<PopupMenuEntry<ApiVariable>>((ApiVariable value) {
+                              return PopupMenuItem<ApiVariable>(
+                                value: value,
+                                child: Text(value.name),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Wrap(
+                        spacing: 20,
+                        children: [
+                          Padding(padding: EdgeInsets.all(6), child: Text("模板")),
+                          ..._templates.map(
+                            (e) => Padding(
+                              padding: EdgeInsets.all(6),
+                              child: Chip(
+                                label: Text(e.name),
+                                deleteIcon: Icon(Icons.close, size: 10),
+                                onDeleted: () {
+                                  setState(() {
+                                    _allTemplates.addAll(_templates.where((element) => element.name == e.name));
+                                    _templates.removeWhere((element) => element.name == e.name);
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
+                          PopupMenuButton<ApiTemplate>(
+                            tooltip: "添加模板",
+                            padding: EdgeInsets.zero,
+                            offset: Offset.zero,
+                            icon: Container(
+                              padding: EdgeInsets.zero,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black, width: 2),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.add, size: 24.0),
+                            ),
+                            onSelected: (ApiTemplate value) {
+                              setState(() {
+                                _templates.add(value);
+                                _allTemplates.removeWhere((element) => element.name == value.name);
+                              });
+                            },
+                            itemBuilder: (BuildContext context) =>
+                                _allTemplates.map<PopupMenuEntry<ApiTemplate>>((ApiTemplate value) {
+                              return PopupMenuItem<ApiTemplate>(
+                                value: value,
+                                child: Text(value.name),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

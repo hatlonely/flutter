@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cicd/api/api.dart';
 import 'package:cicd/config/config.dart';
 import 'package:cicd/pages/task/job_view.dart';
@@ -14,7 +16,7 @@ class TaskViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("task")),
+      appBar: AppBar(title: Text("任务详情")),
       body: Center(
         child: ListView(
           children: [
@@ -152,201 +154,198 @@ class TaskViewState extends State<TaskView> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.zero,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      elevation: 2,
-      child: Padding(
-        padding: EdgeInsets.all(40.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                CircleIconButton(
-                  tooltip: "运行",
-                  color: Colors.white,
-                  onPressed: _editable ? null : runTask,
-                  icon: Icons.play_circle_filled,
-                ),
-                CircleIconButton(
-                  tooltip: "保存",
-                  color: Colors.white,
-                  onPressed: _editable ? save : null,
-                  icon: Icons.save,
-                ),
-                const SizedBox(width: 10),
-                CircleIconButton(
-                  tooltip: "编辑",
-                  color: Colors.white,
-                  onPressed: _editable ? null : edit,
-                  icon: Icons.edit,
-                ),
-                const SizedBox(width: 10),
-                CircleIconButton(
-                  tooltip: "取消",
-                  color: Colors.white,
-                  onPressed: _editable ? cancel : null,
-                  icon: Icons.cancel,
-                ),
-                const SizedBox(width: 10),
-                CircleIconButton(
-                    tooltip: "删除",
-                    color: Colors.white,
-                    onPressed: _editable ? null : delete,
-                    icon: Icons.delete,
-                    iconColor: Colors.red),
-              ],
-            ),
-            const SizedBox(height: 40),
-            Form(
-              key: _formKey,
-              child: Column(
+    var maxWidth = min(MediaQuery.of(context).size.width, 800);
+    return Center(
+      child: Container(
+        width: maxWidth,
+        child: Padding(
+          padding: EdgeInsets.all(40.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  MyTextField(
-                      label: "名字",
-                      controller: _nameController,
-                      editable: _editable,
-                      validator: StringValidator.required),
-                  const SizedBox(height: 20),
-                  MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
-                  const SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Wrap(
-                      spacing: 20,
-                      children: [
-                        Padding(padding: EdgeInsets.all(6), child: Text("变量")),
-                        ..._variables.map(
-                          (e) => Padding(
-                            padding: EdgeInsets.all(6),
-                            child: Chip(
-                              label: Text(e.name),
-                              deleteIcon: Icon(Icons.close, size: 10),
-                              onDeleted: _editable
-                                  ? () {
-                                      setState(() {
-                                        _allVariables.addAll(_variables.where((element) => element.name == e.name));
-                                        _variables.removeWhere((element) => element.name == e.name);
-                                        print("[${e.name}] hello");
-                                        print(_variables);
-                                      });
-                                    }
-                                  : null,
-                            ),
-                          ),
-                        ),
-                        PopupMenuButton<ApiVariable>(
-                          tooltip: "添加变量",
-                          padding: EdgeInsets.zero,
-                          offset: Offset.zero,
-                          enabled: _editable,
-                          icon: Container(
-                            padding: EdgeInsets.zero,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black, width: 2),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(Icons.add, size: 24.0),
-                          ),
-                          onSelected: (ApiVariable value) {
-                            setState(() {
-                              _variables.add(value);
-                              _allVariables.removeWhere((element) => element.name == value.name);
-                            });
-                          },
-                          itemBuilder: (BuildContext context) =>
-                              _allVariables.map<PopupMenuEntry<ApiVariable>>((ApiVariable value) {
-                            return PopupMenuItem<ApiVariable>(
-                              value: value,
-                              child: Text(value.name),
-                            );
-                          }).toList(),
-                        ),
-                      ],
-                    ),
+                  CircleIconButton(
+                    tooltip: "运行",
+                    color: Colors.white,
+                    onPressed: _editable ? null : runTask,
+                    icon: Icons.play_circle_filled,
                   ),
-                  const SizedBox(height: 20),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Wrap(
-                      spacing: 20,
-                      children: [
-                        Padding(padding: EdgeInsets.all(6), child: Text("模板")),
-                        ..._templates.map(
-                          (e) => Padding(
-                            padding: EdgeInsets.all(6),
-                            child: Chip(
-                              label: Text(e.name),
-                              deleteIcon: Icon(Icons.close, size: 10),
-                              onDeleted: _editable
-                                  ? () {
-                                      setState(() {
-                                        _allTemplates.addAll(_templates.where((element) => element.name == e.name));
-                                        _templates.removeWhere((element) => element.name == e.name);
-                                        print("[${e.name}] hello");
-                                        print(_templates);
-                                      });
-                                    }
-                                  : null,
-                            ),
-                          ),
-                        ),
-                        PopupMenuButton<ApiTemplate>(
-                          tooltip: "添加模板",
-                          padding: EdgeInsets.zero,
-                          offset: Offset.zero,
-                          enabled: _editable,
-                          icon: Container(
-                            padding: EdgeInsets.zero,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black, width: 2),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(Icons.add, size: 24.0),
-                          ),
-                          onSelected: (ApiTemplate value) {
-                            setState(() {
-                              _templates.add(value);
-                              _allTemplates.removeWhere((element) => element.name == value.name);
-                            });
-                          },
-                          itemBuilder: (BuildContext context) =>
-                              _allTemplates.map<PopupMenuEntry<ApiTemplate>>((ApiTemplate value) {
-                            return PopupMenuItem<ApiTemplate>(
-                              value: value,
-                              child: Text(value.name),
-                            );
-                          }).toList(),
-                        ),
-                      ],
-                    ),
+                  CircleIconButton(
+                    tooltip: "保存",
+                    color: Colors.white,
+                    onPressed: _editable ? save : null,
+                    icon: Icons.save,
                   ),
+                  const SizedBox(width: 10),
+                  CircleIconButton(
+                    tooltip: "编辑",
+                    color: Colors.white,
+                    onPressed: _editable ? null : edit,
+                    icon: Icons.edit,
+                  ),
+                  const SizedBox(width: 10),
+                  CircleIconButton(
+                    tooltip: "取消",
+                    color: Colors.white,
+                    onPressed: _editable ? cancel : null,
+                    icon: Icons.cancel,
+                  ),
+                  const SizedBox(width: 10),
+                  CircleIconButton(
+                      tooltip: "删除",
+                      color: Colors.white,
+                      onPressed: _editable ? null : delete,
+                      icon: Icons.delete,
+                      iconColor: Colors.red),
                 ],
               ),
-            ),
-            const SizedBox(height: 40),
-            DataTable(
-                showCheckboxColumn: false,
-                columns: <String>["ID", "CreateAt", "Status", "Operation"]
-                    .map((e) => DataColumn(label: Center(child: Text(e, textAlign: TextAlign.center))))
-                    .toList(),
-                rows: _jobs
-                    .map((e) => DataRow(
-                            cells: <DataCell>[
-                              DataCell(Text(e.id)),
-                              DataCell(Text(e.createAt == null
-                                  ? "unknown"
-                                  : DateTime.fromMillisecondsSinceEpoch(e.createAt * 1000).toIso8601String())),
-                              DataCell(Text(e.status)),
-                              DataCell(Row(
-                                children: [
-                                  IconButton(
+              const SizedBox(height: 40),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    MyTextField(
+                        label: "名字",
+                        controller: _nameController,
+                        editable: _editable,
+                        validator: StringValidator.required),
+                    const SizedBox(height: 20),
+                    MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
+                    const SizedBox(height: 20),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Wrap(
+                        spacing: 20,
+                        children: [
+                          Padding(padding: EdgeInsets.all(6), child: Text("变量")),
+                          ..._variables.map(
+                            (e) => Padding(
+                              padding: EdgeInsets.all(6),
+                              child: Chip(
+                                label: Text(e.name),
+                                deleteIcon: Icon(Icons.close, size: 10),
+                                onDeleted: _editable
+                                    ? () {
+                                        setState(() {
+                                          _allVariables.addAll(_variables.where((element) => element.name == e.name));
+                                          _variables.removeWhere((element) => element.name == e.name);
+                                          print("[${e.name}] hello");
+                                          print(_variables);
+                                        });
+                                      }
+                                    : null,
+                              ),
+                            ),
+                          ),
+                          PopupMenuButton<ApiVariable>(
+                            tooltip: "添加变量",
+                            padding: EdgeInsets.zero,
+                            offset: Offset.zero,
+                            enabled: _editable,
+                            icon: Container(
+                              padding: EdgeInsets.zero,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black, width: 2),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.add, size: 24.0),
+                            ),
+                            onSelected: (ApiVariable value) {
+                              setState(() {
+                                _variables.add(value);
+                                _allVariables.removeWhere((element) => element.name == value.name);
+                              });
+                            },
+                            itemBuilder: (BuildContext context) =>
+                                _allVariables.map<PopupMenuEntry<ApiVariable>>((ApiVariable value) {
+                              return PopupMenuItem<ApiVariable>(
+                                value: value,
+                                child: Text(value.name),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Wrap(
+                        spacing: 20,
+                        children: [
+                          Padding(padding: EdgeInsets.all(6), child: Text("模板")),
+                          ..._templates.map(
+                            (e) => Padding(
+                              padding: EdgeInsets.all(6),
+                              child: Chip(
+                                label: Text(e.name),
+                                deleteIcon: Icon(Icons.close, size: 10),
+                                onDeleted: _editable
+                                    ? () {
+                                        setState(() {
+                                          _allTemplates.addAll(_templates.where((element) => element.name == e.name));
+                                          _templates.removeWhere((element) => element.name == e.name);
+                                          print("[${e.name}] hello");
+                                          print(_templates);
+                                        });
+                                      }
+                                    : null,
+                              ),
+                            ),
+                          ),
+                          PopupMenuButton<ApiTemplate>(
+                            tooltip: "添加模板",
+                            padding: EdgeInsets.zero,
+                            offset: Offset.zero,
+                            enabled: _editable,
+                            icon: Container(
+                              padding: EdgeInsets.zero,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.black, width: 2),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.add, size: 24.0),
+                            ),
+                            onSelected: (ApiTemplate value) {
+                              setState(() {
+                                _templates.add(value);
+                                _allTemplates.removeWhere((element) => element.name == value.name);
+                              });
+                            },
+                            itemBuilder: (BuildContext context) =>
+                                _allTemplates.map<PopupMenuEntry<ApiTemplate>>((ApiTemplate value) {
+                              return PopupMenuItem<ApiTemplate>(
+                                value: value,
+                                child: Text(value.name),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 40),
+              DataTable(
+                  showCheckboxColumn: false,
+                  columns: <String>["ID", "CreateAt", "Status", "Operation"]
+                      .map((e) => DataColumn(label: Center(child: Text(e, textAlign: TextAlign.center))))
+                      .toList(),
+                  rows: _jobs
+                      .map((e) => DataRow(
+                              cells: <DataCell>[
+                                DataCell(Text(e.id)),
+                                DataCell(Text(e.createAt == null
+                                    ? "unknown"
+                                    : DateTime.fromMillisecondsSinceEpoch(e.createAt * 1000).toIso8601String())),
+                                DataCell(Text(e.status)),
+                                DataCell(Row(
+                                  children: [
+                                    IconButton(
                                       icon: Icon(Icons.refresh),
                                       onPressed: () {
                                         var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
@@ -354,30 +353,33 @@ class TaskViewState extends State<TaskView> {
                                               var idx = _jobs.indexWhere((element) => element.id == e.id);
                                               _jobs.replaceRange(idx, idx + 1, [value]);
                                             }));
-                                      }),
-                                  IconButton(
-                                      icon: Icon(Icons.delete),
-                                      color: Colors.red,
-                                      onPressed: e.status != "Finish" && e.status != "Failed"
-                                          ? null
-                                          : () {
-                                              var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
-                                              client.cICDServiceDelJob(e.id).then((value) => setState(() {
-                                                    print(_jobs.length);
-                                                    _jobs.removeWhere((element) => element.id == e.id);
-                                                    print(_jobs.length);
-                                                  }));
-                                            }),
-                                ],
-                              )),
-                            ],
-                            onSelectChanged: (bool selected) {
-                              if (selected) {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => JobViewPage(id: e.id)));
-                              }
-                            }))
-                    .toList()),
-          ],
+                                      },
+                                    ),
+                                    IconButton(
+                                        icon: Icon(Icons.delete),
+                                        color: Colors.red,
+                                        onPressed: e.status != "Finish" && e.status != "Failed"
+                                            ? null
+                                            : () {
+                                                var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
+                                                client.cICDServiceDelJob(e.id).then((value) => setState(() {
+                                                      print(_jobs.length);
+                                                      _jobs.removeWhere((element) => element.id == e.id);
+                                                      print(_jobs.length);
+                                                    }));
+                                              }),
+                                  ],
+                                )),
+                              ],
+                              onSelectChanged: (bool selected) {
+                                if (selected) {
+                                  Navigator.push(
+                                      context, MaterialPageRoute(builder: (context) => JobViewPage(id: e.id)));
+                                }
+                              }))
+                      .toList()),
+            ],
+          ),
         ),
       ),
     );

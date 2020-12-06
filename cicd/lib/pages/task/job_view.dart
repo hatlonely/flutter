@@ -10,7 +10,7 @@ class JobViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("job")),
+      appBar: AppBar(title: Text("Job 详情")),
       body: Center(
         child: ListView(children: [JobView(id: id)]),
       ),

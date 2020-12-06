@@ -15,7 +15,7 @@ class TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("task")),
+      appBar: AppBar(title: Text("任务")),
       body: Center(
         child: ListTaskView(),
       ),
