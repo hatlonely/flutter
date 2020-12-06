@@ -13,7 +13,7 @@ class VariableViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("variable")),
+      appBar: AppBar(title: Text("变量详情")),
       body: Center(
         child: VariableView(id: this.id),
       ),
@@ -154,13 +154,24 @@ class VariableViewState extends State<VariableView> {
               key: _formKey,
               child: Column(
                 children: [
-                  MyTextField(
-                      label: "名字",
-                      controller: _nameController,
-                      editable: _editable,
-                      validator: StringValidator.required),
-                  const SizedBox(height: 20),
-                  MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 2.5,
+                        child: MyTextField(
+                          label: "名字",
+                          controller: _nameController,
+                          editable: _editable,
+                          validator: StringValidator.required,
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 2.5,
+                        child: MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 20),
                   MyTextField(
                     label: "键值",

@@ -13,7 +13,7 @@ class PutVariableViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("put variable")),
+      appBar: AppBar(title: Text("新增变量")),
       body: Center(
         child: PutVariableView(),
       ),
@@ -100,13 +100,24 @@ class PutVariableViewState extends State<PutVariableView> {
               key: _formKey,
               child: Column(
                 children: [
-                  MyTextField(
-                      label: "名字",
-                      controller: _nameController,
-                      editable: _editable,
-                      validator: StringValidator.required),
-                  const SizedBox(height: 20),
-                  MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 2.5,
+                        child: MyTextField(
+                          label: "名字",
+                          controller: _nameController,
+                          editable: _editable,
+                          validator: StringValidator.required,
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 2.5,
+                        child: MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 20),
                   MyTextField(
                     label: "键值",

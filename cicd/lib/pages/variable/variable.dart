@@ -14,7 +14,7 @@ class VariablePageState extends State<VariablePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("variable")),
+      appBar: AppBar(title: Text("变量")),
       body: Center(
         child: VariableView(),
       ),
