@@ -166,33 +166,46 @@ class TemplateViewState extends State<TemplateView> {
               key: _formKey,
               child: Column(
                 children: [
-                  MyTextField(
-                      label: "名字",
-                      controller: _nameController,
-                      editable: _editable,
-                      validator: StringValidator.required),
-                  const SizedBox(height: 20),
-                  MyTextField(label: "类别", controller: _categoryController, editable: _editable),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 4,
+                        child: MyTextField(
+                          label: "名字",
+                          controller: _nameController,
+                          editable: _editable,
+                          validator: StringValidator.required,
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 4,
+                        child: MyDropDownTextFormField(
+                          label: "语言",
+                          items: ["shell", "python3"],
+                          value: _language,
+                          enable: _editable,
+                          onChanged: (value) {
+                            setState(() {
+                              _language = value;
+                            });
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 4,
+                        child: MyTextField(label: "类别", controller: _categoryController, editable: _editable),
+                      )
+                    ],
+                  ),
                   const SizedBox(height: 20),
                   MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
-                  const SizedBox(height: 20),
-                  MyDropDownTextFormField(
-                    label: "语言",
-                    items: ["shell", "python3"],
-                    value: _language,
-                    enable: _editable,
-                    onChanged: (value) {
-                      setState(() {
-                        _language = value;
-                      });
-                    },
-                  ),
                   const SizedBox(height: 20),
                   MyTextField(
                     label: "脚本",
                     controller: _scriptController,
                     minLines: 10,
-                    maxLines: 20,
+                    maxLines: 100,
                     editable: _editable,
                   ),
                 ],

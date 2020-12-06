@@ -56,6 +56,7 @@ class MyDropDownTextFormField extends FormField<String> {
                   borderRadius: BorderRadius.circular(5.0),
                   borderSide: BorderSide(),
                 ),
+                contentPadding: EdgeInsets.all(13.5),
               ),
               isEmpty: value == null,
               child: DropdownButtonHideUnderline(
