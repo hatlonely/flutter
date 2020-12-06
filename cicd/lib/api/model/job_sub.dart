@@ -8,6 +8,12 @@ class JobSub {
   String status = null;
   
 
+  String language = null;
+  
+
+  String script = null;
+  
+
   int exitCode = null;
   
 
@@ -20,7 +26,7 @@ class JobSub {
 
   @override
   String toString() {
-    return 'JobSub[templateID=$templateID, status=$status, exitCode=$exitCode, stdout=$stdout, stderr=$stderr, ]';
+    return 'JobSub[templateID=$templateID, status=$status, language=$language, script=$script, exitCode=$exitCode, stdout=$stdout, stderr=$stderr, ]';
   }
 
   JobSub.fromJson(Map<String, dynamic> json) {
@@ -30,6 +36,12 @@ class JobSub {
     ;
     status =
         json['status']
+    ;
+    language =
+        json['language']
+    ;
+    script =
+        json['script']
     ;
     exitCode =
         json['exitCode']
@@ -46,6 +58,8 @@ class JobSub {
     return {
       'templateID': templateID,
       'status': status,
+      'language': language,
+      'script': script,
       'exitCode': exitCode,
       'stdout': stdout,
       'stderr': stderr

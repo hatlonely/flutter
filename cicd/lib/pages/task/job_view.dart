@@ -1,5 +1,6 @@
 import 'package:cicd/api/api.dart';
 import 'package:cicd/config/config.dart';
+import 'package:cicd/widget/widget.dart';
 import 'package:flutter/material.dart';
 
 class JobViewPage extends StatelessWidget {
@@ -52,6 +53,8 @@ class JobViewState extends State<JobView> {
           const SizedBox(height: 20),
           Text(_job.taskID ?? ""),
           const SizedBox(height: 20),
+          Text(_job.taskName ?? ""),
+          const SizedBox(height: 20),
           Text(_job.status ?? ""),
           const SizedBox(height: 20),
           Text(_job.createAt == null
@@ -62,7 +65,17 @@ class JobViewState extends State<JobView> {
               ? "unknown"
               : DateTime.fromMillisecondsSinceEpoch(_job.createAt * 1000).toIso8601String()),
           const SizedBox(height: 20),
-          ..._job.subs?.map((e) => Text(e.stdout))
+          ..._job.subs?.map((e) => Column(
+                children: [
+                  Text(e.language ?? ""),
+                  Text(e.script ?? ""),
+                  Text(e.stdout ?? ""),
+                  Text(e.stderr ?? ""),
+                  Text(e.exitCode == null ? "0" : e.exitCode.toString()),
+                  Text(e.status ?? "")
+                ],
+              )),
+          MyTextField(key: "名字"),
         ]),
       ),
     );
