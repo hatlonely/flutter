@@ -16,11 +16,17 @@ class ApiTask {
 
   List<String> variableIDs = [];
   
+
+  int createAt = null;
+  
+
+  int updateAt = null;
+  
   ApiTask();
 
   @override
   String toString() {
-    return 'ApiTask[id=$id, name=$name, description=$description, templateIDs=$templateIDs, variableIDs=$variableIDs, ]';
+    return 'ApiTask[id=$id, name=$name, description=$description, templateIDs=$templateIDs, variableIDs=$variableIDs, createAt=$createAt, updateAt=$updateAt, ]';
   }
 
   ApiTask.fromJson(Map<String, dynamic> json) {
@@ -40,6 +46,12 @@ class ApiTask {
     variableIDs =
         (json['variableIDs'] as List).map((item) => item as String).toList()
     ;
+    createAt =
+        json['createAt']
+    ;
+    updateAt =
+        json['updateAt']
+    ;
   }
 
   Map<String, dynamic> toJson() {
@@ -48,7 +60,9 @@ class ApiTask {
       'name': name,
       'description': description,
       'templateIDs': templateIDs,
-      'variableIDs': variableIDs
+      'variableIDs': variableIDs,
+      'createAt': createAt,
+      'updateAt': updateAt
      };
   }
 

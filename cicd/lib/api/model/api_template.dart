@@ -17,13 +17,19 @@ class ApiTemplate {
   String category = null;
   
 
+  int createAt = null;
+  
+
+  int updateAt = null;
+  
+
   TemplateScriptTemplate scriptTemplate = null;
   
   ApiTemplate();
 
   @override
   String toString() {
-    return 'ApiTemplate[id=$id, name=$name, description=$description, type=$type, category=$category, scriptTemplate=$scriptTemplate, ]';
+    return 'ApiTemplate[id=$id, name=$name, description=$description, type=$type, category=$category, createAt=$createAt, updateAt=$updateAt, scriptTemplate=$scriptTemplate, ]';
   }
 
   ApiTemplate.fromJson(Map<String, dynamic> json) {
@@ -43,6 +49,12 @@ class ApiTemplate {
     category =
         json['category']
     ;
+    createAt =
+        json['createAt']
+    ;
+    updateAt =
+        json['updateAt']
+    ;
     scriptTemplate =
       
       
@@ -57,6 +69,8 @@ class ApiTemplate {
       'description': description,
       'type': type,
       'category': category,
+      'createAt': createAt,
+      'updateAt': updateAt,
       'scriptTemplate': scriptTemplate
      };
   }

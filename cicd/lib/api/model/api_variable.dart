@@ -13,11 +13,17 @@ class ApiVariable {
 
   String kvs = null;
   
+
+  int createAt = null;
+  
+
+  int updateAt = null;
+  
   ApiVariable();
 
   @override
   String toString() {
-    return 'ApiVariable[id=$id, name=$name, description=$description, kvs=$kvs, ]';
+    return 'ApiVariable[id=$id, name=$name, description=$description, kvs=$kvs, createAt=$createAt, updateAt=$updateAt, ]';
   }
 
   ApiVariable.fromJson(Map<String, dynamic> json) {
@@ -34,6 +40,12 @@ class ApiVariable {
     kvs =
         json['kvs']
     ;
+    createAt =
+        json['createAt']
+    ;
+    updateAt =
+        json['updateAt']
+    ;
   }
 
   Map<String, dynamic> toJson() {
@@ -41,7 +53,9 @@ class ApiVariable {
       'id': id,
       'name': name,
       'description': description,
-      'kvs': kvs
+      'kvs': kvs,
+      'createAt': createAt,
+      'updateAt': updateAt
      };
   }
 
