@@ -43,6 +43,40 @@ class MyTextField extends TextFormField {
         );
 }
 
+class MyDropDownTextFormField extends FormField<String> {
+  MyDropDownTextFormField(
+      {List<String> items, String value, bool enable, void Function(String) onChanged, String label})
+      : super(
+          builder: (FormFieldState<String> state) {
+            return InputDecorator(
+              decoration: InputDecoration(
+                isDense: true,
+                labelText: label,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                  borderSide: BorderSide(),
+                ),
+              ),
+              isEmpty: value == null,
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: value,
+                  disabledHint: Text(value ?? ""),
+                  isDense: true,
+                  onChanged: enable ? onChanged : null,
+                  items: ["shell", "python3"].map((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+              ),
+            );
+          },
+        );
+}
+
 class ElementAddCard extends GestureDetector {
   ElementAddCard({void Function() onTap})
       : super(

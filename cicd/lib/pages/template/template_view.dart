@@ -34,15 +34,18 @@ class TemplateViewState extends State<TemplateView> {
   var _nameController = TextEditingController();
   var _categoryController = TextEditingController();
   var _descriptionController = TextEditingController();
-  var _languageController = TextEditingController();
   var _scriptController = TextEditingController();
+  String _language;
   bool _editable = false;
   var _template = ApiTemplate();
   final _formKey = GlobalKey<FormState>();
 
   TemplateViewState({this.id}) {
     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
-    client.cICDServiceGetTemplate(id).then((value) => setState(() => _template = value));
+    client.cICDServiceGetTemplate(id).then((value) => setState(() {
+          _template = value;
+          setTextEditControllersByTemplate(_template);
+        }));
   }
 
   void edit() {
@@ -93,7 +96,7 @@ class TemplateViewState extends State<TemplateView> {
     _nameController.text = template.name;
     _categoryController.text = template.category;
     _descriptionController.text = template.description;
-    _languageController.text = template.scriptTemplate?.language;
+    _language = template.scriptTemplate?.language;
     _scriptController.text = template.scriptTemplate?.script;
   }
 
@@ -105,15 +108,13 @@ class TemplateViewState extends State<TemplateView> {
     template.category = _categoryController.value.text;
     template.type = "script";
     template.scriptTemplate = TemplateScriptTemplate();
-    template.scriptTemplate.language = _languageController.value.text;
+    template.scriptTemplate.language = _language;
     template.scriptTemplate.script = _scriptController.value.text;
     return template;
   }
 
   @override
   Widget build(BuildContext context) {
-    setTextEditControllersByTemplate(_template);
-
     return Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
@@ -170,7 +171,17 @@ class TemplateViewState extends State<TemplateView> {
                   const SizedBox(height: 20),
                   MyTextField(key: "描述", controller: _descriptionController, editable: _editable),
                   const SizedBox(height: 20),
-                  MyTextField(key: "语言", controller: _languageController, editable: _editable),
+                  MyDropDownTextFormField(
+                    label: "语言",
+                    items: ["shell", "python3"],
+                    value: _language,
+                    enable: _editable,
+                    onChanged: (value) {
+                      setState(() {
+                        _language = value;
+                      });
+                    },
+                  ),
                   const SizedBox(height: 20),
                   MyTextField(
                     key: "脚本",
