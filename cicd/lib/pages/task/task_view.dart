@@ -1,5 +1,6 @@
 import 'package:cicd/api/api.dart';
 import 'package:cicd/config/config.dart';
+import 'package:cicd/pages/task/job_view.dart';
 import 'package:cicd/pages/task/task.dart';
 import 'package:cicd/validator/validator.dart';
 import 'package:cicd/widget/widget.dart';
@@ -369,7 +370,7 @@ class TaskViewState extends State<TaskView> {
                             ],
                             onSelectChanged: (bool selected) {
                               if (selected) {
-                                print(e.id);
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => JobViewPage(id: e.id)));
                               }
                             }))
                     .toList()),
