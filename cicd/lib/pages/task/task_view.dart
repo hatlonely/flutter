@@ -325,51 +325,61 @@ class TaskViewState extends State<TaskView> {
               const SizedBox(height: 40),
               DataTable(
                   showCheckboxColumn: false,
-                  columns: <String>["ID", "CreateAt", "Status", "Operation"]
+                  columns: <String>[
+                    maxWidth > 700 ? "ID" : null,
+                    maxWidth > 400 ? "CreateAt" : null,
+                    "Status",
+                    "Operation"
+                  ]
+                      .where((element) => element != null)
                       .map((e) => DataColumn(label: Center(child: Text(e, textAlign: TextAlign.center))))
                       .toList(),
                   rows: _jobs
                       .map((e) => DataRow(
-                              cells: <DataCell>[
-                                DataCell(Text(e.id)),
-                                DataCell(Text(e.createAt == null
+                          cells: <DataCell>[
+                            maxWidth > 700 ? DataCell(Text(e.id)) : null,
+                            maxWidth > 400
+                                ? DataCell(Text(e.createAt == null
                                     ? "unknown"
-                                    : DateTime.fromMillisecondsSinceEpoch(e.createAt * 1000).toIso8601String())),
-                                DataCell(Text(e.status)),
-                                DataCell(Row(
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(Icons.refresh),
-                                      onPressed: () {
-                                        var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
-                                        client.cICDServiceGetJob(e.id).then((value) => setState(() {
-                                              var idx = _jobs.indexWhere((element) => element.id == e.id);
-                                              _jobs.replaceRange(idx, idx + 1, [value]);
-                                            }));
-                                      },
-                                    ),
-                                    IconButton(
-                                        icon: Icon(Icons.delete),
-                                        color: Colors.red,
-                                        onPressed: e.status != "Finish" && e.status != "Failed"
-                                            ? null
-                                            : () {
-                                                var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
-                                                client.cICDServiceDelJob(e.id).then((value) => setState(() {
-                                                      print(_jobs.length);
-                                                      _jobs.removeWhere((element) => element.id == e.id);
-                                                      print(_jobs.length);
-                                                    }));
-                                              }),
-                                  ],
-                                )),
+                                    : DateTime.fromMillisecondsSinceEpoch(e.createAt * 1000).toIso8601String()))
+                                : null,
+                            DataCell(Icon(Icons.lens,
+                                color: e.status == "Failed"
+                                    ? Colors.red
+                                    : (e.status == "Finish" ? Colors.green : Colors.yellow))),
+                            DataCell(Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.refresh),
+                                  onPressed: () {
+                                    var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
+                                    client.cICDServiceGetJob(e.id).then((value) => setState(() {
+                                          var idx = _jobs.indexWhere((element) => element.id == e.id);
+                                          _jobs.replaceRange(idx, idx + 1, [value]);
+                                        }));
+                                  },
+                                ),
+                                IconButton(
+                                    icon: Icon(Icons.delete),
+                                    color: Colors.red,
+                                    onPressed: e.status != "Finish" && e.status != "Failed"
+                                        ? null
+                                        : () {
+                                            var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
+                                            client.cICDServiceDelJob(e.id).then((value) => setState(() {
+                                                  print(_jobs.length);
+                                                  _jobs.removeWhere((element) => element.id == e.id);
+                                                  print(_jobs.length);
+                                                }));
+                                          }),
                               ],
-                              onSelectChanged: (bool selected) {
-                                if (selected) {
-                                  Navigator.push(
-                                      context, MaterialPageRoute(builder: (context) => JobViewPage(id: e.id)));
-                                }
-                              }))
+                            )),
+                          ].where((element) => element != null).toList(),
+                          onSelectChanged: (bool selected) {
+                            if (selected) {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => JobViewPage(id: e.id)));
+                            }
+                          }))
                       .toList()),
             ],
           ),
