@@ -82,10 +82,10 @@ class PutTaskViewState extends State<PutTaskView> {
 
   @override
   Widget build(BuildContext context) {
-    var maxWidth = min(MediaQuery.of(context).size.width, 800);
+    var maxWidth = min(MediaQuery.of(context).size.width - 80, 800);
     return Center(
       child: Container(
-        width: maxWidth,
+        width: maxWidth + 80,
         child: Padding(
           padding: EdgeInsets.all(40.0),
           child: Column(

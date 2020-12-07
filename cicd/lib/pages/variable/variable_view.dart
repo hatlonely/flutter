@@ -108,10 +108,10 @@ class VariableViewState extends State<VariableView> {
 
   @override
   Widget build(BuildContext context) {
-    var maxWidth = min(MediaQuery.of(context).size.width, 800);
+    var maxWidth = min(MediaQuery.of(context).size.width - 80, 800);
     return Center(
       child: Container(
-        width: maxWidth,
+        width: maxWidth + 80,
         child: Padding(
           padding: EdgeInsets.all(40.0),
           child: Column(
@@ -125,19 +125,16 @@ class VariableViewState extends State<VariableView> {
                     onPressed: _editable ? save : null,
                     icon: Icons.save,
                   ),
-                  const SizedBox(width: 10),
                   CircleIconButton(
                     tooltip: "编辑",
                     onPressed: _editable ? null : edit,
                     icon: Icons.edit,
                   ),
-                  const SizedBox(width: 10),
                   CircleIconButton(
                     tooltip: "取消",
                     onPressed: _editable ? cancel : null,
                     icon: Icons.cancel,
                   ),
-                  const SizedBox(width: 10),
                   CircleIconButton(
                     tooltip: "删除",
                     onPressed: _editable ? null : delete,
@@ -155,7 +152,7 @@ class VariableViewState extends State<VariableView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
-                          width: maxWidth / 2.5,
+                          width: maxWidth / 2.25,
                           child: MyTextField(
                             label: "名字",
                             controller: _nameController,
@@ -164,7 +161,7 @@ class VariableViewState extends State<VariableView> {
                           ),
                         ),
                         SizedBox(
-                          width: maxWidth / 2.5,
+                          width: maxWidth / 2.25,
                           child: MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
                         ),
                       ],

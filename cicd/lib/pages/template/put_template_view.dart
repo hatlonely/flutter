@@ -75,10 +75,10 @@ class PutTemplateViewState extends State<PutTemplateView> {
 
   @override
   Widget build(BuildContext context) {
-    var maxWidth = min(MediaQuery.of(context).size.width, 800);
+    var maxWidth = min(MediaQuery.of(context).size.width - 80, 800);
     return Center(
       child: Container(
-        width: maxWidth,
+        width: maxWidth + 80,
         child: Padding(
           padding: EdgeInsets.all(40.0),
           child: Column(
@@ -108,7 +108,7 @@ class PutTemplateViewState extends State<PutTemplateView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
-                          width: maxWidth / 4,
+                          width: maxWidth / 3.25,
                           child: MyTextField(
                             label: "名字",
                             controller: _nameController,
@@ -117,7 +117,7 @@ class PutTemplateViewState extends State<PutTemplateView> {
                           ),
                         ),
                         SizedBox(
-                          width: maxWidth / 4,
+                          width: maxWidth / 3.25,
                           child: MyDropDownTextFormField(
                             label: "语言",
                             items: ["shell", "python3"],
@@ -131,7 +131,7 @@ class PutTemplateViewState extends State<PutTemplateView> {
                           ),
                         ),
                         SizedBox(
-                          width: maxWidth / 4,
+                          width: maxWidth / 3.25,
                           child: MyTextField(label: "类别", controller: _categoryController, editable: _editable),
                         )
                       ],

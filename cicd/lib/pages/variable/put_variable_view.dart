@@ -67,10 +67,10 @@ class PutVariableViewState extends State<PutVariableView> {
 
   @override
   Widget build(BuildContext context) {
-    var maxWidth = min(MediaQuery.of(context).size.width, 800);
+    var maxWidth = min(MediaQuery.of(context).size.width - 80, 800);
     return Center(
       child: Container(
-        width: maxWidth,
+        width: maxWidth + 80,
         child: Padding(
           padding: EdgeInsets.all(40.0),
           child: Column(
@@ -100,7 +100,7 @@ class PutVariableViewState extends State<PutVariableView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         SizedBox(
-                          width: maxWidth / 2.5,
+                          width: maxWidth / 2.25,
                           child: MyTextField(
                             label: "名字",
                             controller: _nameController,
@@ -109,7 +109,7 @@ class PutVariableViewState extends State<PutVariableView> {
                           ),
                         ),
                         SizedBox(
-                          width: maxWidth / 2.5,
+                          width: maxWidth / 2.25,
                           child: MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
                         ),
                       ],
