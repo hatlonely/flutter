@@ -4,6 +4,7 @@ import 'package:cicd/api/api.dart';
 import 'package:cicd/config/config.dart';
 import 'package:cicd/pages/task/job_view.dart';
 import 'package:cicd/pages/task/task.dart';
+import 'package:cicd/timex/timex.dart';
 import 'package:cicd/validator/validator.dart';
 import 'package:cicd/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -327,7 +328,7 @@ class TaskViewState extends State<TaskView> {
                   showCheckboxColumn: false,
                   columns: <String>[
                     maxWidth > 700 ? "ID" : null,
-                    maxWidth > 400 ? "CreateAt" : null,
+                    maxWidth > 370 ? "CreateAt" : null,
                     "Status",
                     "Operation"
                   ]
@@ -338,10 +339,10 @@ class TaskViewState extends State<TaskView> {
                       .map((e) => DataRow(
                           cells: <DataCell>[
                             maxWidth > 700 ? DataCell(Text(e.id)) : null,
-                            maxWidth > 400
+                            maxWidth > 370
                                 ? DataCell(Text(e.createAt == null
                                     ? "unknown"
-                                    : DateTime.fromMillisecondsSinceEpoch(e.createAt * 1000).toIso8601String()))
+                                    : DateTime.fromMillisecondsSinceEpoch(e.createAt * 1000).toHumanString()))
                                 : null,
                             DataCell(Icon(Icons.lens,
                                 color: e.status == "Failed"

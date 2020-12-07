@@ -52,7 +52,7 @@ class JobViewState extends State<JobView> {
         Text(
             "最后更新 ${_job.updateAt == null ? "unknown" : DateTime.fromMillisecondsSinceEpoch(_job.createAt * 1000).toIso8601String()}"),
         const SizedBox(height: 20),
-        ..._job.subs?.map(
+        ...(_job.subs ?? []).map(
           (e) => SizedBox(
             width: 600,
             child: Card(
@@ -91,7 +91,7 @@ class JobViewState extends State<JobView> {
                           code: e.stderr ?? "",
                           language: "txt",
                         ),
-                ].where((element) => element != null).toList(),
+                ].where((element) => element != null)?.toList(),
               ),
             ),
           ),
