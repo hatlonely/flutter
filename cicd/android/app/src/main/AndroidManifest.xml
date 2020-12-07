@@ -2,7 +2,9 @@
     package="com.hatlonely.cicd">
    <application
         android:label="cicd"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+       android:networkSecurityConfig="@xml/test"
+       >
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

@@ -1,3 +1,3 @@
 class Config {
-  static const String CICDEndpoint = "http://127.0.0.1";
+  static const String CICDEndpoint = "http://192.168.0.102";
 }
