@@ -3,22 +3,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/themes/github.dart';
 
-// class CircleIconButton extends FlatButton {
-//   CircleIconButton({
-//     Function onPressed,
-//     Color color,
-//     IconData icon,
-//     String tooltip,
-//     Color iconColor,
-//   }) : super(
-//           color: color,
-//           child: Tooltip(message: tooltip, child: Icon(icon, color: iconColor)),
-//           padding: EdgeInsets.all(15),
-//           shape: CircleBorder(),
-//           onPressed: onPressed,
-//         );
-// }
-
 class CircleIconButton extends IconButton {
   CircleIconButton({
     Function onPressed,
