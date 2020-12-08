@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/themes/github.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CircleIconButton extends IconButton {
   CircleIconButton({
@@ -120,10 +121,7 @@ class CodeView extends SizedBox {
                       language: language,
                       theme: githubTheme,
                       padding: EdgeInsets.all(12),
-                      textStyle: TextStyle(
-                        fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace',
-                        fontSize: 12,
-                      ),
+                      textStyle: GoogleFonts.sourceCodePro(),
                     ),
                   ),
                 ],
