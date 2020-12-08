@@ -226,8 +226,6 @@ class TaskViewState extends State<TaskView> {
                                         setState(() {
                                           _allVariables.addAll(_variables.where((element) => element.name == e.name));
                                           _variables.removeWhere((element) => element.name == e.name);
-                                          print("[${e.name}] hello");
-                                          print(_variables);
                                         });
                                       }
                                     : null,
@@ -335,7 +333,7 @@ class TaskViewState extends State<TaskView> {
                       .where((element) => element != null)
                       .map((e) => DataColumn(label: Center(child: Text(e, textAlign: TextAlign.center))))
                       .toList(),
-                  rows: _jobs
+                  rows: (_jobs ?? [])
                       .map((e) => DataRow(
                           cells: <DataCell>[
                             maxWidth > 700 ? DataCell(Text(e.id)) : null,
@@ -351,6 +349,8 @@ class TaskViewState extends State<TaskView> {
                             DataCell(Row(
                               children: [
                                 IconButton(
+                                  splashRadius: 20,
+                                  tooltip: "刷新",
                                   icon: Icon(Icons.refresh),
                                   onPressed: () {
                                     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
@@ -361,6 +361,8 @@ class TaskViewState extends State<TaskView> {
                                   },
                                 ),
                                 IconButton(
+                                    splashRadius: 20,
+                                    tooltip: "删除",
                                     icon: Icon(Icons.delete),
                                     color: Colors.red,
                                     onPressed: e.status != "Finish" && e.status != "Failed"

@@ -65,8 +65,8 @@ class VariableViewState extends State<VariableView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(e.name),
-              Text(e.description),
+              Text(e.name ?? ""),
+              Text(e.description ?? ""),
             ],
           ),
         ),
