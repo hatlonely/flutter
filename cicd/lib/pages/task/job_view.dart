@@ -63,42 +63,50 @@ class JobViewState extends State<JobView> {
               (e) => SizedBox(
                 width: maxWidth,
                 child: Card(
-                  margin: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                   clipBehavior: Clip.antiAlias,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                    side: BorderSide(
+                        color: e.status == "Success"
+                            ? Colors.green
+                            : e.status == "Failed"
+                                ? Colors.red
+                                : Colors.yellow,
+                        width: 1.0),
+                    borderRadius: BorderRadius.circular(4.0),
                   ),
-                  elevation: 2,
-                  child: Column(
-                    children: [
-                      Text(
-                          "${e.templateName} 语言: ${e.language ?? ""} 退出码: ${e.exitCode == null ? "0" : e.exitCode.toString()} 状态: ${e.status ?? ""}"),
-                      const SizedBox(height: 20),
-                      CodeView(
-                        width: maxWidth,
-                        title: "script",
-                        code: e.script,
-                        language: e.language,
-                      ),
-                      const SizedBox(height: 20),
-                      e.stdout == null
-                          ? null
-                          : CodeView(
-                              width: maxWidth,
-                              title: "stdout",
-                              code: e.stdout ?? "",
-                              language: "txt",
-                            ),
-                      const SizedBox(height: 20),
-                      e.stderr == null
-                          ? null
-                          : CodeView(
-                              width: maxWidth,
-                              title: "stderr",
-                              code: e.stderr ?? "",
-                              language: "txt",
-                            ),
-                    ].where((element) => element != null)?.toList(),
+                  elevation: 0,
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        Text(
+                            "${e.templateName} 语言: ${e.language ?? ""} 退出码: ${e.exitCode == null ? "0" : e.exitCode.toString()} 状态: ${e.status ?? ""}"),
+                        const SizedBox(height: 20),
+                        CodeView(
+                          width: maxWidth,
+                          code: e.script,
+                          language: e.language,
+                        ),
+                        e.stdout == null ? null : const SizedBox(height: 20),
+                        e.stdout == null
+                            ? null
+                            : CodeView(
+                                width: maxWidth,
+                                code: e.stdout ?? "",
+                                language: "txt",
+                                borderColor: Colors.green,
+                              ),
+                        e.stderr == null ? null : const SizedBox(height: 20),
+                        e.stderr == null
+                            ? null
+                            : CodeView(
+                                width: maxWidth,
+                                code: e.stderr ?? "",
+                                language: "txt",
+                                borderColor: Colors.red,
+                              ),
+                      ].where((element) => element != null)?.toList(),
+                    ),
                   ),
                 ),
               ),

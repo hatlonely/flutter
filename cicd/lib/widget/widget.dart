@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
-import 'package:flutter_highlight/themes/github.dart';
+import 'package:flutter_highlight/themes/docco.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CircleIconButton extends IconButton {
@@ -101,32 +101,30 @@ class ElementAddCard extends GestureDetector {
 }
 
 class CodeView extends SizedBox {
-  CodeView({String code, String language, String title, double width})
+  CodeView({String code, String language, double width, Color borderColor})
       : super(
-            width: width,
-            child: Card(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.left,
-                  ),
-                  SizedBox(
-                    width: width,
-                    child: HighlightView(
-                      code,
-                      language: language,
-                      theme: githubTheme,
-                      padding: EdgeInsets.all(12),
-                      textStyle: GoogleFonts.sourceCodePro(),
-                    ),
-                  ),
-                ],
+          width: width,
+          child: Card(
+            shape: RoundedRectangleBorder(
+              side: BorderSide(color: borderColor ?? Colors.white, width: 1.0),
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            elevation: 0,
+            child: SizedBox(
+              width: width,
+              child: HighlightView(
+                code,
+                language: (language) {
+                  const languageDict = {"shell": "sh", "python3": "python"};
+                  return languageDict[language] ?? language;
+                }(language),
+                theme: doccoTheme,
+                padding: EdgeInsets.all(12),
+                textStyle: GoogleFonts.sourceCodePro(),
               ),
-            ));
+            ),
+          ),
+        );
 }
 
 void Info(BuildContext context, String message) {
