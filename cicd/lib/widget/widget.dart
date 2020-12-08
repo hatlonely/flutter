@@ -120,7 +120,7 @@ class CodeView extends SizedBox {
                 }(language),
                 theme: doccoTheme,
                 padding: EdgeInsets.all(12),
-                textStyle: GoogleFonts.sourceCodePro(),
+                textStyle: GoogleFonts.ubuntuMono(),
               ),
             ),
           ),
