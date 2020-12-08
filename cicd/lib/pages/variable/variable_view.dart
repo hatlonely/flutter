@@ -120,28 +120,39 @@ class VariableViewState extends State<VariableView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CircleIconButton(
-                    tooltip: "保存",
-                    onPressed: _editable ? save : null,
-                    icon: Icons.save,
-                  ),
-                  CircleIconButton(
-                    tooltip: "编辑",
-                    onPressed: _editable ? null : edit,
-                    icon: Icons.edit,
-                  ),
-                  CircleIconButton(
-                    tooltip: "取消",
-                    onPressed: _editable ? cancel : null,
-                    icon: Icons.cancel,
-                  ),
-                  CircleIconButton(
-                    tooltip: "删除",
-                    onPressed: _editable ? null : delete,
-                    icon: Icons.delete,
-                    color: Colors.red,
-                  ),
-                ],
+                  !_editable
+                      ? CircleIconButton(
+                          color: Colors.deepPurple,
+                          tooltip: "编辑",
+                          onPressed: edit,
+                          icon: Icons.edit,
+                        )
+                      : null,
+                  !_editable
+                      ? CircleIconButton(
+                          tooltip: "删除",
+                          onPressed: delete,
+                          icon: Icons.delete,
+                          color: Colors.red,
+                        )
+                      : null,
+                  _editable
+                      ? CircleIconButton(
+                          color: Colors.deepPurple,
+                          tooltip: "保存",
+                          onPressed: save,
+                          icon: Icons.save,
+                        )
+                      : null,
+                  _editable
+                      ? CircleIconButton(
+                          color: Colors.deepPurple,
+                          tooltip: "取消",
+                          onPressed: cancel,
+                          icon: Icons.cancel,
+                        )
+                      : null,
+                ].where((element) => element != null).toList(),
               ),
               const SizedBox(height: 40),
               Form(

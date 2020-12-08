@@ -4,6 +4,8 @@ import 'package:cicd/api/api.dart';
 import 'package:cicd/config/config.dart';
 import 'package:cicd/pages/task/job_view.dart';
 import 'package:cicd/pages/task/task.dart';
+import 'package:cicd/pages/template/template_view.dart';
+import 'package:cicd/pages/variable/variable_view.dart';
 import 'package:cicd/timex/timex.dart';
 import 'package:cicd/validator/validator.dart';
 import 'package:cicd/widget/widget.dart';
@@ -172,7 +174,7 @@ class TaskViewState extends State<TaskView> {
                       ? CircleIconButton(
                           color: Colors.green,
                           tooltip: "运行",
-                          onPressed: _editable ? null : runTask,
+                          onPressed: runTask,
                           icon: Icons.play_circle_filled,
                         )
                       : null,
@@ -180,14 +182,14 @@ class TaskViewState extends State<TaskView> {
                       ? CircleIconButton(
                           color: Colors.deepPurple,
                           tooltip: "编辑",
-                          onPressed: _editable ? null : edit,
+                          onPressed: edit,
                           icon: Icons.edit,
                         )
                       : null,
                   !_editable
                       ? CircleIconButton(
                           tooltip: "删除",
-                          onPressed: _editable ? null : delete,
+                          onPressed: delete,
                           icon: Icons.delete,
                           color: Colors.red,
                         )
@@ -196,7 +198,7 @@ class TaskViewState extends State<TaskView> {
                       ? CircleIconButton(
                           color: Colors.deepPurple,
                           tooltip: "保存",
-                          onPressed: _editable ? save : null,
+                          onPressed: save,
                           icon: Icons.save,
                         )
                       : null,
@@ -204,7 +206,7 @@ class TaskViewState extends State<TaskView> {
                       ? CircleIconButton(
                           color: Colors.deepPurple,
                           tooltip: "取消",
-                          onPressed: _editable ? cancel : null,
+                          onPressed: cancel,
                           icon: Icons.cancel,
                         )
                       : null,
@@ -229,7 +231,7 @@ class TaskViewState extends State<TaskView> {
                         spacing: 20,
                         children: [
                           ..._variables.map(
-                            (e) => Chip(
+                            (e) => RawChip(
                               backgroundColor: Colors.pink,
                               label: Text(e.name, style: TextStyle(color: Colors.white)),
                               deleteIcon: Container(
@@ -240,6 +242,10 @@ class TaskViewState extends State<TaskView> {
                                 padding: EdgeInsets.all(2),
                                 child: Icon(Icons.clear, color: Colors.pink, size: 14),
                               ),
+                              onPressed: () {
+                                Navigator.push(
+                                    context, MaterialPageRoute(builder: (context) => VariableViewPage(id: e.id)));
+                              },
                               onDeleted: _editable
                                   ? () {
                                       setState(() {
@@ -291,7 +297,7 @@ class TaskViewState extends State<TaskView> {
                         spacing: 20,
                         children: [
                           ..._templates.map(
-                            (e) => Chip(
+                            (e) => RawChip(
                               backgroundColor: Colors.teal,
                               label: Text(e.name, style: TextStyle(color: Colors.white)),
                               deleteIcon: Container(
@@ -302,6 +308,10 @@ class TaskViewState extends State<TaskView> {
                                 padding: EdgeInsets.all(2),
                                 child: Icon(Icons.clear, color: Colors.teal, size: 14),
                               ),
+                              onPressed: () {
+                                Navigator.push(
+                                    context, MaterialPageRoute(builder: (context) => TemplateViewPage(id: e.id)));
+                              },
                               onDeleted: _editable
                                   ? () {
                                       setState(() {
