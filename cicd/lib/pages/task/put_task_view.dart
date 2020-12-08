@@ -95,11 +95,13 @@ class PutTaskViewState extends State<PutTaskView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CircleIconButton(
+                    color: Colors.deepPurple,
                     tooltip: "保存",
                     onPressed: _editable ? save : null,
                     icon: Icons.save,
                   ),
                   CircleIconButton(
+                    color: Colors.deepPurple,
                     tooltip: "取消",
                     onPressed: _editable ? cancel : null,
                     icon: Icons.cancel,
