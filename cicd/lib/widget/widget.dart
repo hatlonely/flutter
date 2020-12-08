@@ -11,9 +11,17 @@ class CircleIconButton extends IconButton {
     IconData icon,
     String tooltip,
   }) : super(
-          splashRadius: 20,
-          icon: Icon(icon),
-          color: color,
+          splashRadius: 28,
+          icon: Container(
+            width: 28,
+            height: 28,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: color,
+            ),
+            padding: EdgeInsets.all(2),
+            child: Icon(icon, size: 16, color: Colors.white),
+          ),
           tooltip: tooltip,
           onPressed: onPressed,
         );
