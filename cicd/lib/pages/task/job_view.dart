@@ -51,13 +51,11 @@ class JobViewState extends State<JobView> {
           child: Column(children: [
             Text(_job.taskName ?? "", style: Theme.of(context).textTheme.headline5),
             const SizedBox(height: 20),
-            Text("任务状态 ${_job.status ?? ""}"),
-            const SizedBox(height: 20),
             Text(
-                "创建时间 ${_job.createAt == null ? "unknown" : DateTime.fromMillisecondsSinceEpoch(_job.createAt * 1000).toHumanString()}"),
-            const SizedBox(height: 20),
-            Text(
-                "最后更新 ${_job.updateAt == null ? "unknown" : DateTime.fromMillisecondsSinceEpoch(_job.createAt * 1000).toHumanString()}"),
+              "创建时间 ${_job.createAt == null ? "unknown" : DateTime.fromMillisecondsSinceEpoch(_job.createAt * 1000).toHumanString()}  "
+              "最后更新 ${_job.updateAt == null ? "unknown" : DateTime.fromMillisecondsSinceEpoch(_job.createAt * 1000).toHumanString()}",
+              style: TextStyle(fontSize: 12),
+            ),
             const SizedBox(height: 20),
             ...(_job.subs ?? []).map(
               (e) => SizedBox(
@@ -79,8 +77,13 @@ class JobViewState extends State<JobView> {
                     padding: EdgeInsets.all(20),
                     child: Column(
                       children: [
-                        Text(
-                            "${e.templateName} 语言: ${e.language ?? ""} 退出码: ${e.exitCode == null ? "0" : e.exitCode.toString()} 状态: ${e.status ?? ""}"),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("${e.templateName}", style: Theme.of(context).textTheme.subtitle2),
+                            Text("退出码: ${e.exitCode == null ? "0" : e.exitCode.toString()}"),
+                          ],
+                        ),
                         const SizedBox(height: 20),
                         CodeView(
                           width: maxWidth,
