@@ -32,6 +32,45 @@ class TaskViewPage extends StatelessWidget {
   }
 }
 
+class TwinkIcon extends StatefulWidget {
+  @override
+  TwinkIconState createState() => TwinkIconState();
+}
+
+class TwinkIconState extends State<TwinkIcon> with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<Color> _animation;
+  Timer _timer;
+  bool _flag = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+    _animation = ColorTween(begin: Colors.yellow, end: Colors.white).animate(_controller)
+      ..addListener(() {
+        setState(() {});
+      });
+    _timer = Timer.periodic(Duration(milliseconds: 600), (timer) => _changeColor());
+  }
+
+  void _changeColor() {
+    _flag ? _controller.forward() : _controller.reverse();
+    _flag = !_flag;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer.cancel();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Icon(Icons.lens, color: _animation.value);
+  }
+}
+
 class TaskView extends StatefulWidget {
   final String id;
   TaskView({Key key, this.id}) : super(key: key);
@@ -154,33 +193,6 @@ class TaskViewState extends State<TaskView> with SingleTickerProviderStateMixin 
     task.variableIDs.addAll(_variables.map((e) => e.id));
     task.templateIDs.addAll(_templates.map((e) => e.id));
     return task;
-  }
-
-  AnimationController _controller;
-  Animation<Color> _animation;
-  Timer _timer;
-  bool _flag = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 450));
-    _animation = ColorTween(begin: Colors.yellow, end: Colors.white).animate(_controller)
-      ..addListener(() {
-        setState(() {});
-      });
-    _timer = Timer.periodic(Duration(milliseconds: 600), (timer) => _changeColor());
-  }
-
-  void _changeColor() {
-    _flag ? _controller.forward() : _controller.reverse();
-    _flag = !_flag;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _timer.cancel();
   }
 
   @override
@@ -408,10 +420,11 @@ class TaskViewState extends State<TaskView> with SingleTickerProviderStateMixin 
                                     ? "unknown"
                                     : DateTime.fromMillisecondsSinceEpoch(e.createAt * 1000).toHumanString()))
                                 : null,
-                            DataCell(Icon(Icons.lens,
-                                color: e.status == "Failed"
-                                    ? Colors.red
-                                    : (e.status == "Finish" ? Colors.green : _animation.value))),
+                            DataCell(e.status == "Failed"
+                                ? Icon(Icons.lens, color: Colors.red)
+                                : e.status == "Finish"
+                                    ? Icon(Icons.lens, color: Colors.green)
+                                    : TwinkIcon()),
                             DataCell(Row(
                               children: [
                                 IconButton(
