@@ -28,7 +28,7 @@ class PutTaskView extends StatefulWidget {
   State<PutTaskView> createState() => PutTaskViewState();
 }
 
-class PutTaskViewState extends State<PutTaskView> {
+class PutTaskViewState extends State<PutTaskView> with SingleTickerProviderStateMixin {
   var _nameController = TextEditingController();
   var _descriptionController = TextEditingController();
   bool _editable = true;

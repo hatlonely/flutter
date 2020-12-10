@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:cicd/api/api.dart';
@@ -39,7 +40,7 @@ class TaskView extends StatefulWidget {
   State<TaskView> createState() => TaskViewState(id: id);
 }
 
-class TaskViewState extends State<TaskView> {
+class TaskViewState extends State<TaskView> with SingleTickerProviderStateMixin {
   final String id;
   var _nameController = TextEditingController();
   var _descriptionController = TextEditingController();
@@ -153,6 +154,33 @@ class TaskViewState extends State<TaskView> {
     task.variableIDs.addAll(_variables.map((e) => e.id));
     task.templateIDs.addAll(_templates.map((e) => e.id));
     return task;
+  }
+
+  AnimationController _controller;
+  Animation<Color> _animation;
+  Timer _timer;
+  bool _flag = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+    _animation = ColorTween(begin: Colors.yellow, end: Colors.white).animate(_controller)
+      ..addListener(() {
+        setState(() {});
+      });
+    _timer = Timer.periodic(Duration(milliseconds: 600), (timer) => _changeColor());
+  }
+
+  void _changeColor() {
+    _flag ? _controller.forward() : _controller.reverse();
+    _flag = !_flag;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer.cancel();
   }
 
   @override
@@ -383,7 +411,7 @@ class TaskViewState extends State<TaskView> {
                             DataCell(Icon(Icons.lens,
                                 color: e.status == "Failed"
                                     ? Colors.red
-                                    : (e.status == "Finish" ? Colors.green : Colors.yellow))),
+                                    : (e.status == "Finish" ? Colors.green : _animation.value))),
                             DataCell(Row(
                               children: [
                                 IconButton(

@@ -53,7 +53,7 @@ class JobViewState extends State<JobView> {
             const SizedBox(height: 20),
             Text(
               "创建时间 ${_job.createAt == null ? "unknown" : DateTime.fromMillisecondsSinceEpoch(_job.createAt * 1000).toHumanString()}  "
-              "最后更新 ${_job.updateAt == null ? "unknown" : DateTime.fromMillisecondsSinceEpoch(_job.createAt * 1000).toHumanString()}",
+              "最后更新 ${_job.updateAt == null ? "unknown" : DateTime.fromMillisecondsSinceEpoch(_job.updateAt * 1000).toHumanString()}",
               style: TextStyle(fontSize: 12),
             ),
             const SizedBox(height: 20),
@@ -64,7 +64,7 @@ class JobViewState extends State<JobView> {
                   clipBehavior: Clip.antiAlias,
                   shape: RoundedRectangleBorder(
                     side: BorderSide(
-                        color: e.status == "Success"
+                        color: e.status == "Finish"
                             ? Colors.green
                             : e.status == "Failed"
                                 ? Colors.red
@@ -81,8 +81,10 @@ class JobViewState extends State<JobView> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text("${e.templateName}", style: Theme.of(context).textTheme.subtitle2),
-                            Text("退出码: ${e.exitCode == null ? "0" : e.exitCode.toString()}"),
-                          ],
+                            e.status == "Finish" || e.status == "Failed"
+                                ? Text("退出码: ${e.exitCode == null ? "0" : e.exitCode.toString()}")
+                                : null,
+                          ].where((element) => element != null).toList(),
                         ),
                         const SizedBox(height: 20),
                         CodeView(
