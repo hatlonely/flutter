@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
-import 'package:flutter_highlight/themes/docco.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CircleIconButton extends IconButton {
@@ -126,7 +125,40 @@ class CodeView extends SizedBox {
                   const languageDict = {"shell": "sh", "python3": "python"};
                   return languageDict[language] ?? language;
                 }(language),
-                theme: doccoTheme,
+                theme: {
+                  'root': GoogleFonts.ubuntuMono(color: Color(0xff000000), backgroundColor: Color(0xfff8f8ff)),
+                  'comment': GoogleFonts.ubuntuMono(color: Color(0xff408080), fontStyle: FontStyle.italic),
+                  'quote': GoogleFonts.ubuntuMono(color: Color(0xff408080), fontStyle: FontStyle.italic),
+                  'keyword': GoogleFonts.ubuntuMono(color: Color(0xff954121)),
+                  'selector-tag': GoogleFonts.ubuntuMono(color: Color(0xff954121)),
+                  'literal': GoogleFonts.ubuntuMono(color: Color(0xff954121)),
+                  'subst': GoogleFonts.ubuntuMono(color: Color(0xff954121)),
+                  'number': GoogleFonts.ubuntuMono(color: Color(0xff40a070)),
+                  'string': GoogleFonts.ubuntuMono(color: Color(0xff219161)),
+                  'doctag': GoogleFonts.ubuntuMono(color: Color(0xff219161)),
+                  'selector-id': GoogleFonts.ubuntuMono(color: Color(0xff19469d)),
+                  'selector-class': GoogleFonts.ubuntuMono(color: Color(0xff19469d)),
+                  'section': GoogleFonts.ubuntuMono(color: Color(0xff19469d)),
+                  'type': GoogleFonts.ubuntuMono(color: Color(0xff19469d)),
+                  'params': GoogleFonts.ubuntuMono(color: Color(0xff0000ff)),
+                  'title': GoogleFonts.ubuntuMono(color: Color(0xff445588), fontWeight: FontWeight.bold),
+                  'tag': GoogleFonts.ubuntuMono(color: Color(0xff000080), fontWeight: FontWeight.normal),
+                  'name': GoogleFonts.ubuntuMono(color: Color(0xff000080), fontWeight: FontWeight.normal),
+                  'attribute': GoogleFonts.ubuntuMono(color: Color(0xff000080), fontWeight: FontWeight.normal),
+                  'variable': GoogleFonts.ubuntuMono(color: Color(0xff008080)),
+                  'template-variable': GoogleFonts.ubuntuMono(color: Color(0xff008080)),
+                  'regexp': GoogleFonts.ubuntuMono(color: Color(0xffbb6688)),
+                  'link': GoogleFonts.ubuntuMono(color: Color(0xffbb6688)),
+                  'symbol': GoogleFonts.ubuntuMono(color: Color(0xff990073)),
+                  'bullet': GoogleFonts.ubuntuMono(color: Color(0xff990073)),
+                  'built_in': GoogleFonts.ubuntuMono(color: Color(0xff0086b3)),
+                  'builtin-name': GoogleFonts.ubuntuMono(color: Color(0xff0086b3)),
+                  'meta': GoogleFonts.ubuntuMono(color: Color(0xff999999), fontWeight: FontWeight.bold),
+                  'deletion': GoogleFonts.ubuntuMono(backgroundColor: Color(0xffffdddd)),
+                  'addition': GoogleFonts.ubuntuMono(backgroundColor: Color(0xffddffdd)),
+                  'emphasis': GoogleFonts.ubuntuMono(fontStyle: FontStyle.italic),
+                  'strong': GoogleFonts.ubuntuMono(fontWeight: FontWeight.bold),
+                },
                 padding: EdgeInsets.all(12),
                 textStyle: GoogleFonts.ubuntuMono(fontSize: 16),
               ),
