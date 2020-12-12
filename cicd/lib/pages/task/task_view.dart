@@ -415,7 +415,7 @@ class TaskViewState extends State<TaskView> with SingleTickerProviderStateMixin 
                   showCheckboxColumn: false,
                   columns: <String>[maxWidth > 700 ? "序号" : null, maxWidth > 370 ? "创建时间" : null, "状态", "操作"]
                       .where((element) => element != null)
-                      .map((e) => DataColumn(label: Center(child: Text(e, textAlign: TextAlign.center))))
+                      .map((e) => DataColumn(label: Text(e)))
                       .toList(),
                   rows: (_jobs ?? [])
                       .map((e) => DataRow(
