@@ -205,7 +205,7 @@ class TemplateViewState extends State<TemplateView> {
                     const SizedBox(height: 20),
                     MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
                     const SizedBox(height: 20),
-                    MyTextField(
+                    CodeEditor(
                       label: "脚本",
                       controller: _scriptController,
                       minLines: 10,
