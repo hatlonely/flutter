@@ -442,7 +442,7 @@ class TaskViewState extends State<TaskView> with SingleTickerProviderStateMixin 
               const SizedBox(height: 40),
               DataTable(
                   showCheckboxColumn: false,
-                  columns: <String>[maxWidth > 700 ? "序号" : null, maxWidth > 370 ? "创建时间" : null, "状态", "操作"]
+                  columns: <String>[maxWidth > 700 ? "序号" : null, maxWidth > 370 ? "创建时间" : null, "运行时长", "状态", "操作"]
                       .where((element) => element != null)
                       .map((e) => DataColumn(label: Text(e)))
                       .toList(),
@@ -455,6 +455,7 @@ class TaskViewState extends State<TaskView> with SingleTickerProviderStateMixin 
                                     ? "unknown"
                                     : DateTime.fromMillisecondsSinceEpoch(e.createAt * 1000).toHumanString()))
                                 : null,
+                            DataCell(Text("${e.updateAt - e.createAt}秒")),
                             DataCell(e.status == "Failed"
                                 ? Icon(Icons.lens, color: Colors.red)
                                 : e.status == "Finish"
