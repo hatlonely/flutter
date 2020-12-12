@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:cicd/api/api.dart';
@@ -11,6 +12,7 @@ import 'package:cicd/timex/timex.dart';
 import 'package:cicd/validator/validator.dart';
 import 'package:cicd/widget/widget.dart';
 import 'package:flutter/material.dart';
+import 'package:mustache_template/mustache_template.dart';
 import 'package:provider/provider.dart';
 
 class TaskViewPage extends StatelessWidget {
@@ -198,6 +200,8 @@ class TaskViewState extends State<TaskView> with SingleTickerProviderStateMixin 
   @override
   Widget build(BuildContext context) {
     var maxWidth = min(MediaQuery.of(context).size.width - 80, 800);
+    var variableMap = Map.fromIterable(_variables, key: (e) => e.name, value: (e) => jsonDecode(e.kvs));
+
     return Center(
       child: Container(
         width: maxWidth + 80,
@@ -212,18 +216,18 @@ class TaskViewState extends State<TaskView> with SingleTickerProviderStateMixin 
                 children: [
                   !_editable
                       ? CircleIconButton(
-                          color: Colors.green,
-                          tooltip: "运行",
-                          onPressed: runTask,
-                          icon: Icons.play_circle_filled,
-                        )
-                      : null,
-                  !_editable
-                      ? CircleIconButton(
                           color: Colors.deepPurple,
                           tooltip: "编辑",
                           onPressed: edit,
                           icon: Icons.edit,
+                        )
+                      : null,
+                  !_editable
+                      ? CircleIconButton(
+                          color: Colors.green,
+                          tooltip: "运行",
+                          onPressed: runTask,
+                          icon: Icons.play_circle_filled,
                         )
                       : null,
                   !_editable
@@ -342,6 +346,13 @@ class TaskViewState extends State<TaskView> with SingleTickerProviderStateMixin 
                       ),
                     ),
                     const SizedBox(height: 20),
+                    CodeView(
+                      code: JsonEncoder.withIndent("  ").convert(variableMap),
+                      language: "json",
+                      width: maxWidth,
+                      borderColor: Colors.pink,
+                    ),
+                    const SizedBox(height: 20),
                     Align(
                       alignment: Alignment.topLeft,
                       child: Wrap(
@@ -407,6 +418,24 @@ class TaskViewState extends State<TaskView> with SingleTickerProviderStateMixin 
                         ].where((element) => element != null).toList(),
                       ),
                     ),
+                    const SizedBox(height: 20),
+                    ..._templates.map((e) {
+                      try {
+                        return CodeView(
+                          code: Template(e.scriptTemplate.script).renderString(variableMap),
+                          language: e.scriptTemplate.language,
+                          width: maxWidth,
+                          borderColor: Colors.teal,
+                        );
+                      } catch (err) {
+                        return CodeView(
+                          code: e.scriptTemplate.script,
+                          language: e.scriptTemplate.language,
+                          width: maxWidth,
+                          borderColor: Colors.red,
+                        );
+                      }
+                    }),
                   ],
                 ),
               ),

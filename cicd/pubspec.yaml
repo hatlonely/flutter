@@ -28,6 +28,7 @@ dependencies:
   flutter_highlight: ^0.6.0
   provider: ^4.3.2+2
   google_fonts: ^1.1.1
+  mustache_template: ^1.0.0+1
   flutter:
     sdk: flutter
 
