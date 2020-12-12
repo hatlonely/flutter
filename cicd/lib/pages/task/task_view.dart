@@ -115,7 +115,7 @@ class TaskViewState extends State<TaskView> with SingleTickerProviderStateMixin 
           );
       client.cICDServiceListJob(offset: "0", limit: "20", taskID: id).then((value) => setState(() {
             print(value);
-            _jobs = value.jobs;
+            _jobs = value.jobs ?? [];
           }));
     });
   }
@@ -402,19 +402,14 @@ class TaskViewState extends State<TaskView> with SingleTickerProviderStateMixin 
               const SizedBox(height: 40),
               DataTable(
                   showCheckboxColumn: false,
-                  columns: <String>[
-                    maxWidth > 700 ? "ID" : null,
-                    maxWidth > 370 ? "CreateAt" : null,
-                    "Status",
-                    "Operation"
-                  ]
+                  columns: <String>[maxWidth > 700 ? "序号" : null, maxWidth > 370 ? "创建时间" : null, "状态", "操作"]
                       .where((element) => element != null)
                       .map((e) => DataColumn(label: Center(child: Text(e, textAlign: TextAlign.center))))
                       .toList(),
                   rows: (_jobs ?? [])
                       .map((e) => DataRow(
                           cells: <DataCell>[
-                            maxWidth > 700 ? DataCell(Text(e.id)) : null,
+                            maxWidth > 700 ? DataCell(Text(e.seq.toString())) : null,
                             maxWidth > 370
                                 ? DataCell(Text(e.createAt == null
                                     ? "unknown"

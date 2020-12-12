@@ -4,6 +4,8 @@ class ApiJob {
   
   String id = null;
   
+  int seq = null;
+  
   String taskID = null;
   
   String taskName = null;
@@ -21,12 +23,13 @@ class ApiJob {
 
   @override
   String toString() {
-    return 'ApiJob[id=$id, taskID=$taskID, taskName=$taskName, status=$status, error=$error, createAt=$createAt, updateAt=$updateAt, subs=$subs, ]';
+    return 'ApiJob[id=$id, seq=$seq, taskID=$taskID, taskName=$taskName, status=$status, error=$error, createAt=$createAt, updateAt=$updateAt, subs=$subs, ]';
   }
 
   ApiJob.fromJson(Map<String, dynamic> json) {
     if (json == null) return;
     id = json['id'];
+    seq = json['seq'];
     taskID = json['taskID'];
     taskName = json['taskName'];
     status = json['status'];
@@ -42,6 +45,8 @@ class ApiJob {
     Map <String, dynamic> json = {};
     if (id != null)
       json['id'] = id;
+    if (seq != null)
+      json['seq'] = seq;
     if (taskID != null)
       json['taskID'] = taskID;
     if (taskName != null)

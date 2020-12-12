@@ -128,7 +128,7 @@ class CodeView extends SizedBox {
                 }(language),
                 theme: doccoTheme,
                 padding: EdgeInsets.all(12),
-                textStyle: GoogleFonts.ubuntuMono(fontSize: 13),
+                textStyle: GoogleFonts.ubuntuMono(fontSize: 16),
               ),
             ),
           ),
@@ -158,7 +158,7 @@ class CodeEditor extends TextFormField {
           minLines: minLines,
           controller: controller,
           enabled: editable,
-          style: GoogleFonts.ubuntuMono(fontSize: 13),
+          style: GoogleFonts.ubuntuMono(fontSize: 16),
         );
 }
 
