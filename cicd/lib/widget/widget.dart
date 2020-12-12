@@ -128,10 +128,37 @@ class CodeView extends SizedBox {
                 }(language),
                 theme: doccoTheme,
                 padding: EdgeInsets.all(12),
-                textStyle: GoogleFonts.ubuntuMono(),
+                textStyle: GoogleFonts.ubuntuMono(fontSize: 13),
               ),
             ),
           ),
+        );
+}
+
+class CodeEditor extends TextFormField {
+  CodeEditor({
+    TextEditingController controller,
+    String label,
+    bool editable,
+    int minLines,
+    int maxLines,
+    String Function(String) validator,
+  }) : super(
+          validator: validator,
+          decoration: InputDecoration(
+            isDense: true,
+            labelText: label,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(5.0),
+              borderSide: BorderSide(),
+            ),
+          ),
+          autofocus: true,
+          maxLines: maxLines,
+          minLines: minLines,
+          controller: controller,
+          enabled: editable,
+          style: GoogleFonts.ubuntuMono(fontSize: 13),
         );
 }
 

@@ -103,6 +103,8 @@ class VariableViewState extends State<VariableView> {
     variable.name = _nameController.value.text;
     variable.description = _descriptionController.value.text;
     variable.kvs = _kvsController.value.text;
+    variable.createAt = _variable.createAt;
+    variable.updateAt = _variable.updateAt;
     return variable;
   }
 
@@ -178,7 +180,7 @@ class VariableViewState extends State<VariableView> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    MyTextField(
+                    CodeEditor(
                       label: "键值",
                       validator: StringValidator.isJson,
                       controller: _kvsController,
