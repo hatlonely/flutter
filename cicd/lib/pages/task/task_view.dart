@@ -257,13 +257,24 @@ class TaskViewState extends State<TaskView> with SingleTickerProviderStateMixin 
                 key: _formKey,
                 child: Column(
                   children: [
-                    MyTextField(
-                        label: "名字",
-                        controller: _nameController,
-                        editable: _editable,
-                        validator: StringValidator.required),
-                    const SizedBox(height: 20),
-                    MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: maxWidth / 2.25,
+                          child: MyTextField(
+                            label: "名字",
+                            controller: _nameController,
+                            editable: _editable,
+                            validator: StringValidator.required,
+                          ),
+                        ),
+                        SizedBox(
+                          width: maxWidth / 2.25,
+                          child: MyTextField(label: "描述", controller: _descriptionController, editable: _editable),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 20),
                     Align(
                       alignment: Alignment.topLeft,
