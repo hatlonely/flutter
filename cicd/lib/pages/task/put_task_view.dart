@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:cicd/api/api.dart';
 import 'package:cicd/config/config.dart';
 import 'package:cicd/pages/task/task.dart';
+import 'package:cicd/pages/template/template_view.dart';
+import 'package:cicd/pages/variable/variable_view.dart';
 import 'package:cicd/validator/validator.dart';
 import 'package:cicd/widget/widget.dart';
 import 'package:flutter/material.dart';
@@ -138,49 +140,64 @@ class PutTaskViewState extends State<PutTaskView> with SingleTickerProviderState
                       child: Wrap(
                         spacing: 20,
                         children: [
-                          Padding(padding: EdgeInsets.all(6), child: Text("变量")),
                           ..._variables.map(
-                            (e) => Padding(
-                              padding: EdgeInsets.all(6),
-                              child: Chip(
-                                label: Text(e.name),
-                                deleteIcon: Icon(Icons.close, size: 10),
-                                onDeleted: () {
-                                  setState(() {
-                                    _allVariables.addAll(_variables.where((element) => element.name == e.name));
-                                    _variables.removeWhere((element) => element.name == e.name);
-                                  });
-                                },
+                            (e) => RawChip(
+                              backgroundColor: Colors.pink,
+                              label: Text(e.name, style: TextStyle(color: Colors.white)),
+                              deleteIcon: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                ),
+                                padding: EdgeInsets.all(2),
+                                child: Icon(Icons.clear, color: Colors.pink, size: 14),
                               ),
+                              onPressed: () {
+                                Navigator.push(
+                                    context, MaterialPageRoute(builder: (context) => VariableViewPage(id: e.id)));
+                              },
+                              onDeleted: _editable
+                                  ? () {
+                                      setState(() {
+                                        _allVariables.addAll(_variables.where((element) => element.name == e.name));
+                                        _variables.removeWhere((element) => element.name == e.name);
+                                      });
+                                    }
+                                  : null,
                             ),
                           ),
-                          PopupMenuButton<ApiVariable>(
-                            tooltip: "添加变量",
-                            padding: EdgeInsets.zero,
-                            offset: Offset.zero,
-                            icon: Container(
-                              padding: EdgeInsets.zero,
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black, width: 2),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(Icons.add, size: 24.0),
-                            ),
-                            onSelected: (ApiVariable value) {
-                              setState(() {
-                                _variables.add(value);
-                                _allVariables.removeWhere((element) => element.name == value.name);
-                              });
-                            },
-                            itemBuilder: (BuildContext context) =>
-                                _allVariables.map<PopupMenuEntry<ApiVariable>>((ApiVariable value) {
-                              return PopupMenuItem<ApiVariable>(
-                                value: value,
-                                child: Text(value.name),
-                              );
-                            }).toList(),
-                          ),
-                        ],
+                          _editable
+                              ? PopupMenuButton<ApiVariable>(
+                                  tooltip: "添加变量",
+                                  padding: EdgeInsets.zero,
+                                  offset: Offset.zero,
+                                  enabled: _editable,
+                                  child: Container(
+                                    height: 28,
+                                    width: 28,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.pink,
+                                    ),
+                                    padding: EdgeInsets.all(2),
+                                    child: Icon(Icons.add, size: 20, color: Colors.white),
+                                  ),
+                                  onSelected: (ApiVariable value) {
+                                    setState(() {
+                                      _variables.add(value);
+                                      _allVariables.removeWhere((element) => element.name == value.name);
+                                    });
+                                  },
+                                  itemBuilder: (BuildContext context) =>
+                                      _allVariables.map<PopupMenuEntry<ApiVariable>>((ApiVariable value) {
+                                    return PopupMenuItem<ApiVariable>(
+                                      value: value,
+                                      child: Text(value.name),
+                                    );
+                                  }).toList(),
+                                )
+                              : null,
+                        ].where((element) => element != null).toList(),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -189,52 +206,66 @@ class PutTaskViewState extends State<PutTaskView> with SingleTickerProviderState
                       child: Wrap(
                         spacing: 20,
                         children: [
-                          Padding(padding: EdgeInsets.all(6), child: Text("模板")),
                           ..._templates.map(
-                            (e) => Padding(
-                              padding: EdgeInsets.all(6),
-                              child: Chip(
-                                label: Text(e.name),
-                                deleteIcon: Icon(Icons.close, size: 10),
-                                onDeleted: () {
-                                  setState(() {
-                                    _allTemplates.addAll(_templates.where((element) => element.name == e.name));
-                                    _templates.removeWhere((element) => element.name == e.name);
-                                  });
-                                },
+                            (e) => RawChip(
+                              backgroundColor: Colors.teal,
+                              label: Text(e.name, style: TextStyle(color: Colors.white)),
+                              deleteIcon: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                ),
+                                padding: EdgeInsets.all(2),
+                                child: Icon(Icons.clear, color: Colors.teal, size: 14),
                               ),
+                              onPressed: () {
+                                Navigator.push(
+                                    context, MaterialPageRoute(builder: (context) => TemplateViewPage(id: e.id)));
+                              },
+                              onDeleted: _editable
+                                  ? () {
+                                      setState(() {
+                                        _allTemplates.addAll(_templates.where((element) => element.name == e.name));
+                                        _templates.removeWhere((element) => element.name == e.name);
+                                      });
+                                    }
+                                  : null,
                             ),
                           ),
-                          PopupMenuButton<ApiTemplate>(
-                            tooltip: "添加模板",
-                            padding: EdgeInsets.zero,
-                            offset: Offset.zero,
-                            icon: Container(
-                              padding: EdgeInsets.zero,
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black, width: 2),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(Icons.add, size: 24.0),
-                            ),
-                            onSelected: (ApiTemplate value) {
-                              setState(() {
-                                _templates.add(value);
-                                _allTemplates.removeWhere((element) => element.name == value.name);
-                              });
-                            },
-                            itemBuilder: (BuildContext context) =>
-                                _allTemplates.map<PopupMenuEntry<ApiTemplate>>((ApiTemplate value) {
-                              return PopupMenuItem<ApiTemplate>(
-                                value: value,
-                                child: Text(value.name),
-                              );
-                            }).toList(),
-                          ),
-                        ],
+                          _editable
+                              ? PopupMenuButton<ApiTemplate>(
+                                  tooltip: "添加模板",
+                                  padding: EdgeInsets.zero,
+                                  offset: Offset.zero,
+                                  enabled: _editable,
+                                  child: Container(
+                                    height: 28,
+                                    width: 28,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.teal,
+                                    ),
+                                    padding: EdgeInsets.all(2),
+                                    child: Icon(Icons.add, size: 20, color: Colors.white),
+                                  ),
+                                  onSelected: (ApiTemplate value) {
+                                    setState(() {
+                                      _templates.add(value);
+                                      _allTemplates.removeWhere((element) => element.name == value.name);
+                                    });
+                                  },
+                                  itemBuilder: (BuildContext context) =>
+                                      _allTemplates.map<PopupMenuEntry<ApiTemplate>>((ApiTemplate value) {
+                                    return PopupMenuItem<ApiTemplate>(
+                                      value: value,
+                                      child: Text(value.name),
+                                    );
+                                  }).toList(),
+                                )
+                              : null,
+                        ].where((element) => element != null).toList(),
                       ),
                     ),
-                    const SizedBox(height: 20),
                   ],
                 ),
               ),
