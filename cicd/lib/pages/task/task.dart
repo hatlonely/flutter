@@ -39,7 +39,7 @@ class TaskModel extends ChangeNotifier {
   void update() {
     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     client.cICDServiceListTask(offset: "0", limit: "20").then((value) {
-      _tasks = value.tasks;
+      _tasks = value.tasks ?? [];
       notifyListeners();
     });
   }
@@ -67,7 +67,7 @@ class ListTaskViewState extends State<ListTaskView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(e.name),
-              Text(e.description),
+              Text(e.description ?? ""),
             ],
           ),
         ),

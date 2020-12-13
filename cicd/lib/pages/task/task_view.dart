@@ -107,7 +107,6 @@ class TaskViewState extends State<TaskView> with SingleTickerProviderStateMixin 
               _allTemplates.removeWhere((element) => _task.templateIDs.contains(element.id));
             }),
           );
-
       client.cICDServiceListVariable(offset: "0", limit: "20").then(
             (value) => setState(() {
               _allVariables = value.variables;
