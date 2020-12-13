@@ -95,6 +95,10 @@ class TaskViewState extends State<TaskView> with SingleTickerProviderStateMixin 
   var _jobs = <ApiJob>[];
 
   TaskViewState({this.id}) {
+    refresh();
+  }
+
+  void refresh() {
     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     client.cICDServiceGetTask(id).then((value) {
       _task = value;
@@ -115,7 +119,6 @@ class TaskViewState extends State<TaskView> with SingleTickerProviderStateMixin 
             }),
           );
       client.cICDServiceListJob(offset: "0", limit: "20", taskID: id).then((value) => setState(() {
-            print(value);
             _jobs = value.jobs ?? [];
           }));
     });
@@ -227,6 +230,14 @@ class TaskViewState extends State<TaskView> with SingleTickerProviderStateMixin 
                           tooltip: "运行",
                           onPressed: runTask,
                           icon: Icons.play_circle_filled,
+                        )
+                      : null,
+                  !_editable
+                      ? CircleIconButton(
+                          color: Colors.pink,
+                          tooltip: "刷新",
+                          onPressed: refresh,
+                          icon: Icons.refresh,
                         )
                       : null,
                   !_editable

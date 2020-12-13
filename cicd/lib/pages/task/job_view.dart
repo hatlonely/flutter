@@ -35,6 +35,10 @@ class JobViewState extends State<JobView> {
   var _job = ApiJob();
 
   JobViewState({this.id}) {
+    refresh();
+  }
+
+  void refresh() {
     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     client.cICDServiceGetJob(id).then((res) => setState(() => _job = res));
   }
@@ -56,6 +60,12 @@ class JobViewState extends State<JobView> {
               "创建时间 ${_job.createAt == null ? "unknown" : DateTime.fromMillisecondsSinceEpoch(_job.createAt * 1000).toHumanString()}  "
               "最后更新 ${_job.updateAt == null ? "unknown" : DateTime.fromMillisecondsSinceEpoch(_job.updateAt * 1000).toHumanString()}",
               style: TextStyle(fontSize: 12),
+            ),
+            CircleIconButton(
+              color: Colors.pink,
+              tooltip: "刷新",
+              onPressed: refresh,
+              icon: Icons.refresh,
             ),
             _job.error != null ? const SizedBox(height: 20) : null,
             _job.error != null
