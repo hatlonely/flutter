@@ -48,7 +48,8 @@ class JobViewState extends State<JobView> {
         width: maxWidth + 80,
         child: Padding(
           padding: EdgeInsets.all(40.0),
-          child: Column(children: [
+          child: Column(
+              children: [
             Text(_job.taskName ?? "", style: Theme.of(context).textTheme.headline5),
             const SizedBox(height: 20),
             Text(
@@ -56,6 +57,15 @@ class JobViewState extends State<JobView> {
               "最后更新 ${_job.updateAt == null ? "unknown" : DateTime.fromMillisecondsSinceEpoch(_job.updateAt * 1000).toHumanString()}",
               style: TextStyle(fontSize: 12),
             ),
+            _job.error != null ? const SizedBox(height: 20) : null,
+            _job.error != null
+                ? CodeView(
+                    width: maxWidth,
+                    code: _job.error,
+                    language: "txt",
+                    borderColor: Colors.red,
+                  )
+                : null,
             const SizedBox(height: 20),
             ...(_job.subs ?? []).map(
               (e) => SizedBox(
@@ -116,7 +126,7 @@ class JobViewState extends State<JobView> {
                 ),
               ),
             ),
-          ]),
+          ].where((element) => element != null).toList()),
         ),
       ),
     );
