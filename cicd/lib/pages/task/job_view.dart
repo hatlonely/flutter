@@ -54,7 +54,7 @@ class JobViewState extends State<JobView> {
           padding: EdgeInsets.all(40.0),
           child: Column(
               children: [
-            Text(_job.taskName ?? "", style: Theme.of(context).textTheme.headline5),
+            Text("${_job.taskName ?? ""} #${_job.seq}", style: Theme.of(context).textTheme.headline5),
             const SizedBox(height: 20),
             Text(
               "创建时间 ${_job.createAt == null ? "unknown" : DateTime.fromMillisecondsSinceEpoch(_job.createAt * 1000).toHumanString()}  "
