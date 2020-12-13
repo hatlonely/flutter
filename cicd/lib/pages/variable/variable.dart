@@ -38,7 +38,7 @@ class VariableModel extends ChangeNotifier {
   void update() {
     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     client.cICDServiceListVariable(offset: "0", limit: "20").then((res) {
-      _variables = res.variables;
+      _variables = res.variables ?? [];
       notifyListeners();
     });
   }

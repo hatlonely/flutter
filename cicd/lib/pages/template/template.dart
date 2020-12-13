@@ -38,7 +38,7 @@ class TemplateModel extends ChangeNotifier {
   void update() {
     var client = CICDServiceApi(ApiClient(basePath: Config.CICDEndpoint));
     client.cICDServiceListTemplate(offset: "0", limit: "20").then((res) {
-      _templates = res.templates;
+      _templates = res.templates ?? [];
       notifyListeners();
     });
   }
