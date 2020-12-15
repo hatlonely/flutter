@@ -465,7 +465,7 @@ class TaskViewState extends State<TaskView> with SingleTickerProviderStateMixin 
                                     ? "unknown"
                                     : DateTime.fromMillisecondsSinceEpoch(e.createAt * 1000).toHumanString()))
                                 : null,
-                            DataCell(Text("${e.updateAt - e.createAt}秒")),
+                            DataCell(Text("${e.updateAt ?? e.createAt - e.createAt}秒")),
                             DataCell(e.status == "Failed"
                                 ? Icon(Icons.lens, color: Colors.red)
                                 : e.status == "Finish"
